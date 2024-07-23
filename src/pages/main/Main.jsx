@@ -1,4 +1,4 @@
-import Content from "../../components/Content";
+import KakaoPayButton from "../payment/kakaoPay/KakaoPayButton";
 import React from "react";
 
 const Main = () => {
@@ -14,6 +14,9 @@ const Main = () => {
           <div className="bg-gray-200 p-4 rounded">구역1 1</div>
           <div className="bg-gray-200 p-4 rounded">구역2 2</div>
           <div className="bg-gray-200 p-4 rounded">구역33</div>
+        </div>
+        <div className="mt-8">
+          <KakaoPayButton />
         </div>
       </div>
     </>
