@@ -1,7 +1,13 @@
-import KakaoPayButton from "../payment/kakaoPay/KakaoPayButton";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
+  const navigate = useNavigate();
+
+  const handlePaymentClick = () => {
+    navigate("/payment");
+  };
+
   return (
     <>
       <div className="h-[200vh]">
@@ -16,7 +22,12 @@ const Main = () => {
           <div className="bg-gray-200 p-4 rounded">구역33</div>
         </div>
         <div className="mt-8">
-          <KakaoPayButton />
+          <button
+            onClick={handlePaymentClick}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            결제하기
+          </button>
         </div>
       </div>
     </>
