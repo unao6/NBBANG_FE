@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { approveKakaoPay } from "../../../api/payment/kakaoPay/kakaoPay";
+import { approveKakaoPay } from "../../../api/payment/kakaoPay/kakaoPayApi";
 import usePaymentStore from "../../../store/usePaymentStore";
 
 const KakaoPayApprove = () => {

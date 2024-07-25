@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { createKakaoPay } from "../../../api/payment/kakaoPay/kakaoPay";
+import { createKakaoPay } from "../../../api/payment/kakaoPay/kakaoPayApi";
 import usePaymentStore from "../../../store/usePaymentStore";
 
 const KakaoPayCardRegister = () => {

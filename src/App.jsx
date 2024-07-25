@@ -1,13 +1,13 @@
 import "./index.css";
 
-import { BrowserRouter, useLocation } from "react-router-dom";
-
+import AdminContainer from "./pages/admin/AdminContainer";
 import Container from "./components/Container";
 import Content from "./components/Content";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
 import React from "react";
 import Router from "./Router";
+import { useLocation } from "react-router-dom";
 
 function App() {
   const location = useLocation();
@@ -17,15 +17,23 @@ function App() {
     "/payment/kakaopay/approve",
   ].includes(location.pathname);
 
+  const isAdminPage = location.pathname.startsWith("/admin");
+
   return (
     <div className="App font-pre">
-      <Container>
-        {!hideHeaderFooter && <Header />}
-        <Content>
+      {isAdminPage ? (
+        <AdminContainer>
           <Router />
-        </Content>
-        {!hideHeaderFooter && <Footer />}
-      </Container>
+        </AdminContainer>
+      ) : (
+        <Container>
+          {!hideHeaderFooter && <Header />}
+          <Content>
+            <Router />
+          </Content>
+          {!hideHeaderFooter && <Footer />}
+        </Container>
+      )}
     </div>
   );
 }

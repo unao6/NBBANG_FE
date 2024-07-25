@@ -19,3 +19,7 @@ export const approveKakaoPay = async (tid, pgToken) => {
   });
   return response.data;
 };
+
+export const cancelPayment = async (cancelRequest) => {
+  return axios.post(`${kakaoUrl}/cancel`, cancelRequest);
+};
