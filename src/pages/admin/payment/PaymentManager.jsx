@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getPayments } from "../../../api/payment/paymentApi";
 
-const Manager = () => {
+const PaymentManager = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,7 +37,7 @@ const Manager = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl mb-4">Payments</h1>
+      <h1 className="text-2xl mb-4">결제 관리</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -98,4 +98,4 @@ const Manager = () => {
   );
 };
 
-export default Manager;
+export default PaymentManager;
