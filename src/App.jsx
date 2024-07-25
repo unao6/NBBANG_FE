@@ -14,6 +14,7 @@ function App() {
   const hideHeaderFooter = [
     "/payment/kakaopay/register",
     "/payment/card/register",
+    "/payment/kakaopay/approve",
   ].includes(location.pathname);
 
   return (

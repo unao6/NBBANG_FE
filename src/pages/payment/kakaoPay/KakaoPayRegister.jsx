@@ -1,10 +1,38 @@
 import React, { useState } from "react";
 
+import { createKakaoPay } from "../../../api/payment/kakaoPay/kakaoPay";
+import usePaymentStore from "../../../store/usePaymentStore";
+
 const KakaoPayCardRegister = () => {
   const [isAgreed, setIsAgreed] = useState(false);
+  const setTid = usePaymentStore((state) => state.setTid);
 
   const handleAgreementChange = () => {
     setIsAgreed(!isAgreed);
+  };
+
+  const handleSubmit = async () => {
+    if (isAgreed) {
+      try {
+        const userId = 1; // 실제 userId로 변경 필요 임시 1로 설정
+        const response = await createKakaoPay(userId);
+        console.log("KakaoPay response:", response);
+
+        // 응답값 확인
+        if (response && response.next_redirect_pc_url) {
+          const { tid, next_redirect_pc_url } = response;
+          console.log("next_redirect_pc_url:", next_redirect_pc_url); //url 넘어왔나 확인
+          setTid(tid); // Zustand에 tid 저장
+          console.log("tid 넘어왔나 확인", tid); // tid 잘 넘어왔나 확인
+
+          window.location.href = next_redirect_pc_url; // 여기서 리디렉션 수행
+        } else {
+          console.error("응답값 이상", response); // 응답값이 유효하지 않을 때
+        }
+      } catch (error) {
+        console.error("Error creating KakaoPay subscription:", error);
+      }
+    }
   };
 
   return (
@@ -68,6 +96,7 @@ const KakaoPayCardRegister = () => {
               ? "bg-green-500 text-white"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
+          onClick={handleSubmit}
         >
           동의하고 넘어가기
         </button>

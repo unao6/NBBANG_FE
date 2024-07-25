@@ -4,7 +4,7 @@ import CardRegister from "./pages/payment/CardRegister";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
-import KakaoPayRegister from "./pages/payment/KakaoPayRegister";
+import KakaoPayRegister from "./pages/payment/kakaoPay/KakaoPayRegister";
 import Main from "./pages/main/Main";
 import Payment from "./pages/payment/Payment";
 
