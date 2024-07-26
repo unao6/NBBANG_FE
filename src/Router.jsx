@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
+import StartChat from "./pages/chat/StartChat";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
@@ -22,6 +23,7 @@ const Router = () => {
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
       <Route path="/chat" element={<Chat />} />
+      <Route path="/chat/start" element={<StartChat />} />
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
     </Routes>
