@@ -56,6 +56,15 @@ const AdminContainer = ({ children }) => {
                 파티 관리
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/admin/chat"
+                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
+                activeClassName="bg-gray-200"
+              >
+                채팅 관리
+              </NavLink>
+            </li>
             <li className="mt-8">
               <NavLink
                 to="/"

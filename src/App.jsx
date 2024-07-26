@@ -20,7 +20,7 @@ function App() {
   const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
-    <div className="App font-pre">
+    <div className="App font-pre h-screen flex flex-col overflow-hidden">
       {isAdminPage ? (
         <AdminContainer>
           <Router />
