@@ -17,6 +17,10 @@ function App() {
     "/payment/kakaopay/register",
     "/payment/card/register",
     "/payment/kakaopay/approve",
+    "/login",
+    "/users/user-login",
+    "/users/sign-up",
+    "/auth/user-auth"
   ].includes(location.pathname);
 
   const theme = createTheme({

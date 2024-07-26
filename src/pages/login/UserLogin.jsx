@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -12,9 +13,18 @@ const UserLogin = () => {
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 로그인 처리 로직 추가
+    try {
+      const response = await axios.post("http://localhost:8080/api/users/user-login", {
+        email,
+        password
+      });
+      console.log(response.data);
+      // 로그인 성공 처리 로직 추가 (예: 토큰 저장, 페이지 리디렉션 등)
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   const handleSignUpClick = () => {
@@ -26,13 +36,13 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4 bg-white pt-[10px]">
+    <div className="flex flex-col items-center h-full bg-white">
       <div className="w-full max-w-md">
         <div className="flex items-center mb-6">
-          <button onClick={handleBackClick} className="p-2 rounded-full bg-gray-100">
+          <button onClick={handleBackClick} className="p-1 rounded bg-gray-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-4 w-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -45,12 +55,12 @@ const UserLogin = () => {
               />
             </svg>
           </button>
-          <h2 className="text-xl font-bold ml-4">이메일 로그인</h2>
+          <h2 className="text-sm font-bold ml-2 text-center w-full">이메일 로그인</h2>
         </div>
         <h2 className="text-2xl font-bold mb-6 text-left">이메일로 <br /> 로그인 하기</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">이메일</label>
+            <label className={`block text-sm font-medium ${isEmailFocused ? "text-green-500" : "text-gray-700"}`}>이메일</label>
             <input
               type="email"
               value={email}
@@ -68,7 +78,7 @@ const UserLogin = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">비밀번호</label>
+            <label className={`block text-sm font-medium ${isPasswordFocused ? "text-green-500" : "text-gray-700"}`}>비밀번호</label>
             <input
               type="password"
               value={password}

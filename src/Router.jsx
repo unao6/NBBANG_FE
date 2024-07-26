@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
 import CardRegister from "./pages/payment/CardRegister";
-// import Chat from "./pages/chat/Chat";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
@@ -15,6 +14,7 @@ import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from './pages/join/SignUp';
 import Login from './pages/login/UserLogin';
 import LoginPage from './pages/login/LoginPage';
+import UserAuth from './pages/join/UserAuth';
 
 const Router = () => {
   return (
@@ -26,7 +26,6 @@ const Router = () => {
       <Route path="/payment/kakaopay/approve" element={<KakaoPayApprove />} />
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
-{/*       <Route path="/chat" element={<Chat />} /> */}
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/mypage" element={<MyPage />} />
@@ -34,7 +33,7 @@ const Router = () => {
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
-
+      <Route path="/auth/user-auth" element={<UserAuth />} />
 
     </Routes>
   );
