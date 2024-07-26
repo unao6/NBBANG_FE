@@ -22,7 +22,7 @@ const MyPage = () => {
     {
       text: "파티원 | 결제수단",
       icon: <PaymentIcon />,
-      href: "/payment-method",
+      href: "/payment/card/register",
     },
     {
       text: "파티장 | 정산계좌",
