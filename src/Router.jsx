@@ -15,6 +15,7 @@ import SignUp from './pages/join/SignUp';
 import Login from './pages/login/UserLogin';
 import LoginPage from './pages/login/LoginPage';
 import UserAuth from './pages/join/UserAuth';
+import OttList from "./pages/admin/ott/OttList";
 
 const Router = () => {
   return (
@@ -34,7 +35,7 @@ const Router = () => {
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/auth/user-auth" element={<UserAuth />} />
-
+      <Route path="/admin/ott" element={<OttList />} />
     </Routes>
   );
 };
