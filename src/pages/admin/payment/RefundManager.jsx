@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
+import {
+  getPaymentsByStatus,
+  requestRefund,
+} from "../../../api/payment/paymentApi";
 
 import CircularProgress from "@mui/material/CircularProgress";
-import { getPayments } from "../../../api/payment/paymentApi";
+import RefundModal from "./fragments/RefundModal";
 
 const RefundManager = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("REFUND_REQUESTED");
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await getPayments();
+        const response = await getPaymentsByStatus(filter);
         setPayments(response.data);
       } catch (err) {
         setError(err);
@@ -22,15 +28,34 @@ const RefundManager = () => {
     };
 
     fetchPayments();
-  }, []);
+  }, [filter]);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
 
-  const filteredPayments = payments.filter(
-    (payment) => payment.status === filter,
-  );
+  const openModal = (payment) => {
+    setSelectedPayment(payment);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPayment(null);
+  };
+
+  const handleRefundSubmit = async (refundData) => {
+    try {
+      await requestRefund(selectedPayment.id, refundData);
+      alert("환불 요청이 성공적으로 제출되었습니다.");
+      closeModal();
+      // 데이터 새로고침
+      const response = await getPaymentsByStatus(filter);
+      setPayments(response.data);
+    } catch (error) {
+      alert("환불 요청 중 오류가 발생했습니다.");
+    }
+  };
 
   if (loading) {
     return (
@@ -55,7 +80,7 @@ const RefundManager = () => {
           id="statusFilter"
           value={filter}
           onChange={handleFilterChange}
-          className="border border-gray-300 rounded p-2"
+          className="border border-gray-300 rounded p-2 w-60"
         >
           <option value="REFUND_REQUESTED">환불 요청</option>
           <option value="REFUNDED_COMPLETED">환불 완료</option>
@@ -88,10 +113,13 @@ const RefundManager = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Payment Approved At
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredPayments.map((payment) => (
+            {payments.map((payment) => (
               <tr key={payment.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {payment.tid}
@@ -114,11 +142,26 @@ const RefundManager = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.paymentApprovedAt}
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {payment.status === "REFUND_REQUESTED" && (
+                    <button
+                      onClick={() => openModal(payment)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                      환불 정보 입력
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <RefundModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={handleRefundSubmit}
+      />
     </div>
   );
 };
