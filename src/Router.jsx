@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 import CardRegister from "./pages/payment/CardRegister";
-import Chat from "./pages/chat/Chat";
+// import Chat from "./pages/chat/Chat";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
@@ -10,6 +10,8 @@ import Main from "./pages/main/Main";
 import Manager from "./pages/admin/payment/PaymentManager";
 import Payment from "./pages/payment/Payment";
 import RefundManager from "./pages/admin/payment/RefundManager";
+import SignUp from './pages/join/SignUp';
+
 
 const Router = () => {
   return (
@@ -21,9 +23,10 @@ const Router = () => {
       <Route path="/payment/kakaopay/approve" element={<KakaoPayApprove />} />
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
-      <Route path="/chat" element={<Chat />} />
+{/*       <Route path="/chat" element={<Chat />} /> */}
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
+      <Route path="/sign-up" element={<SignUp />} />
     </Routes>
   );
 };
