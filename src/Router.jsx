@@ -11,7 +11,7 @@ import Manager from "./pages/admin/payment/PaymentManager";
 import Payment from "./pages/payment/Payment";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from './pages/join/SignUp';
-
+import Login from './pages/login/UserLogin';
 
 const Router = () => {
   return (
@@ -26,7 +26,9 @@ const Router = () => {
 {/*       <Route path="/chat" element={<Chat />} /> */}
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
-      <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/users/sign-up" element={<SignUp />} />
+      <Route path="/users/user-login" element={<Login />} />
+
     </Routes>
   );
 };
