@@ -11,6 +11,7 @@ import MyPage from "./pages/myPage/MyPage";
 import Payment from "./pages/payment/Payment";
 import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
+import OttList from "./pages/admin/ott/OttList";
 
 const Router = () => {
   return (
@@ -26,6 +27,7 @@ const Router = () => {
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
+      <Route path="/admin/ott" element={<OttList />} />
     </Routes>
   );
 };
