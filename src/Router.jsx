@@ -9,6 +9,7 @@ import Main from "./pages/main/Main";
 import Manager from "./pages/admin/payment/PaymentManager";
 import MyPage from "./pages/myPage/MyPage";
 import Payment from "./pages/payment/Payment";
+import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
 
 const Router = () => {
@@ -24,6 +25,7 @@ const Router = () => {
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/mypage" element={<MyPage />} />
+      <Route path="/mypage/payment" element={<PaymentMypage />} />
     </Routes>
   );
 };

@@ -1,5 +1,7 @@
 import "./index.css";
 
+import { ThemeProvider, createTheme } from "@mui/material";
+
 import AdminContainer from "./pages/admin/AdminContainer";
 import Container from "./components/Container";
 import Content from "./components/Content";
@@ -17,23 +19,38 @@ function App() {
     "/payment/kakaopay/approve",
   ].includes(location.pathname);
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#8BC34A",
+      },
+      secondary: {
+        main: "#FF9800",
+        light: "#FFEB3B",
+        contrastText: "#364D1C",
+      },
+    },
+  });
+
   const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
     <div className="App font-pre h-screen flex flex-col overflow-hidden">
-      {isAdminPage ? (
-        <AdminContainer>
-          <Router />
-        </AdminContainer>
-      ) : (
-        <Container>
-          {!hideHeaderFooter && <Header />}
-          <Content>
+      <ThemeProvider theme={theme}>
+        {isAdminPage ? (
+          <AdminContainer>
             <Router />
-          </Content>
-          {!hideHeaderFooter && <Footer />}
-        </Container>
-      )}
+          </AdminContainer>
+        ) : (
+          <Container>
+            {!hideHeaderFooter && <Header />}
+            <Content>
+              <Router />
+            </Content>
+            {!hideHeaderFooter && <Footer />}
+          </Container>
+        )}
+      </ThemeProvider>
     </div>
   );
 }
