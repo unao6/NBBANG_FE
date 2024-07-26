@@ -14,6 +14,7 @@ import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from './pages/join/SignUp';
 import Login from './pages/login/UserLogin';
+import LoginPage from './pages/login/LoginPage';
 
 const Router = () => {
   return (
@@ -32,6 +33,8 @@ const Router = () => {
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
+      <Route path="/login" element={<LoginPage />} />
+
 
     </Routes>
   );

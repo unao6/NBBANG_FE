@@ -22,7 +22,7 @@ const UserLogin = () => {
   };
 
   const handleBackClick = () => {
-    // 뒤로가기 로직 추가
+    navigate("/login");
   };
 
   return (
