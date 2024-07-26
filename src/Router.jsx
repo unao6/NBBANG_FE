@@ -9,6 +9,7 @@ import Main from "./pages/main/Main";
 import Manager from "./pages/admin/payment/PaymentManager";
 import Payment from "./pages/payment/Payment";
 import RefundManager from "./pages/admin/payment/RefundManager";
+import OttList from "./pages/admin/ott/OttList";
 
 const Router = () => {
   return (
@@ -22,6 +23,7 @@ const Router = () => {
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
+      <Route path="/admin/ott" element={<OttList />} />
     </Routes>
   );
 };
