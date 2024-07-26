@@ -18,3 +18,15 @@ export const getPaymentsByStatus = async (status) => {
 export const requestRefund = async (paymentId, refundData) => {
   return axios.post(`${paymentUrl}/${paymentId}/refund`, refundData);
 };
+
+export const getCardInfo = async (userId) => {
+  try {
+    const response = await axios.get(`/api/card/info/${userId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+};
