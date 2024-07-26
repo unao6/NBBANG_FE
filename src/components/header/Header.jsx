@@ -16,6 +16,13 @@ const Header = () => {
         </div>
         <div className="flex items-center">
           <IconButton
+            href="/login"
+            aria-label="my page"
+            className="text-black"
+          >
+            <AccountCircleIcon />
+          </IconButton>
+          <IconButton
             href="/mypage"
             aria-label="my page"
             className="text-black"

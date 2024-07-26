@@ -11,6 +11,10 @@ import MyPage from "./pages/myPage/MyPage";
 import Payment from "./pages/payment/Payment";
 import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
+import SignUp from './pages/join/SignUp';
+import Login from './pages/login/UserLogin';
+import LoginPage from './pages/login/LoginPage';
+import UserAuth from './pages/join/UserAuth';
 import OttList from "./pages/admin/ott/OttList";
 
 const Router = () => {
@@ -27,6 +31,10 @@ const Router = () => {
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
+      <Route path="/users/sign-up" element={<SignUp />} />
+      <Route path="/users/user-login" element={<Login />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/auth/user-auth" element={<UserAuth />} />
       <Route path="/admin/ott" element={<OttList />} />
     </Routes>
   );
