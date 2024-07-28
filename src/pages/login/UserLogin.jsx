@@ -2,19 +2,26 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 const refreshAccessToken = async () => {
   try {
-    const refreshToken = localStorage.getItem("refreshToken");
+    const refreshToken = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('refreshToken='))
+      ?.split('=')[1];
+
+    if (!refreshToken) throw new Error("No refresh token found");
+
     const response = await axios.post("http://localhost:8080/api/users/refresh-token", {
       refreshToken
     }, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      withCredentials: true
     });
-    const { accessToken } = response.data;
-    localStorage.setItem("accessToken", accessToken);
-    return accessToken;
+    return response.data.accessToken;
   } catch (error) {
     console.error("Failed to refresh access token:", error);
     // 예: 리프레시 토큰도 만료된 경우 로그아웃 처리
@@ -22,7 +29,11 @@ const refreshAccessToken = async () => {
 };
 
 axios.interceptors.request.use(async (config) => {
-  let token = localStorage.getItem("accessToken");
+  let token = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('accessToken='))
+    ?.split('=')[1];
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -38,7 +49,9 @@ axios.interceptors.response.use((response) => {
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
     const newToken = await refreshAccessToken();
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + newToken;
+    if (newToken) {
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+    }
     return axios(originalRequest);
   }
   return Promise.reject(error);
@@ -47,6 +60,7 @@ axios.interceptors.response.use((response) => {
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태 추가
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => setEmail(e.target.value);
@@ -55,20 +69,19 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/users/user-login", {
+      await axios.post("http://localhost:8080/api/users/user-login", {
         email,
         password
       }, {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        withCredentials: true // 쿠키를 허용하도록 설정
       });
-      const { accessToken, refreshToken } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
+      setErrorMessage("로그인 실패: 아이디나 비밀번호를 다시 확인하세요."); // 에러 메시지 설정
     }
   };
 
@@ -95,6 +108,11 @@ const UserLogin = () => {
           <h2 className="text-sm font-bold ml-2 text-center w-full">이메일 로그인</h2>
         </div>
         <h2 className="text-2xl font-bold mb-6 text-left">이메일로 <br /> 로그인 하기</h2>
+        {errorMessage && (
+          <div className="mb-4 text-red-500 text-sm text-center">
+            {errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700">이메일</label>
@@ -126,7 +144,7 @@ const UserLogin = () => {
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">엔빵 계정이 없으신가요? </span>
-          <a onClick={() => navigate("/users/sign-up")} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+          <a onClick={() => navigate("/api/users/sign-up")} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
             회원가입
           </a>
         </div>
