@@ -22,7 +22,7 @@ const SignUp = () => {
   const handleNicknameCheck = async () => {
     // 닉네임 중복 확인 로직
     try {
-      const response = await axios.post("http://localhost:8080/api/users/check-nickname", { nickname });
+      const response = await axios.post("/api/users/check-nickname", { nickname });
       if (response.data.isValid) {
         alert("사용 가능한 닉네임입니다.");
       } else {
@@ -36,7 +36,7 @@ const SignUp = () => {
   const handleEmailCheck = async () => {
     // 이메일 중복 확인 로직
     try {
-      const response = await axios.post("http://localhost:8080/api/users/check-email", { email });
+      const response = await axios.post("/api/users/check-email", { email });
       if (response.data.isValid) {
         alert("사용 가능한 이메일입니다.");
       } else {
@@ -51,7 +51,7 @@ const SignUp = () => {
     e.preventDefault();
     // 회원가입 처리 로직
     try {
-      await axios.post("http://localhost:8080/api/users/sign-up", {
+      await axios.post("/api/users/sign-up", {
         nickname,
         email,
         password,

@@ -1,29 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { startChat } from '../../api/chat/chatApi';
 
 const StartChat = () => {
   const navigate = useNavigate();
 
-  // const handleButtonClick = () => {
-  //   axios.post('/api/chat/start')
-  //     .then(response => {
-  //       const { chatId, messages } = response.data;
-  //       navigate('/chat', { state: { chatId, messages } });
-  //     })
-  //     .catch(error => console.error('Error starting chat:', error));
-  // };
-
-  //테스트용
-	const handleButtonClick = () => {
-    const userId = 1;
-    axios.post('/api/chat/start', { userId })
-      .then(response => {
-        const { chatId, messages } = response.data;
-        navigate('/chat', { state: { chatId, messages } });
-      })
-      .catch(error => console.error('Error starting chat:', error));
-  };
+  const handleButtonClick = async () => {
+    try {
+      const response = await startChat()
+      const { chatId, messages } = response
+      navigate('/chat', { state: { chatId, messages } })
+    } catch (error) {
+      console.log("Error starting chat: ", error)
+    }
+  }
 
   return (
     <div className="flex flex-col h-full">
