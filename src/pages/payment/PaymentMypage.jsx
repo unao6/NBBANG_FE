@@ -26,6 +26,7 @@ const PaymentMypage = () => {
     const fetchCardInfo = async () => {
       try {
         const data = await getCardInfo(userId);
+        console.log("Fetched card info:", data);
         setCardInfo(data);
       } catch (error) {
         console.error("카드 정보를 불러오는 중 오류 발생:", error);

@@ -21,7 +21,7 @@ export const requestRefund = async (paymentId, refundData) => {
 
 export const getCardInfo = async (userId) => {
   try {
-    const response = await axios.get(`/api/card/info/${userId}`);
+    const response = await axios.get(`${baseUrl}/api/card/info/${userId}`);
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -32,5 +32,5 @@ export const getCardInfo = async (userId) => {
 };
 
 export const deleteCardInfo = async (userId) => {
-  return axios.delete(`/api/card/delete/${userId}`);
-}
+  return axios.delete(`${baseUrl}/api/card/delete/${userId}`);
+};
