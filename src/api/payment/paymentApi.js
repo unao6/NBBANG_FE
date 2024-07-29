@@ -30,3 +30,7 @@ export const getCardInfo = async (userId) => {
     throw error;
   }
 };
+
+export const deleteCardInfo = async (userId) => {
+  return axios.delete(`/api/card/delete/${userId}`);
+}
