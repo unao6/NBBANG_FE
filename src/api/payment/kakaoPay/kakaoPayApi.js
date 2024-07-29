@@ -15,7 +15,7 @@ export const createKakaoPay = async (userId) => {
 export const approveKakaoPay = async (tid, pgToken) => {
   const response = await axios.post(`${kakaoUrl}/approve`, {
     tid,
-    pgToken,
+    pg_token: pgToken,
   });
   return response.data;
 };
