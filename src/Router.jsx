@@ -3,8 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
 import StartChat from "./pages/chat/StartChat";
-import ChatList from "./pages/admin/chat/TestChatList";
-import AdminChat from "./pages/admin/chat/TestAdminChat"
+import ChatList from "./pages/admin/chat/ChatList";
+import AdminChat from "./pages/admin/chat/AdminChat"
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";

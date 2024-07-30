@@ -15,8 +15,8 @@ export const sendMessage = async (stompClient, messageRequest) => {
     }
 };
 
-export const fetchAllChats = async (page, size) => {
-    const response = await axios.get(`${adminChatUrl}/all`, { params: { page, size } });
+export const fetchAllChats = async () => {
+    const response = await axios.get(`${adminChatUrl}/all`);
     return response.data;
 };
 
