@@ -1,33 +1,26 @@
+import './Main.css';
+
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 const Main = () => {
-  const navigate = useNavigate();
-
-  const handlePaymentClick = () => {
-    navigate("/payment");
-  };
-
   return (
     <>
-      <div className="h-full">
-        <h1 className="text-3xl mb-4">Welcome to the Main Page</h1>
-        <p className="text-lg mb-8">
-          This is a responsive web page that looks consistent across mobile
-          phones, PCs, and tablets.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-gray-200 p-4 rounded">구역1 1</div>
-          <div className="bg-gray-200 p-4 rounded">구역2 2</div>
-          <div className="bg-gray-200 p-4 rounded">구역3 3</div>
+      <div className="h-full w-full flex items-center justify-center overflow-hidden relative">
+        <div className="floating-background"></div>
+        <div className="floating-element animate-float" style={{ top: '10%', left: '10%' }}>
+          <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="Bread" className="floating-image" />
         </div>
-        <div className="mt-8">
-          <button
-            onClick={handlePaymentClick}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            결제하기
-          </button>
+        <div className="floating-element animate-float" style={{ top: '30%', left: '30%' }}>
+          <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="Bread" className="floating-image" />
+        </div>
+        <div className="floating-element animate-float" style={{ top: '50%', left: '50%' }}>
+          <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="Bread" className="floating-image" />
+        </div>
+        <div className="floating-element animate-float" style={{ top: '70%', left: '70%' }}>
+          <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="Bread" className="floating-image" />
+        </div>
+        <div className="floating-element animate-float" style={{ top: '90%', left: '90%' }}>
+          <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="Bread" className="floating-image" />
         </div>
       </div>
     </>
