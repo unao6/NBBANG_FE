@@ -30,7 +30,7 @@ const Login = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <GoogleOAuthProvider clientId="160290170469-uueuftilh1mt5cq8cig1nrjbl8naukb6.apps.googleusercontent.com">
       <div className="flex flex-col items-center justify-center h-Full bg-gray-50">
         <div className="w-full max-w-md p-6">
           <button onClick={() => navigate("/")} className="p-1 rounded bg-gray-100">
