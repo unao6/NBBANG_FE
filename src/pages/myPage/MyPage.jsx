@@ -17,7 +17,7 @@ const MyPage = () => {
     {
       text: "엔빵 계정 관리",
       icon: <AccountCircleIcon />,
-      href: "/manage-account",
+      href: "/mypage/user-info",
     },
     {
       text: "파티원 | 결제수단",
