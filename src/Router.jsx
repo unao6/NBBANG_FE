@@ -11,6 +11,7 @@ import Main from "./pages/main/Main";
 import Manager from "./pages/admin/payment/PaymentManager";
 import MyPage from "./pages/myPage/MyPage";
 import Payment from "./pages/payment/Payment";
+import UserInfo from "./pages/myPage/UserInfo";
 import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from './pages/join/SignUp';
@@ -35,6 +36,7 @@ const Router = () => {
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
+      <Route path="/mypage/user-info" element={<UserInfo />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
