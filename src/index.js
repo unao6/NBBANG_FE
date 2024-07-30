@@ -1,4 +1,4 @@
-import AppWrapper from "./components/AppWrapper";
+import AppWrapper from "./components/AppWrapper.jsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
