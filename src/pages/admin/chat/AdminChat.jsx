@@ -16,6 +16,7 @@ const AdminChat = () => {
     const [isChatEnded, setIsChatEnded] = useState(false);
     const [open, setOpen] = useState(false); // Dialog 상태
     const stompClient = useRef(null);
+    const userId = 2;
 
     useEffect(() => {
         const loadMessages = async () => {
@@ -65,7 +66,7 @@ const AdminChat = () => {
         if (input.trim() !== '' && !isChatEnded) {
             const newMessage = {
                 chatId: chatId,
-                userId: 1, // 관리자의 userId를 설정
+                userId: 2,
                 message: {
                     nickname: 'N/BBANG',
                     text: input,
