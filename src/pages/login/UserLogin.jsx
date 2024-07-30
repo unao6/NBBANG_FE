@@ -21,7 +21,13 @@ const UserLogin = () => {
         password
       });
       console.log(response.data);
-      // 로그인 성공 처리 로직 추가 (예: 토큰 저장, 페이지 리디렉션 등)
+       // 로그인 성공 시 토큰 저장
+       const { accessToken, refreshToken } = response.data;
+       localStorage.setItem('accessToken', accessToken);
+       localStorage.setItem('refreshToken', refreshToken);
+
+            // 메인 페이지로 리디렉션
+            navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
     }
