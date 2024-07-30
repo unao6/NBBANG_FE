@@ -30,11 +30,11 @@ const OttForm = ({ ottId, onSave }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const ottData = { ottId, name, price: parseInt(price, 10), capacity: parseInt(capacity, 10) };
+    const ottData = { name, price: parseInt(price, 10), capacity: parseInt(capacity, 10) };
 
     try {
       if (ottId) {
-        await updateOtt(ottData);
+        await updateOtt(ottId, ottData);
       } else {
         await createOtt(ottData);
       }
