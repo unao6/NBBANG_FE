@@ -2,20 +2,24 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import axios from 'axios';
+import {startChat, sendMessage} from '../../api/chat/chatApi'
 
 const Chat = () => {
   const location = useLocation();
-  const chatId = location.state?.chatId || null;
-  const initialMessages = location.state?.messages || [];
-  const [messages, setMessages] = useState(initialMessages);
+  const [chatId, setChatId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
   const [stompClient, setStompClient] = useState(null);
-  const userId = 1; // 예제 사용자 ID. 실제 애플리케이션에서는 로그인한 사용자 ID를 사용.
+ 
+  const userId = 1; // 받아와서 변경하도록 수정
 
   useEffect(() => {
-    if (chatId !== null) {
+    const initiateChat = async () => {
+      const chatResponse = await startChat();
+      setChatId(chatResponse.chatId);
+      setMessages(chatResponse.messages);
+      
       const client = new Client({
         webSocketFactory: () => new SockJS('/ws'),
         debug: (str) => {
@@ -33,39 +37,32 @@ const Chat = () => {
       setStompClient(client);
 
       return () => {
-        if (client) {
+        if(client) {
           client.deactivate();
         }
       };
-    }
+    };
+
+    initiateChat();
   }, [chatId]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim() !== '' && chatId !== null && stompClient) {
       const message = {
         chatId: chatId,
         userId: userId,
         message: {
-          nickname: 'User A', // Example nickname, replace with actual user nickname
+          nickname: "유저1", // 유저 도메인 완성 전 임시 사용
           text: input,
           sentAt: new Date().toISOString(),
         },
       };
 
-      if (chatId === -1) {
-        axios.post('/api/chat/send', {
-          userId: userId,
-          message: message.message
-        })
-          .then(response => {
-            setMessages([...messages, response.data]);
-          })
-          .catch(error => console.error('Error sending message:', error));
-      } else {
-        stompClient.publish({
-          destination: '/app/chat/send',
-          body: JSON.stringify({ userId, ...message }),
-        });
+      try {
+        const response = await sendMessage(message);
+        setMessages([...messages, response]);
+      } catch(error) {
+        console.error('Error sending message: ', error);
       }
       setInput('');
     }
@@ -74,6 +71,8 @@ const Chat = () => {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+
 
   return (
     <div className="flex flex-col h-full relative">

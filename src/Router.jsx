@@ -3,6 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
 import StartChat from "./pages/chat/StartChat";
+import ChatList from "./pages/admin/chat/ChatList";
+import AdminChat from "./pages/admin/chat/AdminChat"
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
@@ -34,6 +36,8 @@ const Router = () => {
       <Route path="/chat/start" element={<StartChat />} />
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
+      <Route path="/admin/chat" element={<ChatList />} />
+      <Route path="/admin/chat/:chatId" element={<AdminChat />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />

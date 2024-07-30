@@ -51,7 +51,7 @@ const SignUp = () => {
     e.preventDefault();
     // 회원가입 처리 로직
     try {
-      await axios.post("http://localhost:8080/api/users/sign-up", {
+      await axios.post("/api/users/sign-up", {
         nickname,
         email,
         password,

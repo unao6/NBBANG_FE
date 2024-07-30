@@ -32,7 +32,7 @@ const MyPage = () => {
     { text: "공지사항", icon: <AnnouncementIcon />, href: "/notices" },
     { text: "알림 설정", icon: <NotificationsIcon />, href: "/notifications" },
     { text: "자주 묻는 질문", icon: <HelpIcon />, href: "/faq" },
-    { text: "1:1 채팅문의", icon: <ChatIcon />, href: "/chat" },
+    { text: "1:1 채팅문의", icon: <ChatIcon />, href: "/chat/start" },
     {
       text: "프로모션 코드 입력",
       icon: <LocalOfferIcon />,
