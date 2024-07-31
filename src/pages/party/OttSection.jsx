@@ -52,6 +52,7 @@ const OttSelection = () => {
           ))}
         </div>
 
+
         {selectedOtt && (
           <div className="mt-4 p-4 bg-white rounded-lg shadow-lg text-center w-full">
             <h3 className="text-blue-500 font-semibold">{selectedOtt.name} 프리미엄</h3>
