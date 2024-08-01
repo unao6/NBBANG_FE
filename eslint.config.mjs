@@ -14,9 +14,6 @@ export default defineConfig([
         requireConfigFile: false,
         ecmaVersion: 2021,
         sourceType: 'module',
-        babelOptions: {
-          presets: ['@babel/preset-react'],
-        },
       },
       globals: globals.browser,
     },
