@@ -14,8 +14,7 @@ const UserInfo = () => {
                 const token = localStorage.getItem('access');
                 const response = await axios.get('http://localhost:8080/api/users/user-info', {
                     headers: {
-                        'access': `${token}`,
-                        'Content-Type': 'application/json'
+                        'access': `${token}`
                     }
                 });
                 setUser(response.data);
