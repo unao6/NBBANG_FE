@@ -1,17 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { startChat } from '../../api/chat/chatApi';
+import useUserStore from '../../store/useUserStore';
 
 const StartChat = () => {
   const navigate = useNavigate();
+  const user = useUserStore(state => state.user);
 
   const handleButtonClick = async () => {
     try {
-      const response = await startChat()
-      const { chatId, messages } = response
-      navigate('/chat', { state: { chatId, messages } })
+      const response = await startChat();
+      const { chatId, messages } = response;
+      navigate('/chat', { state: { chatId, messages } });
     } catch (error) {
-      console.log("Error starting chat: ", error)
+      console.log("Error starting chat: ", error);
     }
   }
 

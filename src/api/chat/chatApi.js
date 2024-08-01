@@ -1,12 +1,17 @@
 import axios from "axios";
+import axiosInterceptors from "../axiosInterceptors.js";
 
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
-const chatUrl = `${baseUrl}/api/chat`;
-const adminChatUrl = `${baseUrl}/api/admin/chat`;
+const chatUrl = '/api/chat';
+const adminChatUrl = '/api/admin/chat';
 
 export const startChat = async () => {
-    const response = await axios.post(`${chatUrl}/start`);
-    return response.data;
+    try {
+        const response = await axiosInterceptors.post(`${chatUrl}/start`);
+        return response.data;
+    } catch (error) {
+        console.error('Error in startChat:', error.response ? error.response.data : error.message);
+        throw error;
+    }
   };
 
 export const sendMessage = async (stompClient, messageRequest) => {
@@ -16,21 +21,21 @@ export const sendMessage = async (stompClient, messageRequest) => {
 };
 
 export const fetchAllChats = async () => {
-    const response = await axios.get(`${adminChatUrl}/all`);
+    const response = await axiosInterceptors.get(`${adminChatUrl}/all`);
     return response.data;
 };
 
 export const fetchChatMessages = async (chatId) => {
-    const response = await axios.get(`${adminChatUrl}/${chatId}`);
+    const response = await axiosInterceptors.get(`${adminChatUrl}/${chatId}`);
     return response.data;
 };
 
 export const endChat = async (chatId) => {
-    const response = await axios.post(`${adminChatUrl}/end/${chatId}`);
+    const response = await axiosInterceptors.post(`${adminChatUrl}/end/${chatId}`);
     return response.data;
 };
 
 export const archiveChat = async (chatId, memo) => {
-    const response = await axios.post(`${adminChatUrl}/archive`, { chatId, memo });
+    const response = await axiosInterceptors.post(`${adminChatUrl}/archive`, { chatId, memo });
     return response.data;
 };

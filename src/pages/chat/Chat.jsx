@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import {startChat, sendMessage} from '../../api/chat/chatApi'
+import useUserStore from '../../store/useUserStore';
 
 const Chat = () => {
   const location = useLocation();
@@ -12,7 +13,7 @@ const Chat = () => {
   const chatEndRef = useRef(null);
   const [stompClient, setStompClient] = useState(null);
  
-  const userId = 1; // 받아와서 변경하도록 수정
+  const user = useUserStore(state => state.user);
 
   useEffect(() => {
     const initiateChat = async () => {
@@ -50,9 +51,9 @@ const Chat = () => {
     if (input.trim() !== '' && chatId !== null && stompClient) {
       const message = {
         chatId: chatId,
-        userId: userId,
+        userId: user.id,
         message: {
-          nickname: "유저1", // 유저 도메인 완성 전 임시 사용
+          nickname: user.nickname,
           text: input,
           sentAt: new Date().toISOString(),
         },

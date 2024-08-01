@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Paper, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { fetchChatMessages, sendMessage, endChat, archiveChat } from '../../../api/chat/chatApi'; // Import API helper functions
+import { fetchChatMessages, sendMessage, endChat, archiveChat } from '../../../api/chat/chatApi';
 import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs'; // Import Client from @stomp/stompjs
+import { Client } from '@stomp/stompjs';
+import useUserStore from '../../../store/useUserStore';
 
 const AdminChat = () => {
     const { chatId } = useParams();
@@ -16,7 +17,8 @@ const AdminChat = () => {
     const [isChatEnded, setIsChatEnded] = useState(false);
     const [open, setOpen] = useState(false); // Dialog 상태
     const stompClient = useRef(null);
-    const userId = 2;
+    
+    const user = useUserStore(state => state.user);
 
     useEffect(() => {
         const loadMessages = async () => {
@@ -66,7 +68,7 @@ const AdminChat = () => {
         if (input.trim() !== '' && !isChatEnded) {
             const newMessage = {
                 chatId: chatId,
-                userId: 2,
+                userId: user.id,
                 message: {
                     nickname: 'N/BBANG',
                     text: input,

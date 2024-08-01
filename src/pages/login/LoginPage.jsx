@@ -13,7 +13,7 @@ const Login = () => {
   const handleGoogleLoginSuccess = async (response) => {
     const { credential } = response;
     try {
-      const res = await axios.post('/api/login/google', { token: credential });
+      const res = await axios.post('http://localhost:8080/api/login/google', { token: credential });
       console.log('Login Successful:', res.data);
       // 이후 로직 추가 (예: 토큰 저장, 페이지 이동 등)
     } catch (error) {
