@@ -13,7 +13,7 @@ export default defineConfig([
       parserOptions: {
         requireConfigFile: false,
         ecmaVersion: 2021,
-        sourceType: 'module',
+        sourceType: 'module'
       },
       globals: globals.browser,
     },
