@@ -18,7 +18,7 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/users/user-login", {
+      const response = await axios.post("http://localhost:8080/login", {
         email,
         password
       }, {
@@ -29,8 +29,11 @@ const UserLogin = () => {
       });
 
       // Store access token from response header
-      const accessToken = response.headers['authorization'].split(' ')[1];
-      localStorage.setItem('accessToken', accessToken);
+        const accessToken = response.headers['access'];  // 'authorization' 대신 'access' 사용
+        localStorage.setItem('accessToken', accessToken);
+
+        // 이후 요청에 access 헤더에 토큰 포함
+        axios.defaults.headers.common['access'] = accessToken;
 
       navigate("/");
     } catch (error) {
