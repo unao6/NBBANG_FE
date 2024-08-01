@@ -10,6 +10,7 @@ const AccountRegistration = () => {
   const navigate = useNavigate();
   const [ottAccount, setOttAccount] = useState(''); // OTT ID 상태
   const [password, setPassword] = useState(''); // 비밀번호 상태
+  const [partyCreated, setPartyCreated] = useState(false); // 파티 생성 성공 상태
 
   useEffect(() => {
     if (!ottInfo) {
@@ -30,19 +31,37 @@ const AccountRegistration = () => {
 
     const partyData = {
       ottId,
-      accountId: ottAccount,
-      accountPassword: password,
+      ottAccountId: ottAccount,
+      ottAccountPassword: password,
     };
 
     try {
       await createParty(partyData);  // 파티 생성 API 호출
-      alert('계정이 등록되었습니다.');
-      navigate('/some-next-step');  // 다음 단계로 이동
+      setPartyCreated(true);  // 파티 생성 성공 시 상태 업데이트
     } catch (error) {
       console.error('파티 생성 중 오류 발생:', error);
       alert('파티 생성에 실패했습니다. 다시 시도해주세요.');
     }
   };
+
+  if (partyCreated) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <main className="w-full max-w-lg mx-auto p-4 bg-white rounded-lg shadow-lg text-center">
+          <h2 className="text-lg font-semibold mb-4">{name} 파티 생성</h2>
+          <img src={ottImage} alt="티빙 파티 생성 성공 이미지" className="mx-auto my-8" />
+          <p className="text-2xl font-bold">{name} 파티가 생성됐습니다!</p>
+          <p className="text-gray-500 mt-2">이제 더 저렴한 금액으로 {name}을 즐길 수 있어요</p>
+          <button
+            onClick={() => navigate('/')}
+            className="mt-6 bg-green-500 text-white py-2 px-8 rounded-full shadow-lg w-full"
+          >
+            홈으로 이동
+          </button>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100">
