@@ -1,4 +1,4 @@
-import useUserStore from '../../store/useUserStore';
+import useUserStore from '../../store/useUserStore.js';
 import axiosInterceptors from "../axiosInterceptors.js";
 
 // 유저 정보 가져오기

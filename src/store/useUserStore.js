@@ -1,9 +1,17 @@
-import create from 'zustand';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-// Zustand store 생성
-const useUserStore = create((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-}));
+const useUserStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (user) => set({ user }),
+    }),
+    {
+      name: 'user-store',
+      storage: localStorage,
+    }
+  )
+);
 
 export default useUserStore;
