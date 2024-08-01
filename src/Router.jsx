@@ -21,6 +21,10 @@ import Login from './pages/login/UserLogin';
 import LoginPage from './pages/login/LoginPage';
 import UserAuth from './pages/join/UserAuth';
 import OttList from "./pages/admin/ott/OttList";
+import OttSelection from "./pages/party/OttSection";
+import AddParty from "./pages/party/AddParty";
+import PartyLeaderStep from "./pages/party/PartyLeaderStep";
+import AccountRegistration from './pages/party/AccountRegistration.jsx';
 
 const Router = () => {
   return (
@@ -46,6 +50,10 @@ const Router = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/auth/user-auth" element={<UserAuth />} />
       <Route path="/admin/ott" element={<OttList />} />
+      <Route path="/add-party" element={<OttSelection />} />
+      <Route path="/add-party/:ottId" element={<AddParty />} />
+      <Route path="/party-leader-step/:ottId" element={<PartyLeaderStep />} />
+      <Route path="/add-party/account-registration/:ottId" element={<AccountRegistration />} />
     </Routes>
   );
 };

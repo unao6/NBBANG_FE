@@ -14,8 +14,7 @@ const UserInfo = () => {
                 const token = localStorage.getItem('access');
                 const response = await axios.get('http://localhost:8080/api/users/user-info', {
                     headers: {
-                        'access': `${token}`,
-                        'Content-Type': 'application/json'
+                        'access': `${token}`
                     }
                 });
                 setUser(response.data);
@@ -30,14 +29,13 @@ const UserInfo = () => {
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-                계정 관리
+                피클플러스 계정 관리
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
-                <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}></Avatar>
+                <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}>😊</Avatar>
                 <Box>
                     <Typography variant="h6">{user.email}</Typography>
-                    <Typography variant="p">{user.phoneNumber}</Typography>
-
+                    <Typography variant="body2">{user.phoneNumber}</Typography>
                 </Box>
             </Box>
             <List>
