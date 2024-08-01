@@ -9,7 +9,7 @@ import prettierConfig from "eslint-plugin-prettier";
 export default defineConfig([
   {
     languageOptions: {
-      parser: '@babel/eslint-parser',
+      parser: "@babel/eslint-parser",
       parserOptions: {
         requireConfigFile: false,
         ecmaVersion: 2021,
