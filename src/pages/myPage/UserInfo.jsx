@@ -11,10 +11,10 @@ const UserInfo = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('accessToken');
+                const token = localStorage.getItem('access');
                 const response = await axios.get('http://localhost:8080/api/users/user-info', {
                     headers: {
-                        'accessToken': `${token}`
+                        'access': `${token}`
                     }
                 });
                 setUser(response.data);
