@@ -24,6 +24,7 @@ import OttList from "./pages/admin/ott/OttList";
 import OttSelection from "./pages/party/OttSection";
 import AddParty from "./pages/party/AddParty";
 import PartyLeaderStep from "./pages/party/PartyLeaderStep";
+import PartyMemberStep from "./pages/party/PartyMemberStep";
 import AccountRegistration from './pages/party/AccountRegistration.jsx';
 
 const Router = () => {
@@ -53,6 +54,7 @@ const Router = () => {
       <Route path="/add-party" element={<OttSelection />} />
       <Route path="/add-party/:ottId" element={<AddParty />} />
       <Route path="/party-leader-step/:ottId" element={<PartyLeaderStep />} />
+      <Route path="/party-member-step/:ottId" element={<PartyMemberStep />} />
       <Route path="/add-party/account-registration/:ottId" element={<AccountRegistration />} />
     </Routes>
   );
