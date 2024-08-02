@@ -18,6 +18,11 @@ const SignUp = () => {
   const [emailMessage, setEmailMessage] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
 
+  const [certificationNumber, setVerificationCode] = useState("");
+  const [isVerificationSent, setIsVerificationSent] = useState(false);
+  const [isVerificationSuccess, setIsVerificationSuccess] = useState(false);
+  const [verificationMessage, setVerificationMessage] = useState("");
+
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [passwordMessage, setPasswordMessage] = useState("");
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
@@ -47,6 +52,38 @@ const SignUp = () => {
     } else {
       setEmailMessage("유효한 이메일 주소를 입력하세요.");
       setIsEmailValid(false);
+    }
+  };
+
+const handleSendVerificationCode = async () => {
+  try {
+    await axios.post("http://localhost:8080/api/users/email-certification", { email });
+    setIsVerificationSent(true);
+    alert("인증 이메일이 발송되었습니다. 이메일을 확인해 주세요.");
+  } catch (error) {
+    console.error("Email verification failed:", error);
+    alert("이메일 인증에 실패했습니다. 다시 시도해 주세요.");
+  }
+};
+
+const handleVerificationCodeChange = (e) => {
+  setVerificationCode(e.target.value);
+};
+
+  const handleVerifyCode = async () => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/users/check-certification", { email, certificationNumber });
+      if (response.status === 200) {
+        setIsVerificationSuccess(true);
+        setVerificationMessage("이메일 인증이 완료되었습니다.");
+      } else {
+        setIsVerificationSuccess(false);
+        setVerificationMessage("인증 코드가 올바르지 않습니다.");
+      }
+    } catch (error) {
+      console.error("Verification failed:", error);
+      setIsVerificationSuccess(false);
+      setVerificationMessage("인증 코드가 올바르지 않습니다.");
     }
   };
 
@@ -146,7 +183,8 @@ const isFormValid =
     isPasswordValid && // 비밀번호가 유효한지 확인
     isPasswordMatch && // 비밀번호와 확인 비밀번호가 일치하는지 확인
     isNicknameValid &&
-    isEmailValid;
+    isEmailValid &&
+    isVerificationSuccess;
 
   return (
     <div className="flex flex-col items-center h-full bg-white">
@@ -236,6 +274,43 @@ const isFormValid =
               </p>
             )}
           </div>
+
+                    {!isVerificationSent && (
+                      <div className="mb-6">
+                        <button
+                          type="button"
+                          onClick={handleSendVerificationCode}
+                          className="w-full px-4 py-2 text-white bg-green-700 rounded focus:outline-none hover:bg-green-800"
+                        >
+                          인증번호 전송
+                        </button>
+                      </div>
+                    )}
+
+                    {isVerificationSent && (
+                      <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-700">인증번호</label>
+                        <input
+                          type="text"
+                          value={certificationNumber}
+                          onChange={handleVerificationCodeChange}
+                          className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-green-500"
+                          placeholder="인증번호를 입력해주세요"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleVerifyCode}
+                          className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+                        >
+                          인증 완료
+                        </button>
+                        {verificationMessage && (
+                          <p className={`text-sm mt-2 ${isVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
+                            {verificationMessage}
+                          </p>
+                        )}
+                      </div>
+                    )}
 
       <div className="mb-6">
         <label className={`block text-sm font-medium ${isPasswordFocused ? "text-green-500" : "text-gray-700"}`}>비밀번호</label>
