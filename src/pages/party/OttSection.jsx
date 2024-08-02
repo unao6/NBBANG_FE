@@ -2,17 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";  // useNavigate 훅 가져오기
 import { getAllOtt } from "../../api/ott/ottApi.js";
 import { getOttImage } from '../../components/OttImage.js';
+import { subscribeOtt} from "../../api/party/partyApi.js";
 
 const OttSelection = () => {
   const [ottList, setOttList] = useState([]);
   const [selectedOtt, setSelectedOtt] = useState(null);
-
+  const [subscribedOttIds, setSubscribedOttIds] = useState([]); // 유저가 이용 중인 OTT ID 목록
   const navigate = useNavigate(); // 여기에서 useNavigate 훅을 사용해 navigate를 초기화
 
   useEffect(() => {
+    // 전체 OTT 리스트를 가져옴
     getAllOtt()
       .then((response) => setOttList(response.data))
       .catch((error) => console.error("Error fetching OTT data : ", error));
+
+    // 현재 유저가 이용 중인 OTT 서비스 가져오기
+    subscribeOtt()
+      .then((response) => setSubscribedOttIds(response.data.map(ott => ott.ottId)))
+      .catch((error) => console.error("Error fetching user subscribed OTT data : ", error));
   }, []);
 
   const handleOttClick = (ott) => {
@@ -20,10 +27,12 @@ const OttSelection = () => {
   };
 
   const handleNextClick = () => {
-    if (selectedOtt) {
+    if (selectedOtt && !subscribedOttIds.includes(selectedOtt.ottId)) {
       navigate(`/add-party/${selectedOtt.ottId}`);  // navigate로 페이지 이동
     }
   };
+
+  const isSubscribedOtt = selectedOtt && subscribedOttIds.includes(selectedOtt.ottId);
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100">
@@ -63,15 +72,17 @@ const OttSelection = () => {
             </div>
             <div className="flex justify-center mt-4">
               <button
-                className="mt-4 bg-green-500 text-white py-2 px-8 rounded-full shadow-lg w-full"
+                className={`mt-4 py-2 px-8 rounded-full shadow-lg w-full ${
+                  isSubscribedOtt ? "bg-gray-400 text-gray-600 cursor-not-allowed" : "bg-green-500 text-white"
+                }`}
                 onClick={handleNextClick}
+                disabled={isSubscribedOtt}
               >
-                다음
+                {isSubscribedOtt ? "이용중인 OTT 서비스입니다" : "다음"}
               </button>
             </div>
           </div>
         )}
-
       </main>
     </div>
   );
