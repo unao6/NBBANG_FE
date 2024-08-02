@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Avatar, List, ListItem, ListItemIcon, ListItemText, Divider, IconButton } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const UserInfo = () => {
-    const [user, setUser] = useState({ email: '', phoneNumber: '' });
+    const [user, setUser] = useState({ nickname: '', phoneNumber: '' });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get('/api/users/user-info', {
+                const token = localStorage.getItem('access');
+                const response = await axios.get('http://localhost:8080/api/users/user-info', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'access': `${token}`
                     }
                 });
                 setUser(response.data);
@@ -26,15 +28,19 @@ const UserInfo = () => {
         fetchData();
     }, []);
 
+    const handleDeleteAccountClick = () => {
+        navigate('/mypage/delete-account');
+    };
+
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-                피클플러스 계정 관리
+                N/BBANG 계정 관리
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
-                <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}>😊</Avatar>
+                <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}></Avatar>
                 <Box>
-                    <Typography variant="h6">{user.email}</Typography>
+                    <Typography variant="h6">{user.nickname}</Typography>
                     <Typography variant="body2">{user.phoneNumber}</Typography>
                 </Box>
             </Box>
@@ -49,7 +55,7 @@ const UserInfo = () => {
                     </IconButton>
                 </ListItem>
                 <Divider />
-                <ListItem button>
+                <ListItem button onClick={handleDeleteAccountClick}>
                     <ListItemIcon>
                         <ExitToAppIcon sx={{ color: 'red' }} />
                     </ListItemIcon>

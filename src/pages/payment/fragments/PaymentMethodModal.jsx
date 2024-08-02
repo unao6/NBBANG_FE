@@ -27,7 +27,7 @@ const PaymentMethodModal = ({ open, onClose }) => {
     if (selectedMethod === "kakaopay") {
       navigate("/payment/kakaopay/register");
     } else if (selectedMethod === "creditcard") {
-      navigate("/CreditCardRegister");
+      navigate("/payment/card/register");
     }
     onClose();
   };

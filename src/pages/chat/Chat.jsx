@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import {startChat, sendMessage} from '../../api/chat/chatApi'
+import {startChat, sendMessage} from '../../api/chat/chatApi';
+import useUserStore from '../../store/useUserStore';
+import { fetchUserInfo } from '../../api/user/userApi';
 
 const Chat = () => {
   const location = useLocation();
@@ -12,57 +14,79 @@ const Chat = () => {
   const chatEndRef = useRef(null);
   const [stompClient, setStompClient] = useState(null);
  
-  const userId = 1; // 받아와서 변경하도록 수정
+  const { user, setUser } = useUserStore((state) => ({
+    user: state.user,
+    setUser: state.setUser,
+  }));
 
   useEffect(() => {
-    const initiateChat = async () => {
-      const chatResponse = await startChat();
-      setChatId(chatResponse.chatId);
-      setMessages(chatResponse.messages);
-      
-      const client = new Client({
-        webSocketFactory: () => new SockJS('/ws'),
-        debug: (str) => {
-          console.log(str);
-        },
-        onConnect: () => {
-          client.subscribe('/queue/messages', (message) => {
-            const newMessage = JSON.parse(message.body);
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-          });
-        },
-      });
+    const initializeUserAndChat = async () => {
+      // 유저 정보 가져오기
+      try {
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo); // 유저 정보를 상태에 저장
+      } catch (error) {
+        console.error('유저 정보를 가져오는데 실패했습니다:', error);
+        return;
+      }
 
-      client.activate();
-      setStompClient(client);
+      // 채팅 시작
+      try {
+        const chatResponse = await startChat();
+        setChatId(chatResponse.chatId);
+        setMessages(chatResponse.messages);
+        
+        // WebSocket 클라이언트 설정
+        const client = new Client({
+          webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+          debug: (str) => {
+            console.log(str);
+          },
+          onConnect: () => {
+            client.subscribe('/queue/messages', (message) => {
+              const newMessage = JSON.parse(message.body);
+              setMessages((prevMessages) => [...prevMessages, newMessage]);
+            });
+          },
+          onStompError: (frame) => {
+            console.error('STOMP Error: ', frame.headers['message'], frame.body); // STOMP 에러 처리
+          },
+        });
 
-      return () => {
-        if(client) {
-          client.deactivate();
-        }
-      };
+        client.activate();
+        setStompClient(client);
+
+        return () => {
+          if (client) {
+            client.deactivate();
+          }
+        };
+      } catch (error) {
+        console.error('채팅을 시작하는데 실패했습니다:', error);
+      }
     };
 
-    initiateChat();
-  }, [chatId]);
+    // 유저 정보 및 채팅 초기화
+    initializeUserAndChat();
+  }, []); // 의존성 배열에 chatId를 제거했습니다. 초기화 시에만 호출하도록 변경
 
   const handleSend = async () => {
     if (input.trim() !== '' && chatId !== null && stompClient) {
       const message = {
         chatId: chatId,
-        userId: userId,
+        userId: user.id,
         message: {
-          nickname: "유저1", // 유저 도메인 완성 전 임시 사용
+          nickname: user.nickname,
           text: input,
           sentAt: new Date().toISOString(),
         },
       };
 
       try {
-        const response = await sendMessage(message);
+        const response = await sendMessage(stompClient, message);
         setMessages([...messages, response]);
       } catch(error) {
-        console.error('Error sending message: ', error);
+        console.error('메시지 전송 중 오류 발생: ', error);
       }
       setInput('');
     }
@@ -85,7 +109,7 @@ const Chat = () => {
           <div
             key={index}
             className={`my-1 ${
-              msg.nickname === 'User A'
+              msg.nickname === user.nickname
                 ? 'self-end text-right'
                 : 'self-start text-left'
             }`}
@@ -93,7 +117,7 @@ const Chat = () => {
             <div className="text-xs text-gray-500 mb-1">{msg.nickname}</div>
             <div
               className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
-                msg.nickname === 'User A'
+                msg.nickname === user.nickname
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-300 text-black'
               }`}

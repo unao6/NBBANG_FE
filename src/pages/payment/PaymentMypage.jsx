@@ -86,13 +86,13 @@ const PaymentMypage = () => {
               >
                 <CardContent>
                   <Typography variant="h5" component="div">
-                    {cardInfo.issuerCorp}
+                    {cardInfo.issuerCorp || cardInfo.cardCompany}
                   </Typography>
                   <Typography
                     color="textSecondary"
                     sx={{ position: "absolute", bottom: 16, right: 16 }}
                   >
-                    {cardInfo.cardType}
+                    {cardInfo.cardType || cardInfo.cardNumber}
                   </Typography>
                 </CardContent>
               </Card>

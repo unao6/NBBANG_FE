@@ -14,6 +14,7 @@ import Manager from "./pages/admin/payment/PaymentManager";
 import MyPage from "./pages/myPage/MyPage";
 import Payment from "./pages/payment/Payment";
 import UserInfo from "./pages/myPage/UserInfo";
+import DeleteAccount from "./pages/myPage/DeleteAccount";
 import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from './pages/join/SignUp';
@@ -21,6 +22,10 @@ import Login from './pages/login/UserLogin';
 import LoginPage from './pages/login/LoginPage';
 import UserAuth from './pages/join/UserAuth';
 import OttList from "./pages/admin/ott/OttList";
+import OttSelection from "./pages/party/OttSection";
+import AddParty from "./pages/party/AddParty";
+import PartyLeaderStep from "./pages/party/PartyLeaderStep";
+import AccountRegistration from './pages/party/AccountRegistration.jsx';
 
 const Router = () => {
   return (
@@ -41,11 +46,16 @@ const Router = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />
+      <Route path="/mypage/delete-account" element={<DeleteAccount />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/auth/user-auth" element={<UserAuth />} />
       <Route path="/admin/ott" element={<OttList />} />
+      <Route path="/add-party" element={<OttSelection />} />
+      <Route path="/add-party/:ottId" element={<AddParty />} />
+      <Route path="/party-leader-step/:ottId" element={<PartyLeaderStep />} />
+      <Route path="/add-party/account-registration/:ottId" element={<AccountRegistration />} />
     </Routes>
   );
 };
