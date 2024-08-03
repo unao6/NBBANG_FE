@@ -1,10 +1,9 @@
-import axios from "axios";
+import axiosInterceptors from "../../axiosInterceptors.js";
 
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
-const kakaoUrl = `${baseUrl}/api/payment/kakaopay`;
+const kakaoUrl = `/api/payment/kakaopay`;
 
 export const createKakaoPay = async (userId) => {
-  const response = await axios.post(`${kakaoUrl}/create`, null, {
+  const response = await axiosInterceptors.post(`${kakaoUrl}/create`, null, {
     params: {
       userId: userId,
     },
@@ -13,7 +12,7 @@ export const createKakaoPay = async (userId) => {
 };
 
 export const approveKakaoPay = async (tid, pgToken) => {
-  const response = await axios.post(`${kakaoUrl}/approve`, {
+  const response = await axiosInterceptors.post(`${kakaoUrl}/approve`, {
     tid,
     pg_token: pgToken,
   });
@@ -21,5 +20,5 @@ export const approveKakaoPay = async (tid, pgToken) => {
 };
 
 export const cancelPayment = async (cancelRequest) => {
-  return axios.post(`${kakaoUrl}/cancel`, cancelRequest);
+  return axiosInterceptors.post(`${kakaoUrl}/cancel`, cancelRequest);
 };
