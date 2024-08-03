@@ -1,12 +1,10 @@
 import {
-  Alert,
   Box,
   Button,
   Card,
   CardContent,
   Checkbox,
   FormControlLabel,
-  Snackbar,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -14,7 +12,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import PaymentMethodModal from "../payment/fragments/PaymentMethodModal.jsx";
 import { getAllOtt } from "../../api/ott/ottApi.js";
 import { getCardInfo } from "../../api/payment/paymentApi.js";
 import { getOttImage } from "../../components/OttImage.js";
@@ -24,8 +21,6 @@ const PartyMemberStep = () => {
   const [ottInfo, setOttInfo] = useState(null);
   const [isAgreed, setIsAgreed] = useState(false);
   const [cardInfo, setCardInfo] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false); // 모달 상태 관리
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar 상태 관리
   const navigate = useNavigate();
   const userId = 1; // 실제 환경에서는 로그인된 사용자의 ID를 가져와야 함
 
@@ -65,21 +60,8 @@ const PartyMemberStep = () => {
     }
   };
 
-  const handleRegister = () => {
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    fetchCardInfo(); // 모달이 닫힐 때 카드 정보 다시 불러오기
-  };
-
-  const handleChange = () => {
-    setModalOpen(true);
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
+  const handleRegisterOrChange = () => {
+    navigate("/mypage/payment"); // 결제 수단 등록/변경 페이지로 리다이렉트
   };
 
   return (
@@ -162,7 +144,7 @@ const PartyMemberStep = () => {
         {/* 카드 정보 섹션 */}
         <Box className="w-full bg-white rounded-lg shadow p-4 mt-4">
           <Typography variant="h6" component="div" gutterBottom>
-            현재 결제수단 (변경 완료시 즉시 파티매칭이 시작됩니다.)
+            현재 결제수단 (변경 및 등록은 마이페이지에서 가능합니다)
           </Typography>
           {cardInfo ? (
             <>
@@ -199,7 +181,7 @@ const PartyMemberStep = () => {
                   variant="contained"
                   color="primary"
                   startIcon={<EditIcon />}
-                  onClick={handleChange}
+                  onClick={handleRegisterOrChange} // 카드 변경 페이지로 이동
                 >
                   결제 수단 변경
                 </Button>
@@ -225,7 +207,7 @@ const PartyMemberStep = () => {
                   variant="contained"
                   color="primary"
                   startIcon={<AddIcon />}
-                  onClick={handleRegister}
+                  onClick={handleRegisterOrChange} // 카드 등록 페이지로 이동
                   sx={{ width: "50%" }}
                 >
                   결제 수단 등록하기
@@ -234,21 +216,6 @@ const PartyMemberStep = () => {
             </>
           )}
         </Box>
-
-        <PaymentMethodModal open={modalOpen} onClose={handleCloseModal} />
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            결제 수단이 성공적으로 변경되었습니다!
-          </Alert>
-        </Snackbar>
       </main>
     </div>
   );
