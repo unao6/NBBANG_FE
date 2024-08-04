@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';  // useNavigate와 useParams 훅 가져오기
-import useOttStore from '../../store/ottStore';  // Zustand 스토어 import
-import { partyMatching } from '../../api/party/partyApi'; // API 함수 import
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { partyMatching } from '../../api/party/partyApi';
+import useOttStore from '../../store/ottStore';
 
 const AddParty = () => {
-  const { ottId } = useParams(); // URL 파라미터로 ottId 받아오기
-  const { setOttInfo } = useOttStore();  // Zustand 스토어의 setOttInfo 함수 사용
-  const [role, setRole] = useState('partyLeader'); // 기본적으로 파티장 선택
-  const [showImage, setShowImage] = useState(false); // 이미지를 보여줄지 여부 상태값 추가
-  const navigate = useNavigate(); // navigate 훅 초기화
+  const { ottId } = useParams();
+  const { setOttInfo } = useOttStore();
+  const [role, setRole] = useState('partyLeader');
+  const [showImage, setShowImage] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setOttInfo(ottId);  // OTT 정보를 Zustand 스토어에 설정
+    setOttInfo(ottId);
   }, [ottId, setOttInfo]);
 
   const handleRoleSelect = (selectedRole) => {
@@ -20,21 +21,9 @@ const AddParty = () => {
 
   const handleNextClick = async () => {
     if (role === 'partyLeader') {
-      navigate(`/party-leader-step/${ottId}`); // ottId를 포함하여 다음 페이지로 이동
-    } else {
-      try {
-        // partyMatching API 호출
-        const response = await partyMatching({ ottId });
-
-        if (response.status === 200) {
-          // 200 응답이 오면 이미지를 보여줌
-          setShowImage(true);
-        } else {
-          console.error('매칭 실패:', response.statusText);
-        }
-      } catch (error) {
-        console.error('파티 매칭 중 오류 발생:', error);
-      }
+      navigate(`/party-leader-step/${ottId}`);
+    } else if (role === 'partyMember') {
+      navigate(`/party-member-step/${ottId}`);
     }
   };
 
