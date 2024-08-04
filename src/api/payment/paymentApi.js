@@ -1,27 +1,29 @@
-import axios from "axios";
+import axiosInterceptors from "../axiosInterceptors.js";
 
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
-const paymentUrl = `${baseUrl}/api/payment`;
+const paymentUrl = `/api/payment`;
 
 export const getPayments = async () => {
-  return axios.get(`${paymentUrl}/list`);
+  return axiosInterceptors.get(`${paymentUrl}/list`);
 };
 
 export const getUserPayments = async (userId = 1) => {
-  return axios.get(`${paymentUrl}/user/${userId}`);
+  return axiosInterceptors.get(`${paymentUrl}/user/${userId}`);
 };
 
 export const getPaymentsByStatus = async (status) => {
-  return axios.get(`${paymentUrl}/status/${status}`);
+  return axiosInterceptors.get(`${paymentUrl}/status/${status}`);
 };
 
 export const requestRefund = async (paymentId, refundData) => {
-  return axios.post(`${paymentUrl}/${paymentId}/refund`, refundData);
+  return axiosInterceptors.post(
+    `${paymentUrl}/${paymentId}/refund`,
+    refundData,
+  );
 };
 
 export const getCardInfo = async (userId) => {
   try {
-    const response = await axios.get(`${baseUrl}/api/card/info/${userId}`);
+    const response = await axiosInterceptors.get(`/api/card/info/${userId}`);
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -32,5 +34,5 @@ export const getCardInfo = async (userId) => {
 };
 
 export const deleteCardInfo = async (userId) => {
-  return axios.delete(`${baseUrl}/api/card/delete/${userId}`);
+  return axiosInterceptors.delete(`/api/card/delete/${userId}`);
 };

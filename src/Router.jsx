@@ -1,32 +1,32 @@
 import { Route, Routes } from "react-router-dom";
 
+import AccountRegistration from "./pages/party/AccountRegistration.jsx";
+import AddParty from "./pages/party/AddParty";
+import AdminChat from "./pages/admin/chat/AdminChat";
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
-import StartChat from "./pages/chat/StartChat";
 import ChatList from "./pages/admin/chat/ChatList";
-import AdminChat from "./pages/admin/chat/AdminChat"
+import DeleteAccount from "./pages/myPage/DeleteAccount";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
 import KakaoPayRegister from "./pages/payment/kakaoPay/KakaoPayRegister";
+import Login from "./pages/login/UserLogin";
+import LoginPage from "./pages/login/LoginPage";
 import Main from "./pages/main/Main";
 import Manager from "./pages/admin/payment/PaymentManager";
 import MyPage from "./pages/myPage/MyPage";
-import Payment from "./pages/payment/Payment";
-import UserInfo from "./pages/myPage/UserInfo";
-import DeleteAccount from "./pages/myPage/DeleteAccount";
-import PaymentMypage from "./pages/payment/PaymentMypage";
-import RefundManager from "./pages/admin/payment/RefundManager";
-import SignUp from './pages/join/SignUp';
-import Login from './pages/login/UserLogin';
-import LoginPage from './pages/login/LoginPage';
-import UserAuth from './pages/join/UserAuth';
 import OttList from "./pages/admin/ott/OttList";
 import OttSelection from "./pages/party/OttSection";
-import AddParty from "./pages/party/AddParty";
 import PartyLeaderStep from "./pages/party/PartyLeaderStep";
 import PartyMemberStep from "./pages/party/PartyMemberStep";
-import AccountRegistration from './pages/party/AccountRegistration.jsx';
+import Payment from "./pages/payment/Payment";
+import PaymentMypage from "./pages/payment/PaymentMypage";
+import RefundManager from "./pages/admin/payment/RefundManager";
+import SignUp from "./pages/join/SignUp";
+import StartChat from "./pages/chat/StartChat";
+import UserAuth from "./pages/join/UserAuth";
+import UserInfo from "./pages/myPage/UserInfo";
 
 const Router = () => {
   return (
@@ -55,9 +55,12 @@ const Router = () => {
       <Route path="/admin/ott" element={<OttList />} />
       <Route path="/add-party" element={<OttSelection />} />
       <Route path="/add-party/:ottId" element={<AddParty />} />
-      <Route path="/party-leader-step/:ottId" element={<PartyLeaderStep />} />
       <Route path="/party-member-step/:ottId" element={<PartyMemberStep />} />
-      <Route path="/add-party/account-registration/:ottId" element={<AccountRegistration />} />
+      <Route path="/party-leader-step/:ottId" element={<PartyLeaderStep />} />
+      <Route
+        path="/add-party/account-registration/:ottId"
+        element={<AccountRegistration />}
+      />
     </Routes>
   );
 };
