@@ -17,7 +17,10 @@ export const startChat = async () => {
 export const sendMessage = async (stompClient, messageRequest) => {
     if(stompClient && stompClient.connected) {
         stompClient.send("/app/chat/send", {}, JSON.stringify(messageRequest));
-    }
+        console.log('Message sent:', messageRequest); 
+    } else {
+        throw new Error('STOMP client is not connected');
+      }
 };
 
 export const fetchAllChats = async () => {
@@ -40,7 +43,12 @@ export const archiveChat = async (chatId, memo) => {
     return response.data;
 };
 
-export const fetchArchivedChat = async (chatId, memo) => {
-    const response = await axiosInterceptors.post(`${adminChatUrl}/archived`);
+export const fetchArchivedChats = async () => {
+    const response = await axiosInterceptors.get(`${adminChatUrl}/archived`);
+    return response.data;
+};
+
+export const fetchArchivedChatMessages = async (archivedId) => {
+    const response = await axiosInterceptors.get(`${adminChatUrl}/${archivedId}`);
     return response.data;
 };

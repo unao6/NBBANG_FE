@@ -72,7 +72,7 @@ const AdminChat = () => {
                 message: {
                     nickname: 'N/BBANG',
                     text: input,
-                    sentAt: new Date().toISOString()
+                    sentAt: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', hour12: false })
                 }
             };
             sendMessage(stompClient.current, newMessage);
