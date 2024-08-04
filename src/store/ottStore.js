@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { getOttById } from '../api/ott/ottApi.js';
 
 const useOttStore = create((set) => ({
