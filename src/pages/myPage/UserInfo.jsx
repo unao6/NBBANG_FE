@@ -19,7 +19,10 @@ const UserInfo = () => {
                         'access': `${token}`
                     }
                 });
-                setUser(response.data);
+                setUser({
+                    ...response.data,
+                    phoneNumber: formatPhoneNumber(response.data.phoneNumber)
+                });
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -27,6 +30,16 @@ const UserInfo = () => {
 
         fetchData();
     }, []);
+
+    const formatPhoneNumber = (phoneNumber) => {
+        if (phoneNumber.length === 11) {
+            return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${'*'.repeat(4)}`;
+        } else if (phoneNumber.length === 10) {
+            return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${'*'.repeat(4)}`;
+        } else {
+            return phoneNumber;
+        }
+    };
 
     const handleDeleteAccountClick = () => {
         navigate('/mypage/delete-account');
