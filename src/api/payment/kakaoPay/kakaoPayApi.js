@@ -2,12 +2,8 @@ import axiosInterceptors from "../../axiosInterceptors.js";
 
 const kakaoUrl = `/api/payment/kakaopay`;
 
-export const createKakaoPay = async (userId) => {
-  const response = await axiosInterceptors.post(`${kakaoUrl}/create`, null, {
-    params: {
-      userId: userId,
-    },
-  });
+export const createKakaoPay = async () => {
+  const response = await axiosInterceptors.post(`${kakaoUrl}/create`);
   return response.data;
 };
 
