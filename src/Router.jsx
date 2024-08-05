@@ -27,6 +27,10 @@ import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserAuth from "./pages/join/UserAuth";
 import UserInfo from "./pages/myPage/UserInfo";
+import MyParty from "./pages/party/MyParty.jsx";
+import PartyDetail from "./pages/party/PartyDetail";
+import PartySettings from "./pages/party/PartySettings";
+import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement.jsx";
 
 const Router = () => {
   return (
@@ -61,6 +65,10 @@ const Router = () => {
         path="/add-party/account-registration/:ottId"
         element={<AccountRegistration />}
       />
+      <Route path="/my-party" element={<MyParty />} />
+      <Route path="/my-party/:partyId" element={<PartyDetail />} />
+      <Route path="/party-settings/:partyId" element={<PartySettings />} />
+      <Route path="/admin/parties" element={<AdminPartyManagement />} />
     </Routes>
   );
 };
