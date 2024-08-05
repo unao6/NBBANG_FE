@@ -11,3 +11,11 @@ export const subscribeOtt = () => {
 export const partyMatching = (partyMatching) => {
   return axiosInterceptors.post('/api/matching', partyMatching)
 };
+
+export const getMyParty = () => {
+  return axiosInterceptors.get('/api/my-party')
+};
+
+export const getPartyById = (partyId) => {
+  return axiosInterceptors.get(`/api/party/${partyId}`)
+};
