@@ -56,7 +56,7 @@ const AdminChat = () => {
             });
 
             const subscription = client.subscribe(
-              `/queue/messages/${chatId}`,
+              `/topic/messages/${chatId}`,
               (message) => {
                 const newMessage = JSON.parse(message.body);
                 newMessage.sentAt = parseSentAt(newMessage.sentAt);

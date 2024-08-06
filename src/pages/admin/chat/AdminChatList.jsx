@@ -45,6 +45,7 @@ const AdminChatList = () => {
   };
 
   const handleChatClick = (chat) => {
+    console.log('handleChat', chat);
     navigate(`/admin/chat/${chat.id}`, { state: { isChatEnded: !chat.status } });
   };
 

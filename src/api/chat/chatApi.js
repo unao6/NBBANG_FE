@@ -14,11 +14,33 @@ export const startChat = async () => {
     }
   };
 
-  export const sendMessage = async (stompClient, messageRequest, chatId) => {
+//   export const sendMessage = async (stompClient, messageRequest, chatId) => {
+//     if (stompClient && stompClient.connected) {
+//       const destination = `/app/chat/send/${chatId}`;
+//       stompClient.publish(destination, {}, JSON.stringify(messageRequest));
+//       console.log('Message sent:', messageRequest);
+//     }
+//   };
+export const sendMessage = async (stompClient, message, chatId) => {
     if (stompClient && stompClient.connected) {
       const destination = `/app/chat/send/${chatId}`;
-      stompClient.send(destination, {}, JSON.stringify(messageRequest));
-      console.log('Message sent:', messageRequest);
+  
+      // Publish the message using the correct destination
+      try {
+        stompClient.publish({
+          destination: destination,
+          body: JSON.stringify(message),
+        });
+        console.log('Message sent:', message);
+  
+        // Return the message to update the client UI
+        return message; 
+      } catch (error) {
+        console.error('Error sending message:', error);
+        throw error;  // Rethrow error to handle it in handleSend
+      }
+    } else {
+      throw new Error('STOMP client is not connected');
     }
   };
 
@@ -29,6 +51,7 @@ export const fetchAllChats = async () => {
 
 export const fetchChatMessages = async (chatId) => {
     const response = await axiosInterceptors.get(`${adminChatUrl}/${chatId}`);
+    console.log("fetchChatMessages: ", response);
     return response.data;
 };
 

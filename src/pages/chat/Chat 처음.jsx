@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import { startChat } from '../../api/chat/chatApi';
 import useUserStore from '../../store/useUserStore';
-import { fetchUserInfo } from '../../api/user/userApi';
 
 const Chat = () => {
-  const { chatId } = useParams();
-  const location = useLocation();
-  const [messages, setMessages] = useState(location.state?.messages || []);
+  const { chatId: initialChatId } = useParams();
+  const [chatId, setChatId] = useState(initialChatId || '-1');
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
   const stompClientRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   const { user, setUser } = useUserStore((state) => ({
     user: state.user,
@@ -26,76 +25,92 @@ const Chat = () => {
     return kstTime.toISOString().slice(0, 19);
   };
 
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        setIsLoading(true);
-        const userInfo = await fetchUserInfo();
-        if (!userInfo) {
-          console.error('Failed to fetch user information');
-          return;
-        }
-  
-        setUser(userInfo);
-        setIsLoading(false);
+  const initializeWebSocket = useCallback((chatId) => {
+    if (stompClientRef.current) {
+      stompClientRef.current.deactivate();
+    }
 
-        const client = new Client({
-          webSocketFactory: () => new SockJS(`${process.env.REACT_APP_API_BASE_URL}/ws`),
-          debug: (str) => {
-            console.log(str);
-          },
-          onConnect: () => {
-            console.log('WebSocket connected');
-            const token = localStorage.getItem('access');
-
-            if (!token) {
-              console.error('Access token is missing');
-              return;
-            }
-
-            client.publish({
-              destination: '/app/auth',
-              body: JSON.stringify({ token }),
-            });
-
-            const subscription = client.subscribe(
-              `/topic/messages/${chatId}`,
-              (message) => {
-                const newMessage = JSON.parse(message.body);
-                newMessage.sentAt = parseSentAt(newMessage.sentAt);
-
-                console.log('받은 메세지:', newMessage);
-
-                setMessages((prevMessages) => [...prevMessages, newMessage]);
-              }
-            );
-
-
-            stompClientRef.current = {
-              client,
-              subscriptionId: subscription.id,
-            };
-          },
-          onStompError: (frame) => {
-            console.error('STOMP Error: ', frame.headers['message'], frame.body);
-          },
+    const client = new Client({
+      webSocketFactory: () => new SockJS(`${process.env.REACT_APP_API_BASE_URL}/ws`),
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('WebSocket connected');
+        const token = localStorage.getItem('access');
+        client.publish({
+          destination: '/app/auth',
+          body: JSON.stringify({ token }),
         });
 
-        client.activate();
-      } catch (error) {
-        console.error('Error during initialization:', error);
-        setIsLoading(false);
-      }
-    };
-  
-    initialize();
+        const subscription = client.subscribe(
+          `/queue/messages/${chatId}`,
+          (message) => {
+            const newMessage = JSON.parse(message.body);
+            newMessage.sentAt = parseSentAt(newMessage.sentAt);
+
+            console.log('Received message:', newMessage);
+
+            setMessages((prevMessages) => {
+              const isDuplicate = prevMessages.some((msg) => msg.id === newMessage.id);
+              if (!isDuplicate) {
+                return [...prevMessages, newMessage];
+              }
+              return prevMessages;
+            });
+
+          }
+        );
+
+        stompClientRef.current = {
+          client,
+          subscriptionId: subscription.id,
+        };
+      },
+      onStompError: (frame) => {
+        console.error('STOMP Error: ', frame.headers['message'], frame.body);
+      },
+    });
+
+    client.activate();
 
     return () => {
       if (stompClientRef.current) {
         stompClientRef.current.client.deactivate();
       }
     };
-  }, [chatId, setUser]);
+  }, []);
+
+  useEffect(() => {
+    const initializeUserAndChat = async () => {
+      try {
+        const userInfo = await fetchUserInfo();
+        if (!userInfo) {
+          console.error('Failed to fetch user information');
+          return;
+        }
+
+        setUser(userInfo);
+
+        if (chatId === '-1') {
+          const chatResponse = await startChat();
+          setChatId(chatResponse.chatId);
+          setMessages(chatResponse.messages);
+        }
+      } catch (error) {
+        console.error('Error during initialization:', error);
+      }
+    };
+
+    initializeUserAndChat();
+  }, [setUser, chatId]);
+
+  useEffect(() => {
+    if (chatId !== '-1') {
+      const cleanup = initializeWebSocket(chatId);
+      return cleanup;
+    }
+  }, [chatId, initializeWebSocket]);
 
   const parseSentAt = (sentAt) => {
     if (Array.isArray(sentAt)) {
@@ -104,9 +119,9 @@ const Chat = () => {
     return new Date(sentAt);
   };
 
-  const handleSend = () => {
-    if (!user || !user.id || !user.nickname) {
-      console.error('User information is missing or incomplete');
+  const handleSend = async () => {
+    if (!user || !user.id) {
+      console.error('User information is missing');
       return;
     }
 
@@ -130,7 +145,7 @@ const Chat = () => {
       },
     };
 
-    console.log('보낸 메세지:', newMessage);
+    console.log('Sending message:', newMessage);
 
     stompClientRef.current.client.publish({
       destination: '/app/chat/send/' + chatId,
@@ -145,27 +160,18 @@ const Chat = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  useEffect(() => {
-    if (!isLoading) {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [isLoading]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="flex flex-col h-full relative">
       <div
         className="flex-1 overflow-y-auto p-4 bg-white flex flex-col"
         style={{ paddingTop: '68px', paddingBottom: '68px' }}
       >
+        <div ref={chatEndRef} />
         {messages.map((msg, index) => (
           <div
             key={index}
             className={`my-1 ${
-              msg.nickname === user?.nickname
+              msg.nickname === user.nickname
                 ? 'self-end text-right'
                 : 'self-start text-left'
             }`}
@@ -191,6 +197,7 @@ const Chat = () => {
             </div>
           </div>
         ))}
+
         <div ref={chatEndRef} />
       </div>
       <div className="fixed bottom-[68px] left-0 right-0 flex p-2 bg-white z-50 max-w-[540px] mx-auto">
