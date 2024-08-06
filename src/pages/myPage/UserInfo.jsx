@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Avatar, List, ListItem, ListItemIcon, ListItemText, Divider, IconButton } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import axiosInterceptors from '../../api/axiosInterceptors'; // axiosInterceptors 임포트
 
 const UserInfo = () => {
     const [user, setUser] = useState({ nickname: '', phoneNumber: '' });
@@ -13,12 +13,7 @@ const UserInfo = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('access');
-                const response = await axios.get('http://localhost:8080/api/users/user-info', {
-                    headers: {
-                        'access': `${token}`
-                    }
-                });
+                const response = await axiosInterceptors.get('/api/users/user-info'); // axiosInterceptors 사용
                 setUser({
                     ...response.data,
                     phoneNumber: formatPhoneNumber(response.data.phoneNumber)

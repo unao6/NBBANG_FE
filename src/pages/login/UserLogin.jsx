@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-axios.defaults.withCredentials = true;
+import axiosInterceptors from "../../api/axiosInterceptors"; // axiosInterceptors를 가져옵니다
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -18,22 +16,21 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/login", {
+      const response = await axiosInterceptors.post("/login", {
         email,
         password
       }, {
         headers: {
           'Content-Type': 'application/json'
-        },
-        withCredentials: true
+        }
       });
 
       // Store access token from response header
-        const accessToken = response.headers['access'];  // 'authorization' 대신 'access' 사용
-        localStorage.setItem('access', accessToken);
+      const accessToken = response.headers['access'];  // 'authorization' 대신 'access' 사용
+      localStorage.setItem('access', accessToken);
 
-        // 이후 요청에 access 헤더에 토큰 포함
-        axios.defaults.headers.common['access'] = accessToken;
+      // 이후 요청에 access 헤더에 토큰 포함
+      axiosInterceptors.defaults.headers.common['access'] = accessToken;
 
       navigate("/");
     } catch (error) {
