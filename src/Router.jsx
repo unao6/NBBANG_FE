@@ -27,6 +27,9 @@ import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserAuth from "./pages/join/UserAuth";
 import UserInfo from "./pages/myPage/UserInfo";
+import AccountMyPage from "./pages/payment/AccountMyPage";
+import AccountRegisterPage from "./pages/payment/AccountRegister";
+
 
 const Router = () => {
   return (
@@ -61,6 +64,8 @@ const Router = () => {
         path="/add-party/account-registration/:ottId"
         element={<AccountRegistration />}
       />
+      <Route path="/mypage/account" element={<AccountMyPage />} />
+      <Route path="/mypage/account/register" element={<AccountRegisterPage />} />
     </Routes>
   );
 };
