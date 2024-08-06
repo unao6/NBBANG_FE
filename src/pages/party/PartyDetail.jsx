@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPartyById } from '../../api/party/partyApi'; // API 함수 import
 import { getOttImage } from '../../components/OttImage.js'; // OTT 이미지 함수 import
-import { IconButton, Button } from '@mui/material';
+import { IconButton } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -57,6 +57,15 @@ const PartyDetail = () => {
   const individualShare = partyDetails.ottPrice / partyDetails.capacity; // 모든 파티원들이 균등하게 나누어 내는 금액
   const leaderSettlement = individualShare * (partyDetails.capacity - 1) - leaderServiceFee;
 
+  const handleSettingsClick = () => {
+    if (partyDetails.isLeader) {
+      navigate(`/party-settings/${partyId}`, { state: { partyDetails } }); // 리더용 설정 페이지로 이동
+    } else {
+
+      navigate(`/party-settings-user/${partyId}`, { state: { partyDetails } }); // 사용자용 설정 페이지로 이동
+    }
+  };
+
   return (
     <main className="container mx-auto mt-8 px-4 md:px-0">
       {/* Back and Settings Buttons */}
@@ -67,14 +76,12 @@ const PartyDetail = () => {
         >
           <ArrowBackIcon />
         </IconButton>
-        {partyDetails.isLeader && (
-          <IconButton
-            aria-label="settings"
-            onClick={() => navigate(`/party-settings/${partyId}`, { state: { partyDetails } })} // 파티 설정 페이지로 이동
-          >
-            <SettingsIcon />
-          </IconButton>
-        )}
+        <IconButton
+          aria-label="settings"
+          onClick={handleSettingsClick} // 설정 페이지로 이동
+        >
+          <SettingsIcon />
+        </IconButton>
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-6">

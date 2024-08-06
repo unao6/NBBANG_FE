@@ -27,10 +27,11 @@ import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserAuth from "./pages/join/UserAuth";
 import UserInfo from "./pages/myPage/UserInfo";
-import MyParty from "./pages/party/MyParty.jsx";
+import MyParty from "./pages/party/MyParty";
 import PartyDetail from "./pages/party/PartyDetail";
 import PartySettings from "./pages/party/PartySettings";
-import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement.jsx";
+import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
+import PartySettingsUser from "./pages/party/PartySettingsUser";
 
 const Router = () => {
   return (
@@ -68,6 +69,7 @@ const Router = () => {
       <Route path="/my-party" element={<MyParty />} />
       <Route path="/my-party/:partyId" element={<PartyDetail />} />
       <Route path="/party-settings/:partyId" element={<PartySettings />} />
+      <Route path="/party-settings-user/:partyId" element={<PartySettingsUser />} />
       <Route path="/admin/parties" element={<AdminPartyManagement />} />
     </Routes>
   );
