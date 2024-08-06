@@ -38,7 +38,6 @@ import { useNavigate } from "react-router-dom";
     }, [userId]);
   
     const handleRegister = () => {
-      // 모달을 여는 함수
       navigate("/mypage/account/register")
     };
   
@@ -58,6 +57,7 @@ import { useNavigate } from "react-router-dom";
     };
   
     const handleChange = () => {
+      navigate("/mypage/account/register")
     };
   
     return (
