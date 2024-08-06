@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getPartyByAdmin, searchPartyByEmail } from "../../../api/party/partyApi.js";
 
 const AdminPartyManagement = () => {
@@ -9,7 +9,7 @@ const AdminPartyManagement = () => {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
 
-  const fetchPartyData = async (reset = false) => {
+  const fetchPartyData = useCallback(async (reset = false) => {
     setLoading(true);
     try {
       let response;
@@ -29,7 +29,7 @@ const AdminPartyManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, searchEmail]);
 
   useEffect(() => {
     if (page === 0) {
@@ -37,7 +37,7 @@ const AdminPartyManagement = () => {
     } else {
       fetchPartyData(); // 추가 데이터 로드
     }
-  }, [page]);
+  }, [page, fetchPartyData]);
 
   const handleSearch = () => {
     setPage(0); // 페이지를 초기화
@@ -81,20 +81,20 @@ const AdminPartyManagement = () => {
       {partyData.length === 0 && !loading ? (
         <div>해당 이메일과 관련된 파티가 없습니다.</div>
       ) : (
-        <div>
+        <div className="space-y-4">
           {partyData.map((party, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-lg p-6 mb-4 flex flex-row justify-between items-center"
+              className="bg-white rounded-lg shadow-lg p-6 flex flex-row justify-between items-center"
               ref={partyData.length === index + 1 ? lastPartyElementRef : null}
             >
-              <div className="flex flex-col mr-4">
+              <div className="flex flex-col w-1/3">
                 <h2 className="text-xl font-bold mb-2">{party.ottName}</h2>
                 <p><strong>파티장:</strong> {party.leaderNickname} ({party.leaderEmail})</p>
                 <p><strong>전화번호:</strong> {party.leaderPhoneNumber}</p>
               </div>
-              <div className="flex flex-col">
-                <h3 className="text-lg font-semibold">파티원 목록:</h3>
+              <div className="flex-grow border-l-2 border-gray-200 pl-6">
+                <h3 className="text-lg font-semibold mb-2">파티원 목록:</h3>
                 <ul className="list-disc list-inside">
                   {party.members.map((member, memberIndex) => (
                     <li key={memberIndex}>
@@ -105,7 +105,7 @@ const AdminPartyManagement = () => {
               </div>
             </div>
           ))}
-          {loading && <div>로딩 중...</div>}
+          {loading && <div className="text-center">로딩 중...</div>}
         </div>
       )}
     </div>
