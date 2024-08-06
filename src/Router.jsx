@@ -5,7 +5,7 @@ import AddParty from "./pages/party/AddParty";
 import AdminChat from "./pages/admin/chat/AdminChat";
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
-import ChatList from "./pages/admin/chat/ChatList";
+import ChatList from "./pages/admin/chat/AdminChatList";
 import DeleteAccount from "./pages/myPage/DeleteAccount";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";

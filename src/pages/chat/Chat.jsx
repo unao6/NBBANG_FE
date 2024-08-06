@@ -51,7 +51,7 @@ const Chat = () => {
 
           // WebSocket 설정
           const client = new Client({
-            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            webSocketFactory: () => new SockJS(`${process.env.REACT_APP_API_BASE_URL}/ws`),
             debug: (str) => {
               console.log(str);
             },
@@ -70,7 +70,7 @@ const Chat = () => {
 
               // 메시지 구독
               const subscription = client.subscribe(
-                '/queue/messages',
+                `/queue/messages/${chatId}`,
                 (message) => {
                   const newMessage = JSON.parse(message.body);
                   newMessage.sentAt = parseSentAt(newMessage.sentAt);
@@ -201,7 +201,7 @@ const Chat = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="flex-1 p-2 border border-gray-300 rounded mr-2"
-          placeholder="Type a message..."
+          placeholder="메세지 입력"
         />
         <button onClick={handleSend} className="bg-blue-500 text-white p-2 rounded">
           Send

@@ -39,7 +39,7 @@ export const endChat = async (chatId) => {
 };
 
 export const archiveChat = async (chatId, memo) => {
-    const response = await axiosInterceptors.post(`${adminChatUrl}/archive`, { chatId, memo });
+    const response = await axiosInterceptors.post(`${adminChatUrl}/archive/${chatId}`, { memo });
     return response.data;
 };
 
