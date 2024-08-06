@@ -11,7 +11,7 @@ const StartChat = () => {
     try {
       const response = await startChat();
       const { chatId, messages } = response;
-      navigate(`/chat/${chatId}`, { state: { messages } });
+      navigate('/chat', { state: { chatId, messages } });
     } catch (error) {
       console.log("Error starting chat: ", error);
     }

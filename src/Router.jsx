@@ -38,7 +38,7 @@ const Router = () => {
       <Route path="/payment/kakaopay/approve" element={<KakaoPayApprove />} />
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
-      <Route path="/chat" element={<Chat />} />
+      <Route path="/chat/:chatId" element={<Chat />} />
       <Route path="/chat/start" element={<StartChat />} />
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />

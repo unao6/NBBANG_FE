@@ -55,30 +55,15 @@ const AdminChat = () => {
               body: JSON.stringify({ token }),
             });
 
-            // 기존 구독 취소 및 새 구독 설정
-            if (stompClientRef.current && stompClientRef.current.subscriptionId) {
-              client.unsubscribe(stompClientRef.current.subscriptionId);
-            }
-
             const subscription = client.subscribe(
               `/queue/messages/${chatId}`,
               (message) => {
                 const newMessage = JSON.parse(message.body);
                 newMessage.sentAt = parseSentAt(newMessage.sentAt);
 
-                console.log('Received message:', newMessage);
+                console.log('받은 메세지:', newMessage);
 
-                if (!isNaN(newMessage.sentAt.getTime())) {
-                  setMessages((prevMessages) => {
-                    const isDuplicate = prevMessages.some((msg) => msg.id === newMessage.id);
-                    if (!isDuplicate) {
-                      return [...prevMessages, newMessage];
-                    }
-                    return prevMessages;
-                  });
-                } else {
-                  console.error('Invalid date received:', newMessage.sentAt);
-                }
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
               }
             );
 
@@ -123,24 +108,6 @@ const AdminChat = () => {
   };
 
   const handleSend = () => {
-    if (!user || !user.id) {
-      console.error('User information is missing');
-      return;
-    }
-
-    if (input.trim() === '') {
-      console.error('Input message is empty');
-      return;
-    }
-
-    if (
-      !stompClientRef.current ||
-      !stompClientRef.current.client.connected
-    ) {
-      console.error('WebSocket is not connected');
-      return;
-    }
-
     const newMessage = {
       chatId: chatId,
       userId: user.id,
@@ -151,10 +118,10 @@ const AdminChat = () => {
       },
     };
 
-    console.log('Sending message:', newMessage);
+    console.log('보낸 메세지:', newMessage);
 
     stompClientRef.current.client.publish({
-      destination: '/app/chat/send',
+      destination: '/app/chat/send/' + chatId,
       body: JSON.stringify(newMessage),
     });
 

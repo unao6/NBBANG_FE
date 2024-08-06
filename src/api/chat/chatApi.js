@@ -14,14 +14,13 @@ export const startChat = async () => {
     }
   };
 
-export const sendMessage = async (stompClient, messageRequest) => {
-    if(stompClient && stompClient.connected) {
-        stompClient.send("/app/chat/send", {}, JSON.stringify(messageRequest));
-        console.log('Message sent:', messageRequest); 
-    } else {
-        throw new Error('STOMP client is not connected');
-      }
-};
+  export const sendMessage = async (stompClient, messageRequest, chatId) => {
+    if (stompClient && stompClient.connected) {
+      const destination = `/app/chat/send/${chatId}`;
+      stompClient.send(destination, {}, JSON.stringify(messageRequest));
+      console.log('Message sent:', messageRequest);
+    }
+  };
 
 export const fetchAllChats = async () => {
     const response = await axiosInterceptors.get(`${adminChatUrl}/all`);
