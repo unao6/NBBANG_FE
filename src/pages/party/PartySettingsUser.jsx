@@ -1,38 +1,90 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, Modal, Box } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from '@mui/icons-material/Close';
+import { fetchUserInfo } from '../../api/user/userApi';
 
 const PartySettingsUser = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { partyDetails } = location.state || {}; // 전송된 상태를 가져오고 없을 시 기본값 설정
 
+  const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false); // 모달 상태 관리
+  const [alertOpen, setAlertOpen] = useState(false); // 경고 메시지 상태 관리
+
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        // 사용자 정보를 가져오지 못했을 때의 처리 (예: 리다이렉션 등)
+      }
+    };
+
+    loadUserInfo();
+  }, []);
 
   const partyMemberFee = 500;
   const paymentAmount = (partyDetails.ottPrice / partyDetails.capacity) + partyMemberFee;
+
   // 날짜 형식을 변환하는 함수
-  const formatDate = (dateArray) => {
-    if (!Array.isArray(dateArray) || dateArray.length < 3) {
-      return '유효하지 않은 날짜';
-    }
-    const [year, month, day] = dateArray; // 배열의 첫 3개 요소를 추출
-    return `${year % 100}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(2, '0')}일`;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월 ${String(date.getDate()).padStart(2, '0')}일`;
   };
 
-  const calculateOneMonthLater = (dateArray) => {
-    if (!Array.isArray(dateArray) || dateArray.length < 3) {
-      return '유효하지 않은 날짜';
+  // 한 달 뒤 날짜를 계산하는 함수
+  const calculateOneMonthLater = (dateString) => {
+    const date = new Date(dateString);
+    date.setMonth(date.getMonth() + 1);
+    return formatDate(date.toISOString());
+  };
+
+  // 현재 사용자의 joinDate를 가져오는 함수
+  const getJoinDate = () => {
+    const currentUser = partyDetails.members.find(member => member.userId === user?.userId);
+    return currentUser ? currentUser.joinDate : null;
+  };
+
+  const joinDate = user ? getJoinDate() : null;
+  console.log(joinDate)
+
+  const isEligibleToLeave = () => {
+    if (!joinDate) {
+      return false;
     }
-    const [year, month, day] = dateArray;
-    const date = new Date(year, month - 1, day); // Date 객체 생성
-    date.setMonth(date.getMonth() + 1); // 한 달 더하기
-    return formatDate([date.getFullYear(), date.getMonth() + 1, date.getDate()]);
+    const joinDateObj = new Date(joinDate);
+    const oneMonthLater = new Date(joinDateObj);
+    oneMonthLater.setMonth(joinDateObj.getMonth() + 1);
+    return new Date() >= oneMonthLater;
   };
 
   if (!partyDetails) {
     return <div>파티 정보를 불러올 수 없습니다.</div>;
   }
+
+  const handleOpen = () => {
+    if (isEligibleToLeave()) {
+      setOpen(true);
+    } else {
+      setAlertOpen(true);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setAlertOpen(false);
+  };
+
+  const handleConfirm = () => {
+    console.log("파티 탈퇴 확인됨");
+    handleClose();
+    // 파티 탈퇴 처리 로직 추가
+  };
 
   return (
     <main className="container mx-auto mt-8 px-4 md:px-0">
@@ -57,11 +109,11 @@ const PartySettingsUser = () => {
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">파티가입 날짜</div>
-            <div className="text-gray-800">{formatDate(partyDetails.createdAt)}</div>
+            <div className="text-gray-800">{joinDate ? formatDate(joinDate) : '정보 없음'}</div>
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">결제 일자</div>
-            <div className="text-gray-800">{formatDate(partyDetails.settlementDate)}</div>
+            <div className="text-gray-800">{joinDate ? calculateOneMonthLater(joinDate) : '정보 없음'}</div>
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">결제 금액</div>
@@ -75,7 +127,7 @@ const PartySettingsUser = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            onClick={() => console.log("결제카드 변경하기 클릭됨")}
+            onClick={() => navigate('/mypage/payment')}
           >
             결제카드 변경하기
           </Button>
@@ -83,7 +135,7 @@ const PartySettingsUser = () => {
             variant="outlined"
             color="secondary"
             fullWidth
-            onClick={() => console.log("파티 탈퇴하기 클릭됨")}
+            onClick={handleOpen} // 모달 열기
           >
             파티 탈퇴하기
           </Button>
@@ -94,13 +146,76 @@ const PartySettingsUser = () => {
           <div className="flex items-center">
             <div className="mr-2">✔</div>
             <div className="text-gray-800 text-sm">
-              잦은 파티탈퇴 발생 시 파티장님에게 부담이 되기 때문에 파티탈퇴는 최초 가입 한달 뒤인 {calculateOneMonthLater(partyDetails.createdAt)}부터 가능해요.
+              잦은 파티탈퇴 발생 시 파티장님에게 부담이 되기 때문에 파티탈퇴는
+              <br />
+              최초 가입 한달 뒤인 {joinDate ? calculateOneMonthLater(joinDate) : '정보 없음'}부터 가능해요.
               <br />
               결제일에 탈퇴해도 전액 환불이 가능하니 걱정하지 마세요!
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal for options */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box className="bg-white p-6 rounded-lg shadow-lg mx-auto mt-20 max-w-md relative">
+          {/* Close Button */}
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            className="absolute top-2 right-2"
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <h2 id="modal-title" className="text-xl font-bold mb-4">정말 파티 탈퇴하시겠습니까?</h2>
+          <p id="modal-description" className="text-gray-800 mb-4">남은 기간만큼 환불됩니다.</p>
+          <div className="flex justify-between mt-4">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleConfirm}
+            >
+              네
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleClose}
+            >
+              아니오
+            </Button>
+          </div>
+        </Box>
+      </Modal>
+
+      {/* Alert for ineligible users */}
+      <Modal
+        open={alertOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-title"
+        aria-describedby="alert-description"
+      >
+        <Box className="bg-white p-6 rounded-lg shadow-lg mx-auto mt-20 max-w-md">
+          <h2 id="alert-title" className="text-xl font-bold mb-4">탈퇴 불가</h2>
+          <p id="alert-description" className="text-gray-800 mb-4">
+            최초 가입한 날로부터 한 달이 지나지 않았습니다. 한 달 이후에 탈퇴 가능합니다.
+          </p>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClose}
+            fullWidth
+          >
+            확인
+          </Button>
+        </Box>
+      </Modal>
     </main>
   );
 };

@@ -14,16 +14,10 @@ const PartySettings = () => {
   const partyId = partyDetails?.partyId; // partyId를 가져옴
   const leaderFee = 200;
   const settlementAmount = (partyDetails.ottPrice / partyDetails.capacity) * 3 - leaderFee;
-  console.log(partyDetails);
 
-  const formatDate = (dateArray) => {
-    // 배열이 올바른지 확인 (year, month, day 요소가 있는지 확인)
-    if (!Array.isArray(dateArray) || dateArray.length < 3) {
-      return '유효하지 않은 날짜';
-    }
-
-    const [year, month, day] = dateArray; // 배열의 첫 3개 요소를 추출
-    return `${year % 100}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(2, '0')}일`;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월 ${String(date.getDate()).padStart(2, '0')}일`;
   };
 
   // partyDetails가 없을 경우 에러 처리
