@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import axiosInterceptors from '../../../api/axiosInterceptors'; // axiosInterceptors 임포트
+import axiosInterceptors from '../../../api/axiosInterceptors';
 
 const UserList = () => {
   const [activeUsers, setActiveUsers] = useState([]);
@@ -8,13 +8,13 @@ const UserList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewInactive, setViewInactive] = useState(false);
-  const [hoveredPhone, setHoveredPhone] = useState(null); // Hover 상태를 관리하는 상태 변수 추가
+  const [hoveredPhone, setHoveredPhone] = useState(null);
+  const [roleFilter, setRoleFilter] = useState('all');
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const activeResponse = await axiosInterceptors.get('/api/admin/active');
-
         const inactiveResponse = await axiosInterceptors.get('/api/admin/inactive');
 
         setActiveUsers(activeResponse.data);
@@ -45,6 +45,10 @@ const UserList = () => {
     }
   };
 
+  const handleRoleChange = (event) => {
+    setRoleFilter(event.target.value);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -57,7 +61,10 @@ const UserList = () => {
     return <div className="text-red-500">Error: {error.message}</div>;
   }
 
-  const usersToDisplay = viewInactive ? inactiveUsers : activeUsers;
+  // 역할 필터링을 적용한 사용자 목록
+  const filteredUsers = (viewInactive ? inactiveUsers : activeUsers).filter(user =>
+    roleFilter === 'all' || user.role === roleFilter
+  );
 
   // 배열로 된 날짜 데이터를 yyyy.MM.dd HH:mm:ss 형식으로 포맷하는 함수
   const formatDateTimeFromArray = (dateArray) => {
@@ -85,19 +92,32 @@ const UserList = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl mb-4">회원 관리</h1>
-      <div className="flex space-x-4 mb-4">
-        <button
-          onClick={handleViewActive}
-          className={`px-4 py-2 rounded ${!viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-        >
-          가입된 회원 보기
-        </button>
-        <button
-          onClick={handleViewInactive}
-          className={`px-4 py-2 rounded ${viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-        >
-          탈퇴한 회원 보기
-        </button>
+      <div className="flex justify-between mb-4">
+        <div className="flex space-x-4">
+          <button
+            onClick={handleViewActive}
+            className={`px-4 py-2 rounded ${!viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+          >
+            가입된 회원 보기
+          </button>
+          <button
+            onClick={handleViewInactive}
+            className={`px-4 py-2 rounded ${viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+          >
+            탈퇴한 회원 보기
+          </button>
+        </div>
+        <div>
+          <select
+            value={roleFilter}
+            onChange={handleRoleChange}
+            className="px-4 py-2 border rounded pr-8"
+          >
+            <option value="all">전체</option>
+            <option value="admin">관리자</option>
+            <option value="user">유저</option>
+          </select>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -129,7 +149,7 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {Array.isArray(usersToDisplay) && usersToDisplay.map((user) => (
+            {Array.isArray(filteredUsers) && filteredUsers.map((user) => (
               <tr key={user.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {user.id}
@@ -142,7 +162,7 @@ const UserList = () => {
                 </td>
                 <td
                   className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                  style={{ width: '150px' }}  // 고정된 너비 설정
+                  style={{ width: '150px' }}
                   onMouseEnter={() => setHoveredPhone(user.id)}  // 마우스 오버 시 user.id로 상태 변경
                   onMouseLeave={() => setHoveredPhone(null)}     // 마우스가 떠나면 상태 초기화
                 >
