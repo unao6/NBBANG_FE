@@ -62,9 +62,12 @@ const UserList = () => {
   }
 
   // 역할 필터링을 적용한 사용자 목록
-  const filteredUsers = (viewInactive ? inactiveUsers : activeUsers).filter(user =>
-    roleFilter === 'all' || user.role === roleFilter
-  );
+  const filteredUsers = (viewInactive ? inactiveUsers : activeUsers).filter(user => {
+    if (roleFilter === 'all') return true;
+    if (roleFilter === 'admin' && user.role === 'ROLE_ADMIN') return true;
+    if (roleFilter === 'user' && user.role === 'ROLE_USER') return true;
+    return false;
+  });
 
   // 배열로 된 날짜 데이터를 yyyy.MM.dd HH:mm:ss 형식으로 포맷하는 함수
   const formatDateTimeFromArray = (dateArray) => {
