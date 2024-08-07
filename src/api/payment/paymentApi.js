@@ -14,9 +14,14 @@ export const getPaymentsByStatus = async (status) => {
   return axiosInterceptors.get(`${paymentUrl}/status/${status}`);
 };
 
-// 환불 요청 시 이것 수정이 필요.
-export const requestRefund = async (paymentId, refundData) => {
-  return axiosInterceptors.post(`${paymentUrl}/${paymentId}/refund`, refundData);
+// 환불 요청 일단 payment 테이블만 변경
+export const requestRefund = async (ottId) => {
+  try {
+    const response = await axiosInterceptors.post(`${paymentUrl}/refund/${ottId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getCardInfo = async () => {

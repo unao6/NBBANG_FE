@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { deleteCardInfo, getCardInfo } from "../../api/payment/paymentApi";
+import { deleteCardInfo, getCardInfo, requestRefund } from "../../api/payment/paymentApi";
 
 import AddIcon from "@mui/icons-material/Add";
 import Container from "../../components/Container";
@@ -17,15 +17,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import PaymentMethodModal from "./fragments/PaymentMethodModal";
 
 const PaymentMypage = () => {
-  const userId = 1; // 사용자의 ID를 설정합니다. 실제로는 로그인된 사용자의 ID를 가져와야 합니다.
   const [cardInfo, setCardInfo] = useState(null);
   const [modalOpen, setModalOpen] = useState(false); // 모달 상태 관리
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar 상태 관리
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // Snackbar 메시지
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // Snackbar 알림 타입
 
   useEffect(() => {
     const fetchCardInfo = async () => {
       try {
-        const data = await getCardInfo(userId);
+        const data = await getCardInfo();
         console.log("Fetched card info:", data);
         setCardInfo(data);
       } catch (error) {
@@ -34,7 +35,7 @@ const PaymentMypage = () => {
     };
 
     fetchCardInfo();
-  }, [userId]);
+  }, []);
 
   const handleRegister = () => {
     // 모달을 여는 함수
@@ -53,17 +54,36 @@ const PaymentMypage = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteCardInfo(userId);
+      await deleteCardInfo();
       setCardInfo(null);
+      setSnackbarMessage("결제 수단이 성공적으로 삭제되었습니다!");
+      setSnackbarSeverity("success");
       setSnackbarOpen(true); // 삭제 성공 시 Snackbar를 엽니다.
     } catch (error) {
       console.error("카드 삭제 중 오류 발생:", error);
+      setSnackbarMessage("카드 삭제 중 오류가 발생했습니다.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
   const handleChange = () => {
     // 모달을 여는 함수 (카드 변경)
     setModalOpen(true);
+  };
+
+  const handleRefund = async (ottId=2) => {
+    try {
+      await requestRefund(ottId);
+      setSnackbarMessage("환불 요청이 성공적으로 처리되었습니다!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true); // 환불 요청 성공 시 Snackbar를 엽니다.
+    } catch (error) {
+      console.error("환불 요청 중 오류 발생:", error);
+      setSnackbarMessage("환불 요청 중 오류가 발생했습니다.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
   };
 
   return (
@@ -121,6 +141,15 @@ const PaymentMypage = () => {
                   결제 수단 제거
                 </Button>
               </Box>
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleRefund(2)} // 여기에 실제 ottId를 넣으세요.
+                >
+                  환불 요청하기
+                </Button>
+              </Box>
             </>
           ) : (
             <>
@@ -159,10 +188,10 @@ const PaymentMypage = () => {
         >
           <Alert
             onClose={handleCloseSnackbar}
-            severity="success"
+            severity={snackbarSeverity}
             sx={{ width: "100%" }}
           >
-            결제 수단이 성공적으로 삭제되었습니다!
+            {snackbarMessage}
           </Alert>
         </Snackbar>
       </Box>
