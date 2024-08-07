@@ -40,6 +40,10 @@ const UserInfo = () => {
         navigate('/mypage/delete-account');
     };
 
+    const handleChangePhoneNumber = () => {
+        navigate('/mypage/change-phone-number');
+    }
+
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
@@ -53,7 +57,7 @@ const UserInfo = () => {
                 </Box>
             </Box>
             <List>
-                <ListItem button>
+                <ListItem button onClick={handleChangePhoneNumber}>
                     <ListItemIcon>
                         <PhoneIcon />
                     </ListItemIcon>
