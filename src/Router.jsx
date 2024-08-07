@@ -25,8 +25,10 @@ import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
-import UserAuth from "./pages/join/UserAuth";
 import UserInfo from "./pages/myPage/UserInfo";
+import UserList from "./pages/admin/user/UserList";
+import AccountMyPage from "./pages/payment/AccountMyPage";
+import AccountRegisterPage from "./pages/payment/AccountRegister";
 import MyParty from "./pages/party/MyParty";
 import PartyDetail from "./pages/party/PartyDetail";
 import PartySettings from "./pages/party/PartySettings";
@@ -49,6 +51,7 @@ const Router = () => {
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/admin/chat" element={<ChatList />} />
       <Route path="/admin/chat/:chatId" element={<AdminChat />} />
+      <Route path="/admin/users" element={<UserList />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />
@@ -56,7 +59,6 @@ const Router = () => {
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/auth/user-auth" element={<UserAuth />} />
       <Route path="/admin/ott" element={<OttList />} />
       <Route path="/add-party" element={<OttSelection />} />
       <Route path="/add-party/:ottId" element={<AddParty />} />
@@ -71,6 +73,8 @@ const Router = () => {
       <Route path="/party-settings/:partyId" element={<PartySettings />} />
       <Route path="/party-settings-user/:partyId" element={<PartySettingsUser />} />
       <Route path="/admin/parties" element={<AdminPartyManagement />} />
+      <Route path="/mypage/account" element={<AccountMyPage />} />
+      <Route path="/mypage/account/register" element={<AccountRegisterPage />} />
     </Routes>
   );
 };

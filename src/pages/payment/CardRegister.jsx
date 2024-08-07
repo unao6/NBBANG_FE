@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { Bootpay } from '@bootpay/client-js';
+import { postCardInfo } from "../../api/payment/bootPayApi";
 
 const BootpaySubscription = () => {
   const [isAgreed, setIsAgreed] = useState(false);
@@ -29,30 +30,26 @@ const BootpaySubscription = () => {
         subscribe_test_payment: true
       }
     }).then(
-      function (response) {
+      async function (response) {
         if (response.event === 'done') {
-            console.log(response.data);
+          console.log(response.data);
           alert('빌링키 발급이 완료되었습니다.');
 
-          fetch('http://localhost:8080/api/bootpay/card', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+          try {
+            // axiosInterceptors를 통해 API 호출
+            const cardInfo = {
               receiptId: response.data.receipt_id,
               cardCompany: response.data.receipt_data.card_data.card_company,
               cardNumber: response.data.receipt_data.card_data.card_no
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Success:', data);
+            };
+
+            const result = await postCardInfo(cardInfo);
+            console.log('서버 응답:', result);
+
             navigate("/mypage/payment");
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+          } catch (error) {
+            console.error('Error posting card info:', error);
+          }
         }
       },
       function (error) {

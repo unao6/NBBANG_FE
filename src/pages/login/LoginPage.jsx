@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInterceptors from "../../api/axiosInterceptors"; // axiosInterceptors를 가져옵니다
 
 const Login = () => {
     const navigate = useNavigate();
@@ -11,9 +11,10 @@ const Login = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/auth/google", {
-                withCredentials: true,
-            });
+            // axiosInterceptors를 사용하여 요청을 보냅니다
+            const response = await axiosInterceptors.get("/api/auth/google");
+
+            // 구글 로그인 성공 시 리다이렉션
             window.location.href = response.request.responseURL;
         } catch (error) {
             console.error("구글 로그인 실패", error);
@@ -44,7 +45,7 @@ const Login = () => {
                         />
                     </svg>
                 </button>
-                <h1 className="text-4xl font-bold text-center mt-4">엔빵</h1>
+                <h1 className="text-4xl font-bold text-center mt-4">N/BBANG</h1>
                 <p className="text-center text-gray-600 mt-2">안녕하세용</p>
                 <div className="mt-6">
                     <button
@@ -62,9 +63,9 @@ const Login = () => {
                 </div>
                 <div className="mt-4 text-center">
                     <span className="text-xs font-bold">엔빵 계정이 없으신가요? </span>
-                    <a onClick={handleSignUpClick} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+                    <button onClick={handleSignUpClick} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
                         회원가입
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

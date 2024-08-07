@@ -1,11 +1,57 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Box, Button, Typography, Card, CardContent } from '@mui/material';
 
 const DeleteAccount = () => {
-    const handleDeleteAccount = () => {
-        // 회원 탈퇴 로직을 여기에 추가하세요
-        console.log("회원 탈퇴하기 버튼 클릭됨");
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            const token = localStorage.getItem('access'); // 토큰을 로컬 스토리지에서 가져옵니다.
+            try {
+                const response = await axios.get('http://localhost:8080/api/users/user-info', {
+                    headers: {
+                       'access': `${token}`
+                    }
+                });
+                setUser(response.data);
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+                if (error.response && error.response.status === 401) {
+                    navigate('/login'); // 인증이 필요한 경우 로그인 페이지로 이동
+                }
+            }
+        };
+
+        fetchUserInfo();
+    }, [navigate]);
+
+    const handleDeleteAccount = async () => {
+        const token = localStorage.getItem('access'); // 토큰을 로컬 스토리지에서 가져옵니다.
+        if (user && user.email) {
+            try {
+                await axios.delete(`http://localhost:8080/delete-account/${user.email}`, {
+                    headers: {
+                        'access': `${token}`
+                    }
+                });
+                alert('회원 탈퇴가 완료되었습니다.');
+                localStorage.removeItem('access'); // 저장된 토큰 제거
+                // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
+                window.dispatchEvent(new Event("storage"));
+                navigate('/'); // 메인 화면으로 이동
+            } catch (error) {
+                console.error('회원 탈퇴에 실패했습니다:', error);
+                alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
+            }
+        } else {
+            alert('사용자 정보를 가져오는 데 실패했습니다.');
+        }
     };
+
+    if (!user) return <div>Loading...</div>; // 사용자 정보가 로드될 때까지 로딩 표시
 
     return (
         <Box
@@ -13,8 +59,8 @@ const DeleteAccount = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                height: '590px',
                 justifyContent: 'center',
-                minHeight: '100vh',
                 backgroundColor: '#f3f4f6',
                 padding: '16px',
             }}
@@ -38,7 +84,7 @@ const DeleteAccount = () => {
                     </Typography>
                     <Typography variant="body2" color="textSecondary" gutterBottom>
                         N/BBANG에 등록된 모든 정보가 삭제돼요.<br />
-                        이용중·정산 전인 파티가 있으면 회원탈퇴가 불가해요.
+                        이용 중·정산 전인 파티가 있으면 회원탈퇴가 불가해요.
                     </Typography>
                 </CardContent>
             </Card>
