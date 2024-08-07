@@ -6,7 +6,6 @@ import AdminChat from "./pages/admin/chat/AdminChat";
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
 import ChatList from "./pages/admin/chat/AdminChatList";
-import DeleteAccount from "./pages/myPage/DeleteAccount";
 import Guide from "./pages/guide/Guide.jsx";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
@@ -27,11 +26,12 @@ import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import SendEmail from "./pages/admin/notification/SendEmail"
-import UserInfo from "./pages/myPage/UserInfo";
+import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
 import AccountMyPage from "./pages/payment/AccountMyPage";
 import AccountRegisterPage from "./pages/payment/AccountRegister";
-import ChangeNumber from "./pages/myPage/ChangeNumber";
+import ChangeNumber from "./pages/user/ChangeNumber";
+import DeleteAccount from "./pages/user/DeleteAccount";
 import MyParty from "./pages/party/MyParty";
 import PartyDetail from "./pages/party/PartyDetail";
 import PartySettings from "./pages/party/PartySettings";
@@ -81,7 +81,6 @@ const Router = () => {
       <Route path="/admin/parties" element={<AdminPartyManagement />} />
       <Route path="/mypage/account" element={<AccountMyPage />} />
       <Route path="/mypage/account/register" element={<AccountRegisterPage />} />
-      
     </Routes>
   );
 };

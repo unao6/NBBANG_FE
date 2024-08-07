@@ -1,22 +1,22 @@
 import React, { useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
+import axiosInterceptors from "../../api/axiosInterceptors";
 
 const Login = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const handleEmailLogin = () => {
-    navigate("/users/user-login");
-  };
+    const handleEmailLogin = () => {
+        navigate("/users/user-login");
+    };
 
   const handleGoogleLogin = () => {
     // 구글 로그인 시작: Spring Security OAuth2 엔드포인트로 리디렉션
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
   };
 
-  const handleSignUpClick = () => {
-    navigate("/users/sign-up");
-  };
+    const handleSignUpClick = () => {
+        navigate("/users/sign-up");
+    };
 
   return (
     <div className="flex flex-col items-center justify-center h-full bg-gray-50">

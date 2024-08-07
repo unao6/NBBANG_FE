@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import axiosInterceptors from '../../../api/axiosInterceptors';
+import { fetchActiveUsers, fetchInactiveUsers, restoreUserAccount } from '../../../api/user/userApi';
 
 const UserList = () => {
   const [activeUsers, setActiveUsers] = useState([]);
@@ -14,11 +14,11 @@ const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const activeResponse = await axiosInterceptors.get('/api/admin/active');
-        const inactiveResponse = await axiosInterceptors.get('/api/admin/inactive');
+        const activeResponse = await fetchActiveUsers();
+        const inactiveResponse = await fetchInactiveUsers();
 
-        setActiveUsers(activeResponse.data);
-        setInactiveUsers(inactiveResponse.data);
+        setActiveUsers(activeResponse);
+        setInactiveUsers(inactiveResponse);
       } catch (err) {
         setError(err);
       } finally {
@@ -34,9 +34,8 @@ const UserList = () => {
 
   const handleRestoreUser = async (email) => {
     try {
-      await axiosInterceptors.put(`/api/admin/restore-account/${email}`);
+      await restoreUserAccount(email);
 
-      // 복구된 회원을 활성 회원 목록으로 이동
       const userToRestore = inactiveUsers.find(user => user.email === email);
       setActiveUsers([...activeUsers, { ...userToRestore, deleted: false }]);
       setInactiveUsers(inactiveUsers.filter(user => user.email !== email));
@@ -61,7 +60,6 @@ const UserList = () => {
     return <div className="text-red-500">Error: {error.message}</div>;
   }
 
-  // 역할 필터링을 적용한 사용자 목록
   const filteredUsers = (viewInactive ? inactiveUsers : activeUsers).filter(user => {
     if (roleFilter === 'all') return true;
     if (roleFilter === 'admin' && user.role === 'ROLE_ADMIN') return true;
@@ -69,7 +67,6 @@ const UserList = () => {
     return false;
   });
 
-  // 배열로 된 날짜 데이터를 yyyy.MM.dd HH:mm:ss 형식으로 포맷하는 함수
   const formatDateTimeFromArray = (dateArray) => {
     if (Array.isArray(dateArray) && dateArray.length >= 6) {
       const [year, month, day, hour, minute, second] = dateArray;
@@ -82,12 +79,10 @@ const UserList = () => {
     return deleted ? '탈퇴' : '활성';
   };
 
-  // 휴대폰 번호를 마스킹하는 함수
   const maskPhoneNumber = (phoneNumber) => {
     return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-****");
   };
 
-  // 휴대폰 번호를 포맷팅하는 함수 (마우스 오버 시 전체 번호 표시)
   const formatPhoneNumber = (phoneNumber) => {
     return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
   };

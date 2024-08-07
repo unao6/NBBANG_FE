@@ -1,9 +1,8 @@
-// ChangeNumber.jsx
 import React, { useState } from 'react';
 import { Box, Typography, Button, IconButton } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
-import axiosInterceptors from '../../api/axiosInterceptors';
+import { sendPhoneCertification, verifyPhoneCertification, changePhoneNumber } from '../../api/user/userApi';
 
 const ChangeNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -18,23 +17,21 @@ const ChangeNumber = () => {
 
   const handleSendVerificationCode = async () => {
     try {
-      await axiosInterceptors.post('/api/users/phone-certification', { phoneNumber });
+      await sendPhoneCertification(phoneNumber);
       setIsVerificationSent(true);
       alert('인증번호가 발송되었습니다. 휴대폰을 확인해주세요.');
     } catch (error) {
-      console.error('Error sending verification code:', error);
       alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
   const handleVerifyCode = async () => {
     try {
-      await axiosInterceptors.post('/api/users/phone-check', { phoneNumber, verificationCode });
+      await verifyPhoneCertification(phoneNumber, verificationCode);
       setIsVerified(true);
       setIsPhoneVerificationSuccess(true);
       setPhoneVerificationMessage('휴대폰 인증이 완료되었습니다.');
     } catch (error) {
-      console.error('Error verifying code:', error);
       setIsPhoneVerificationSuccess(false);
       setPhoneVerificationMessage('인증에 실패했습니다. 인증번호를 확인해주세요.');
     }
@@ -43,11 +40,10 @@ const ChangeNumber = () => {
   const handleSavePhoneNumber = async () => {
     if (isVerified) {
       try {
-        await axiosInterceptors.put('/api/users/change-phone-number', { phoneNumber });
+        await changePhoneNumber(phoneNumber);
         alert('휴대폰 번호가 성공적으로 변경되었습니다.');
         navigate('/mypage/user-info');
       } catch (error) {
-        console.error('Error changing phone number:', error);
         alert('휴대폰 번호 변경에 실패했습니다. 다시 시도해주세요.');
       }
     } else {
@@ -64,7 +60,7 @@ const ChangeNumber = () => {
       <IconButton onClick={handleBackClick} sx={{ alignSelf: 'flex-start', marginBottom: 2 }}>
         <ArrowBackIosIcon />
       </IconButton>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom sx={{ padding: '16px' }}>
         휴대폰 번호 변경
       </Typography>
 
