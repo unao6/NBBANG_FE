@@ -4,7 +4,7 @@ import { Box, Typography, Avatar, List, ListItem, ListItemIcon, ListItemText, Di
 import PhoneIcon from '@mui/icons-material/Phone';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import axiosInterceptors from '../../api/axiosInterceptors'; // axiosInterceptors 임포트
+import axiosInterceptors from '../../api/axiosInterceptors';
 
 const UserInfo = () => {
     const [user, setUser] = useState({ nickname: '', phoneNumber: '' });
@@ -41,7 +41,7 @@ const UserInfo = () => {
     };
 
     const handleChangePhoneNumber = () => {
-        navigate('/mypage/change-phone-number');
+        navigate('/mypage/change-number');
     }
 
     return (

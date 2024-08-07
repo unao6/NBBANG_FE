@@ -30,6 +30,7 @@ import UserInfo from "./pages/myPage/UserInfo";
 import UserList from "./pages/admin/user/UserList";
 import AccountMyPage from "./pages/payment/AccountMyPage";
 import AccountRegisterPage from "./pages/payment/AccountRegister";
+import ChangeNumber from "./pages/myPage/ChangeNumber";
 
 const Router = () => {
   return (
@@ -53,6 +54,7 @@ const Router = () => {
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />
       <Route path="/mypage/delete-account" element={<DeleteAccount />} />
+      <Route path="/mypage/change-number" element={<ChangeNumber />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />

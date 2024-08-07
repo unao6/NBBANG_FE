@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Box, Button, Typography, Card, CardContent } from '@mui/material';
+import { Box, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import axiosInterceptors from '../../api/axiosInterceptors'; // axiosInterceptors 임포트
 
 const DeleteAccount = () => {
     const [user, setUser] = useState(null);
@@ -9,13 +10,8 @@ const DeleteAccount = () => {
 
     useEffect(() => {
         const fetchUserInfo = async () => {
-            const token = localStorage.getItem('access'); // 토큰을 로컬 스토리지에서 가져옵니다.
             try {
-                const response = await axios.get('http://localhost:8080/api/users/user-info', {
-                    headers: {
-                       'access': `${token}`
-                    }
-                });
+                const response = await axiosInterceptors.get('/api/users/user-info');
                 setUser(response.data);
             } catch (error) {
                 console.error('Error fetching user info:', error);
@@ -29,18 +25,12 @@ const DeleteAccount = () => {
     }, [navigate]);
 
     const handleDeleteAccount = async () => {
-        const token = localStorage.getItem('access'); // 토큰을 로컬 스토리지에서 가져옵니다.
         if (user && user.email) {
             try {
-                await axios.delete(`http://localhost:8080/delete-account/${user.email}`, {
-                    headers: {
-                        'access': `${token}`
-                    }
-                });
+                await axiosInterceptors.delete(`/api/users/delete-account/${user.email}`);
                 alert('회원 탈퇴가 완료되었습니다.');
                 localStorage.removeItem('access'); // 저장된 토큰 제거
-                // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
-                window.dispatchEvent(new Event("storage"));
+                window.dispatchEvent(new Event("storage")); // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
                 navigate('/'); // 메인 화면으로 이동
             } catch (error) {
                 console.error('회원 탈퇴에 실패했습니다:', error);
@@ -51,6 +41,10 @@ const DeleteAccount = () => {
         }
     };
 
+    const handleBackClick = () => {
+        navigate(-1); // 이전 페이지로 이동
+    };
+
     if (!user) return <div>Loading...</div>; // 사용자 정보가 로드될 때까지 로딩 표시
 
     return (
@@ -59,12 +53,15 @@ const DeleteAccount = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                height: '590px',
+                height: '100vh',
                 justifyContent: 'center',
                 backgroundColor: '#f3f4f6',
                 padding: '16px',
             }}
         >
+            <IconButton onClick={handleBackClick} sx={{ alignSelf: 'flex-start', marginBottom: 2 }}>
+                <ArrowBackIosIcon />
+            </IconButton>
             <Typography variant="h6" gutterBottom>
                 N/BBANG 계정 관리
             </Typography>
