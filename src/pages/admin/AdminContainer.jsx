@@ -65,6 +65,15 @@ const AdminContainer = ({ children }) => {
                 채팅 관리
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/admin/notification/email"
+                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
+                activeClassName="bg-gray-200"
+              >
+                이메일 발송
+              </NavLink>
+            </li>
             <li className="mt-8">
               <NavLink
                 to="/"
