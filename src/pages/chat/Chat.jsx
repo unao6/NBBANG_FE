@@ -1,102 +1,191 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import {startChat, sendMessage} from '../../api/chat/chatApi';
 import useUserStore from '../../store/useUserStore';
 import { fetchUserInfo } from '../../api/user/userApi';
 
 const Chat = () => {
+  const { chatId } = useParams();
   const location = useLocation();
-  const [chatId, setChatId] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(location.state?.messages || []);
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
-  const [stompClient, setStompClient] = useState(null);
- 
+  const stompClientRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isChatEnded, setIsChatEnded] = useState(false);
+
   const { user, setUser } = useUserStore((state) => ({
     user: state.user,
     setUser: state.setUser,
   }));
 
-  useEffect(() => {
-    const initializeUserAndChat = async () => {
-      // 유저 정보 가져오기
-      try {
-        const userInfo = await fetchUserInfo();
-        setUser(userInfo); // 유저 정보를 상태에 저장
-      } catch (error) {
-        console.error('유저 정보를 가져오는데 실패했습니다:', error);
-        return;
-      }
+  const getCurrentKSTTimeString = () => {
+    const currentDate = new Date();
+    const kstOffset = 9 * 60 * 60 * 1000; // 9시간
+    const kstTime = new Date(currentDate.getTime() + kstOffset);
+    return kstTime.toISOString().slice(0, 19);
+  };
 
-      // 채팅 시작
+  useEffect(() => {
+    const initialize = async () => {
       try {
-        const chatResponse = await startChat();
-        setChatId(chatResponse.chatId);
-        setMessages(chatResponse.messages);
-        
-        // WebSocket 클라이언트 설정
+        setIsLoading(true);
+        const userInfo = await fetchUserInfo();
+        if (!userInfo) {
+          console.error('Failed to fetch user information');
+          return;
+        }
+  
+        setUser(userInfo);
+        setIsLoading(false);
+
         const client = new Client({
-          webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+          webSocketFactory: () => new SockJS(`${process.env.REACT_APP_API_BASE_URL}/ws`),
           debug: (str) => {
             console.log(str);
           },
           onConnect: () => {
-            client.subscribe('/queue/messages', (message) => {
-              const newMessage = JSON.parse(message.body);
-              setMessages((prevMessages) => [...prevMessages, newMessage]);
+            console.log('WebSocket connected');
+            const token = localStorage.getItem('access');
+
+            if (!token) {
+              console.error('Access token is missing');
+              return;
+            }
+
+            client.publish({
+              destination: '/app/auth',
+              body: JSON.stringify({ token }),
             });
+
+            const subscription = client.subscribe(
+              `/topic/messages/${chatId}`,
+              (message) => {
+                const newMessage = JSON.parse(message.body);
+                newMessage.sentAt = parseSentAt(newMessage.sentAt);
+
+                console.log('받은 메세지:', newMessage);
+
+                // 상담 종료 메세지를 받은 경우 input창 비활성화
+                if (newMessage.nickname === 'System' && newMessage.text.includes('상담이 종료되었습니다. 감사합니다.')) {
+                  setIsChatEnded(true);
+                }
+
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+              }, {ack: "client-individual"}
+            );
+
+
+            stompClientRef.current = {
+              client,
+              subscriptionId: subscription.id,
+            };
+
+            if (messages.length === 0) {
+              sendWelcomeMessage();
+            }
           },
           onStompError: (frame) => {
-            console.error('STOMP Error: ', frame.headers['message'], frame.body); // STOMP 에러 처리
+            console.error('STOMP Error: ', frame.headers['message'], frame.body);
           },
         });
 
         client.activate();
-        setStompClient(client);
-
-        return () => {
-          if (client) {
-            client.deactivate();
-          }
-        };
       } catch (error) {
-        console.error('채팅을 시작하는데 실패했습니다:', error);
+        console.error('Error during initialization:', error);
+        setIsLoading(false);
       }
     };
+  
+    initialize();
 
-    // 유저 정보 및 채팅 초기화
-    initializeUserAndChat();
-  }, []); // 의존성 배열에 chatId를 제거했습니다. 초기화 시에만 호출하도록 변경
-
-  const handleSend = async () => {
-    if (input.trim() !== '' && chatId !== null && stompClient) {
-      const message = {
-        chatId: chatId,
-        userId: user.id,
-        message: {
-          nickname: user.nickname,
-          text: input,
-          sentAt: new Date().toISOString(),
-        },
-      };
-
-      try {
-        const response = await sendMessage(stompClient, message);
-        setMessages([...messages, response]);
-      } catch(error) {
-        console.error('메시지 전송 중 오류 발생: ', error);
+    return () => {
+      if (stompClientRef.current) {
+        stompClientRef.current.client.deactivate();
       }
-      setInput('');
+      setIsLoading(false);
+    };
+  }, [chatId, setUser, messages]);
+
+  const sendWelcomeMessage = () => {
+    if (!stompClientRef.current || !stompClientRef.current.client.connected) {
+      console.error('WebSocket is not connected');
+      return;
     }
+    
+    const welcomeMessage = {
+      chatId: chatId,
+      // userId: user.id,
+      message: {
+        nickname: 'System',
+        text: '환영합니다! 문의사항을 남겨주시면 확인 후 답변 드리겠습니다:)',
+        sentAt: getCurrentKSTTimeString(),
+      },
+    };
+  
+    stompClientRef.current.client.publish({
+      destination: '/app/chat/send/' + chatId,
+      body: JSON.stringify(welcomeMessage),
+    });
+  };
+
+  const parseSentAt = (sentAt) => {
+    if (Array.isArray(sentAt)) {
+      return new Date(...sentAt);
+    }
+    return new Date(sentAt);
+  };
+
+  const handleSend = () => {
+    if (!user || !user.id || !user.nickname) {
+      console.error('User information is missing or incomplete');
+      return;
+    }
+
+    if (input.trim() === '') {
+      console.error('Input message is empty');
+      return;
+    }
+
+    if (!stompClientRef.current || !stompClientRef.current.client.connected) {
+      console.error('WebSocket is not connected');
+      return;
+    }
+
+    const newMessage = {
+      chatId: chatId,
+      userId: user.id,
+      message: {
+        nickname: user.nickname,
+        text: input,
+        sentAt: getCurrentKSTTimeString(),
+      },
+    };
+
+    console.log('보낸 메세지:', newMessage);
+
+    stompClientRef.current.client.publish({
+      destination: '/app/chat/send/' + chatId,
+      body: JSON.stringify(newMessage),
+    });
+
+    setInput('');
   };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  useEffect(() => {
+    if (!isLoading) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [isLoading]);
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col h-full relative">
@@ -104,12 +193,11 @@ const Chat = () => {
         className="flex-1 overflow-y-auto p-4 bg-white flex flex-col"
         style={{ paddingTop: '68px', paddingBottom: '68px' }}
       >
-        <div ref={chatEndRef} />
         {messages.map((msg, index) => (
           <div
             key={index}
             className={`my-1 ${
-              msg.nickname === user.nickname
+              msg.nickname === user?.nickname
                 ? 'self-end text-right'
                 : 'self-start text-left'
             }`}
@@ -125,9 +213,12 @@ const Chat = () => {
               {msg.text}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              {new Date(msg.sentAt).toLocaleTimeString([], {
+              {/* KST로 시간을 변환하여 표시 */}
+              {new Date(msg.sentAt).toLocaleTimeString('ko-KR', {
+                timeZone: 'Asia/Seoul',
                 hour: '2-digit',
                 minute: '2-digit',
+                hour12: true
               })}
             </div>
           </div>
@@ -140,9 +231,15 @@ const Chat = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="flex-1 p-2 border border-gray-300 rounded mr-2"
-          placeholder="Type a message..."
+          placeholder={isChatEnded ? "상담이 종료되었습니다." : "메세지 입력"}
+          disabled={isChatEnded}
         />
-        <button onClick={handleSend} className="bg-blue-500 text-white p-2 rounded">
+        <button 
+          onClick={handleSend} 
+          className={`${
+            isChatEnded ? 'bg-gray-400' : 'bg-blue-500 text-white p-2 rounded'
+            } text-white px-3 py-1.5 rounded-md transition duration-200`} 
+          disabled={isChatEnded} >
           Send
         </button>
       </div>
