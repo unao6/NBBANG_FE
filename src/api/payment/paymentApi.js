@@ -6,24 +6,27 @@ export const getPayments = async () => {
   return axiosInterceptors.get(`${paymentUrl}/list`);
 };
 
-export const getUserPayments = async (userId = 1) => {
-  return axiosInterceptors.get(`${paymentUrl}/user/${userId}`);
+export const getUserPayments = async () => {
+  return axiosInterceptors.get(`${paymentUrl}/user`);
 };
 
 export const getPaymentsByStatus = async (status) => {
   return axiosInterceptors.get(`${paymentUrl}/status/${status}`);
 };
 
-export const requestRefund = async (paymentId, refundData) => {
-  return axiosInterceptors.post(
-    `${paymentUrl}/${paymentId}/refund`,
-    refundData,
-  );
+// 환불 요청 일단 payment 테이블만 변경
+export const requestRefund = async (ottId) => {
+  try {
+    const response = await axiosInterceptors.post(`${paymentUrl}/refund/${ottId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const getCardInfo = async (userId) => {
+export const getCardInfo = async () => {
   try {
-    const response = await axiosInterceptors.get(`/api/card/info/${userId}`);
+    const response = await axiosInterceptors.get(`/api/card/info`);
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -33,6 +36,6 @@ export const getCardInfo = async (userId) => {
   }
 };
 
-export const deleteCardInfo = async (userId) => {
-  return axiosInterceptors.delete(`/api/card/delete/${userId}`);
+export const deleteCardInfo = async () => {
+  return axiosInterceptors.delete(`/api/card/delete`);
 };

@@ -14,8 +14,7 @@ const KakaoPayCardRegister = () => {
   const handleSubmit = async () => {
     if (isAgreed) {
       try {
-        const userId = 1; // 실제 userId로 변경 필요 임시 1로 설정
-        const response = await createKakaoPay(userId);
+        const response = await createKakaoPay();
         console.log("KakaoPay response:", response);
 
         // 응답값 확인

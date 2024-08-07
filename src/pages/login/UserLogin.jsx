@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useUserStore from "../../store/useUserStore.js";
 import { fetchUserInfo } from "../../api/user/userApi.js";
+import axiosInterceptors from "../../api/axiosInterceptors"; // axiosInterceptors를 가져옵니다
 
 axios.defaults.withCredentials = true;
 
@@ -22,14 +23,13 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/login", {
+      const response = await axiosInterceptors.post("/login", {
         email,
         password
       }, {
         headers: {
           'Content-Type': 'application/json'
-        },
-        withCredentials: true
+        }
       });
 
       // Store access token from response header
@@ -38,6 +38,8 @@ const UserLogin = () => {
 
         // 이후 요청에 access 헤더에 토큰 포함
       axios.defaults.headers.common['access'] = accessToken;
+      // 이후 요청에 access 헤더에 토큰 포함
+      axiosInterceptors.defaults.headers.common['access'] = accessToken;
 
       const userInfo = await fetchUserInfo();
       setUser(userInfo);
