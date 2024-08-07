@@ -1,22 +1,23 @@
 import useUserStore from '../../store/useUserStore.js';
 import axiosInterceptors from "../axiosInterceptors.js";
 
-// 유저 정보 가져오기
+// 유저 정보 가져오는 API
 export const fetchUserInfo = async () => {
   try {
+    console.log('Fetching user info...');
     const response = await axiosInterceptors.get('/api/users/user-info');
 
     if (response.status === 200) {
       const userData = response.data;
-      useUserStore.getState().setUser(userData);
-      return userData; // 유저 정보를 반환
+      console.log('유저 정보를 성공적으로 가져왔습니다.', userData);
+      return userData;
     } else {
-      console.error('Failed to fetch user info');
-      return null; // 에러가 발생하면 null을 반환
+      console.error('유저 정보 가져오기 실패');
+      return null;
     }
   } catch (error) {
-    console.error('Error fetching user info:', error.response ? error.response.data : error.message);
-    return null; // 에러가 발생하면 null을 반환
+    console.error('유저 정보를 가져오던 중 에러 발생:', error.response ? error.response.data : error.message);
+    return null;
   }
 };
 
@@ -40,14 +41,75 @@ export const checkEmailAvailability = (email) => {
   return axiosInterceptors.post("/api/users/check-email", { email });
 };
 
+// 휴대폰 인증번호 전송 API
+export const sendPhoneCertification = async (phoneNumber) => {
+  return axiosInterceptors.post('/api/users/phone-certification', { phoneNumber });
+};
+
+// 인증번호 확인 API
+export const verifyPhoneCertification = async (phoneNumber, verificationCode) => {
+  return axiosInterceptors.post('/api/users/phone-check', { phoneNumber, verificationCode });
+};
+
 // 회원가입 API
 export const signUpUser = (nickname, email, password, phoneNumber) => {
   return axiosInterceptors.post("/api/users/sign-up", {
     nickname,
     email,
     password,
-    phoneCerfiticationRequestDto: {
+    phoneCertificationRequestDto: {
       phoneNumber: phoneNumber
     }
   });
+};
+
+// 회원 탈퇴 API
+export const deleteAccount = async (email) => {
+  try {
+    const response = await axiosInterceptors.delete(`/api/users/delete-account/${email}`);
+    return response;
+  } catch (error) {
+    console.error('회원 탈퇴 실패:', error.response ? error.response.data : error.message);
+    throw error;
+  }
+};
+
+// 휴대폰 번호 변경 API
+export const changePhoneNumber = async (phoneNumber) => {
+  try {
+    const response = await axiosInterceptors.put('/api/users/change-phone-number', { phoneNumber });
+    return response;
+  } catch (error) {
+    console.error('Error changing phone number:', error);
+    throw error;
+  }
+};
+
+// 활성 사용자 목록 가져오기
+export const fetchActiveUsers = async () => {
+  try {
+    const response = await axiosInterceptors.get('/api/admin/active');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 비활성 사용자 목록 가져오기
+export const fetchInactiveUsers = async () => {
+  try {
+    const response = await axiosInterceptors.get('/api/admin/inactive');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 사용자 계정 복구
+export const restoreUserAccount = async (email) => {
+  try {
+    await axiosInterceptors.put(`/api/admin/restore-account/${email}`);
+  } catch (error) {
+    throw error;
+  }
 };

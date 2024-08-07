@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IconButton } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import axiosInterceptors from "../../api/axiosInterceptors"; // axiosInterceptors 가져오기
+import axiosInterceptors from "../../api/axiosInterceptors";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

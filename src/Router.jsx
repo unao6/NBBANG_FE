@@ -5,8 +5,8 @@ import AddParty from "./pages/party/AddParty";
 import AdminChat from "./pages/admin/chat/AdminChat";
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
-import ChatList from "./pages/admin/chat/ChatList";
-import DeleteAccount from "./pages/myPage/DeleteAccount";
+import ChatList from "./pages/admin/chat/AdminChatList";
+import Guide from "./pages/guide/Guide.jsx";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
@@ -25,10 +25,13 @@ import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
-import UserInfo from "./pages/myPage/UserInfo";
+import SendEmail from "./pages/admin/notification/SendEmail"
+import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
 import AccountMyPage from "./pages/payment/AccountMyPage";
 import AccountRegisterPage from "./pages/payment/AccountRegister";
+import ChangeNumber from "./pages/user/ChangeNumber";
+import DeleteAccount from "./pages/user/DeleteAccount";
 import MyParty from "./pages/party/MyParty";
 import PartyDetail from "./pages/party/PartyDetail";
 import PartySettings from "./pages/party/PartySettings";
@@ -40,23 +43,26 @@ const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Main />} />
+      <Route path="/guide" element={<Guide />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/payment/kakaopay/register" element={<KakaoPayRegister />} />
       <Route path="/payment/card/register" element={<CardRegister />} />
       <Route path="/payment/kakaopay/approve" element={<KakaoPayApprove />} />
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
-      <Route path="/chat" element={<Chat />} />
+      <Route path="/chat/:chatId" element={<Chat />} />
       <Route path="/chat/start" element={<StartChat />} />
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/admin/chat" element={<ChatList />} />
       <Route path="/admin/chat/:chatId" element={<AdminChat />} />
       <Route path="/admin/users" element={<UserList />} />
+      <Route path="/admin/notification/email" element={<SendEmail />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />
       <Route path="/mypage/delete-account" element={<DeleteAccount />} />
+      <Route path="/mypage/change-number" element={<ChangeNumber />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
