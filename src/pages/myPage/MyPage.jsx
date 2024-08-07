@@ -30,7 +30,7 @@ const MyPage = () => {
     {
       text: "파티장 | 정산계좌",
       icon: <PaymentIcon />,
-      href: "/settlement-account",
+      href: "/mypage/account",
     },
     { text: "공지사항", icon: <AnnouncementIcon />, href: "/notices" },
     { text: "알림 설정", icon: <NotificationsIcon />, href: "/notifications" },
