@@ -1,16 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const FooterLink = ({ href, children }) => {
   return (
-    <a
-      href={href}
+    <Link
+      to={href}
       className="text-gray-400 no-underline font-medium relative group"
     >
       <span className="transition-all duration-300 group-hover:text-black">
         {children}
       </span>
       <span className="absolute bottom-0 left-0 w-0 h-[3px] bg-yellow-300 rounded-full transition-all duration-300 group-hover:w-full"></span>
-    </a>
+    </Link>
   );
 };
 

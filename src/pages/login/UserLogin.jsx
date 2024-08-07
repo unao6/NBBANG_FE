@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useUserStore from "../../store/useUserStore.js";
+import { fetchUserInfo } from "../../api/user/userApi.js";
 
 axios.defaults.withCredentials = true;
 
@@ -11,6 +13,8 @@ const UserLogin = () => {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const setUser = useUserStore(state => state.setUser);
+  console.log(setUser);
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -29,11 +33,15 @@ const UserLogin = () => {
       });
 
       // Store access token from response header
-        const accessToken = response.headers['access'];  // 'authorization' 대신 'access' 사용
-        localStorage.setItem('access', accessToken);
+      const accessToken = response.headers['access'];  // 'authorization' 대신 'access' 사용
+      localStorage.setItem('access', accessToken);
 
         // 이후 요청에 access 헤더에 토큰 포함
-        axios.defaults.headers.common['access'] = accessToken;
+      axios.defaults.headers.common['access'] = accessToken;
+
+      const userInfo = await fetchUserInfo();
+      setUser(userInfo);
+      console.log(useUserStore.getState().user);
 
       navigate("/");
     } catch (error) {
@@ -133,9 +141,10 @@ const UserLogin = () => {
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">엔빵 계정이 없으신가요? </span>
-          <a onClick={handleSignUpClick} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+          <button onClick={handleSignUpClick}
+                  className="text-xs font-bold text-green-500 hover:underline cursor-pointer bg-transparent border-none p-0">
             회원가입
-          </a>
+          </button>
         </div>
       </div>
     </div>

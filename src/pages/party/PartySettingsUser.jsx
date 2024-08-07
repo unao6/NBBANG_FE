@@ -1,32 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconButton, Button, Modal, Box } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
-import { fetchUserInfo } from '../../api/user/userApi';
+import useUserStore from '../../store/useUserStore'; // Zustand store import
 
 const PartySettingsUser = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { partyDetails } = location.state || {}; // 전송된 상태를 가져오고 없을 시 기본값 설정
-
-  const [user, setUser] = useState(null);
+  const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
+  console.log(user);
   const [open, setOpen] = useState(false); // 모달 상태 관리
   const [alertOpen, setAlertOpen] = useState(false); // 경고 메시지 상태 관리
-
-  useEffect(() => {
-    const loadUserInfo = async () => {
-      try {
-        const userInfo = await fetchUserInfo();
-        setUser(userInfo);
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-        // 사용자 정보를 가져오지 못했을 때의 처리 (예: 리다이렉션 등)
-      }
-    };
-
-    loadUserInfo();
-  }, []);
 
   const partyMemberFee = 500;
   const paymentAmount = (partyDetails.ottPrice / partyDetails.capacity) + partyMemberFee;
@@ -51,7 +37,6 @@ const PartySettingsUser = () => {
   };
 
   const joinDate = user ? getJoinDate() : null;
-  console.log(joinDate)
 
   const isEligibleToLeave = () => {
     if (!joinDate) {
