@@ -32,11 +32,7 @@ const Chat = () => {
       try {
         setIsLoading(true);
         const userInfo = await fetchUserInfo();
-        if (!userInfo) {
-          console.error('Failed to fetch user information');
-          return;
-        }
-  
+
         setUser(userInfo);
         setIsLoading(false);
 
@@ -47,16 +43,10 @@ const Chat = () => {
           },
           onConnect: () => {
             console.log('WebSocket connected');
-            const token = localStorage.getItem('access');
-
-            if (!token) {
-              console.error('Access token is missing');
-              return;
-            }
 
             client.publish({
               destination: '/app/auth',
-              body: JSON.stringify({ token }),
+              body: localStorage.getItem('access'),
             });
 
             const subscription = client.subscribe(
@@ -116,7 +106,6 @@ const Chat = () => {
     
     const welcomeMessage = {
       chatId: chatId,
-      // userId: user.id,
       message: {
         nickname: 'System',
         text: '환영합니다! 문의사항을 남겨주시면 확인 후 답변 드리겠습니다:)',
@@ -138,7 +127,7 @@ const Chat = () => {
   };
 
   const handleSend = () => {
-    if (!user || !user.id || !user.nickname) {
+    if (!user || !user.userId || !user.nickname) {
       console.error('User information is missing or incomplete');
       return;
     }

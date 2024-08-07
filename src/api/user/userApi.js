@@ -9,6 +9,7 @@ export const fetchUserInfo = async () => {
     if (response.status === 200) {
       const userData = response.data;
       useUserStore.getState().setUser(userData);
+      console.log('유저 정보를 성공적으로 가져왔습니다.', userData);
       return userData;
     } else {
       console.error('유저 정보 가져오기 실패');
