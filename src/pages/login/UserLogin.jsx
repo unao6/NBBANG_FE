@@ -36,7 +36,7 @@ const UserLogin = () => {
       const accessToken = response.headers['access'];  // 'authorization' 대신 'access' 사용
       localStorage.setItem('access', accessToken);
 
-        // 이후 요청에 access 헤더에 토큰 포함
+      // 이후 요청에 access 헤더에 토큰 포함
       axios.defaults.headers.common['access'] = accessToken;
       // 이후 요청에 access 헤더에 토큰 포함
       axiosInterceptors.defaults.headers.common['access'] = accessToken;

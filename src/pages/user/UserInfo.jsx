@@ -14,71 +14,71 @@ const UserInfo = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInterceptors.get('/api/users/user-info');
-          setUser({
-            ...response.data,
-              phoneNumber: formatPhoneNumber(response.data.phoneNumber)
-             });
-            } catch (error) {
-              console.error('Error fetching user data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const formatPhoneNumber = (phoneNumber) => {
-        if (phoneNumber.length === 11) {
-            return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${'*'.repeat(4)}`;
-        } else if (phoneNumber.length === 10) {
-            return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${'*'.repeat(4)}`;
-        } else {
-            return phoneNumber;
-        }
+        setUser({
+          ...response.data,
+          phoneNumber: formatPhoneNumber(response.data.phoneNumber)
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     };
 
-    const handleDeleteAccountClick = () => {
-        navigate('/mypage/delete-account');
-    };
+    fetchData();
+  }, []);
 
-    const handleChangePhoneNumber = () => {
-        navigate('/mypage/change-number');
+  const formatPhoneNumber = (phoneNumber) => {
+    if (phoneNumber.length === 11) {
+      return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${'*'.repeat(4)}`;
+    } else if (phoneNumber.length === 10) {
+      return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${'*'.repeat(4)}`;
+    } else {
+      return phoneNumber;
     }
+  };
 
-    return (
-        <Box sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-                N/BBANG 계정 관리
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
-                <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}></Avatar>
-                <Box>
-                    <Typography variant="h6">{user.nickname}</Typography>
-                    <Typography variant="body2">{user.phoneNumber}</Typography>
-                </Box>
-            </Box>
-            <List>
-                <ListItem button onClick={handleChangePhoneNumber}>
-                    <ListItemIcon>
-                        <PhoneIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="휴대폰 번호 변경" />
-                    <IconButton edge="end">
-                        <ArrowForwardIosIcon />
-                    </IconButton>
-                </ListItem>
-                <Divider />
-                <ListItem button onClick={handleDeleteAccountClick}>
-                    <ListItemIcon>
-                        <ExitToAppIcon sx={{ color: 'red' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="회원 탈퇴" sx={{ color: 'red' }} />
-                    <IconButton edge="end">
-                        <ArrowForwardIosIcon />
-                    </IconButton>
-                </ListItem>
-            </List>
+  const handleDeleteAccountClick = () => {
+    navigate('/mypage/delete-account');
+  };
+
+  const handleChangePhoneNumber = () => {
+    navigate('/mypage/change-number');
+  };
+
+  return (
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h6" gutterBottom>
+        N/BBANG 계정 관리
+      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
+        <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}></Avatar>
+        <Box>
+          <Typography variant="h6">{user.nickname}</Typography>
+          <Typography variant="body2">{user.phoneNumber}</Typography>
         </Box>
-    );
+      </Box>
+      <List>
+        <ListItem button onClick={handleChangePhoneNumber}>
+          <ListItemIcon>
+            <PhoneIcon />
+          </ListItemIcon>
+          <ListItemText primary="휴대폰 번호 변경" />
+          <IconButton edge="end">
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </ListItem>
+        <Divider />
+        <ListItem button onClick={handleDeleteAccountClick}>
+          <ListItemIcon>
+            <ExitToAppIcon sx={{ color: 'red' }} />
+          </ListItemIcon>
+          <ListItemText primary="회원 탈퇴" sx={{ color: 'red' }} />
+          <IconButton edge="end">
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </ListItem>
+      </List>
+    </Box>
+  );
 };
 
 export default UserInfo;

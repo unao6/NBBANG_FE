@@ -47,7 +47,7 @@ export const signUpUser = (nickname, email, password, phoneNumber) => {
     nickname,
     email,
     password,
-    phoneCerfiticationRequestDto: {
+    phoneCertificationRequestDto: {
       phoneNumber: phoneNumber
     }
   });

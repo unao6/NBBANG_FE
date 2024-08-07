@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInterceptors from "../../api/axiosInterceptors";
 import { Button } from "@mui/material";
 
 const SignUp = () => {
@@ -31,18 +31,17 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
-    // 이메일 형식 정규식
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
 
   const validatePassword = (password) => {
-    // 비밀번호가 영어와 숫자를 포함하여 8자 이상인지 확인
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return regex.test(password);
   };
 
   const handleNicknameChange = (e) => setNickname(e.target.value);
+
   const handleEmailChange = (e) => {
     const emailInput = e.target.value;
     setEmail(emailInput);
@@ -56,24 +55,27 @@ const SignUp = () => {
     }
   };
 
-const handleSendVerificationCode = async () => {
-  try {
-    await axios.post("http://localhost:8080/api/users/email-certification", { email });
-    setIsVerificationSent(true);
-    alert("인증 이메일이 발송되었습니다. 이메일을 확인해 주세요.");
-  } catch (error) {
-    console.error("Email verification failed:", error);
-    alert("이메일 인증에 실패했습니다. 다시 시도해 주세요.");
-  }
-};
+  const handleSendVerificationCode = async () => {
+    try {
+      await axiosInterceptors.post("/api/users/email-certification", { email });
+      setIsVerificationSent(true);
+      alert("인증 이메일이 발송되었습니다. 이메일을 확인해 주세요.");
+    } catch (error) {
+      console.error("Email verification failed:", error);
+      alert("이메일 인증에 실패했습니다. 다시 시도해 주세요.");
+    }
+  };
 
-const handleVerificationCodeChange = (e) => {
-  setVerificationCode(e.target.value);
-};
+  const handleVerificationCodeChange = (e) => {
+    setVerificationCode(e.target.value);
+  };
 
   const handleVerifyCode = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/users/check-certification", { email, certificationNumber });
+      const response = await axiosInterceptors.post("/api/users/check-certification", {
+        email,
+        certificationNumber,
+      });
       if (response.status === 200) {
         setIsVerificationSuccess(true);
         setVerificationMessage("이메일 인증이 완료되었습니다.");
@@ -88,11 +90,10 @@ const handleVerificationCodeChange = (e) => {
     }
   };
 
-const handlePasswordChange = (e) => {
+  const handlePasswordChange = (e) => {
     const passwordInput = e.target.value;
     setPassword(passwordInput);
 
-    // 비밀번호 유효성 검사: 영어와 숫자를 포함하고 8자 이상인지 확인
     if (!validatePassword(passwordInput)) {
       setIsPasswordValid(false);
       setPasswordMessage("비밀번호는 영어와 숫자를 포함하여 8자 이상이어야 합니다.");
@@ -101,7 +102,6 @@ const handlePasswordChange = (e) => {
       setPasswordMessage("");
     }
 
-    // 비밀번호와 확인 비밀번호가 일치하는지 확인
     if (confirmPassword && passwordInput !== confirmPassword) {
       setIsPasswordMatch(false);
       setPasswordMessage("비밀번호가 일치하지 않습니다.");
@@ -109,13 +109,12 @@ const handlePasswordChange = (e) => {
       setIsPasswordMatch(true);
       setPasswordMessage("");
     }
-};
+  };
 
-const handleConfirmPasswordChange = (e) => {
+  const handleConfirmPasswordChange = (e) => {
     const confirmPasswordInput = e.target.value;
     setConfirmPassword(confirmPasswordInput);
 
-    // 비밀번호와 확인 비밀번호가 일치하는지 확인
     if (password && confirmPasswordInput !== password) {
       setIsPasswordMatch(false);
       setPasswordMessage("비밀번호가 일치하지 않습니다.");
@@ -123,15 +122,15 @@ const handleConfirmPasswordChange = (e) => {
       setIsPasswordMatch(true);
       setPasswordMessage("");
     }
-};
+  };
 
   const handleNicknameCheck = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/users/check-nickname", { nickname });
-      if (response.data === true) {  // 사용 가능한 경우
+      const response = await axiosInterceptors.post("/api/users/check-nickname", { nickname });
+      if (response.data === true) {
         setNicknameMessage("사용 가능한 닉네임입니다.");
         setIsNicknameValid(true);
-      } else {  // 이미 사용 중인 경우
+      } else {
         setNicknameMessage("이미 사용 중인 닉네임입니다.");
         setIsNicknameValid(false);
       }
@@ -144,11 +143,11 @@ const handleConfirmPasswordChange = (e) => {
 
   const handleEmailCheck = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/users/check-email", { email });
-      if (response.data === true) {  // 사용 가능한 경우
+      const response = await axiosInterceptors.post("/api/users/check-email", { email });
+      if (response.data === true) {
         setEmailMessage("사용 가능한 이메일입니다.");
         setIsEmailValid(true);
-      } else {  // 이미 사용 중인 경우
+      } else {
         setEmailMessage("이미 사용 중인 이메일입니다.");
         setIsEmailValid(false);
       }
@@ -162,7 +161,7 @@ const handleConfirmPasswordChange = (e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/api/users/sign-up", {
+      await axiosInterceptors.post("/api/users/sign-up", {
         nickname,
         email,
         password,
@@ -177,12 +176,12 @@ const handleConfirmPasswordChange = (e) => {
     navigate("/login");
   };
 
-const isFormValid =
+  const isFormValid =
     nickname &&
     email &&
     password.length >= 8 &&
-    isPasswordValid && // 비밀번호가 유효한지 확인
-    isPasswordMatch && // 비밀번호와 확인 비밀번호가 일치하는지 확인
+    isPasswordValid &&
+    isPasswordMatch &&
     isNicknameValid &&
     isEmailValid &&
     isVerificationSuccess;
@@ -212,7 +211,9 @@ const isFormValid =
         <h2 className="text-2xl font-bold mb-6 text-left">회원가입</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className={`block text-sm font-medium ${isNicknameFocused ? "text-green-500" : "text-gray-700"}`}>닉네임</label>
+            <label className={`block text-sm font-medium ${isNicknameFocused ? "text-green-500" : "text-gray-700"}`}>
+              닉네임
+            </label>
             <div className="relative">
               <input
                 type="text"
@@ -244,7 +245,9 @@ const isFormValid =
           </div>
 
           <div className="mb-6">
-            <label className={`block text-sm font-medium ${isEmailFocused ? "text-green-500" : "text-gray-700"}`}>이메일</label>
+            <label className={`block text-sm font-medium ${isEmailFocused ? "text-green-500" : "text-gray-700"}`}>
+              이메일
+            </label>
             <div className="relative">
               <input
                 type="email"
@@ -276,84 +279,87 @@ const isFormValid =
             )}
           </div>
 
-                    {!isVerificationSent && (
-                      <div className="mb-6">
-                        <button
-                          type="button"
-                          onClick={handleSendVerificationCode}
-                          className="w-full px-4 py-2 text-white bg-green-700 rounded focus:outline-none hover:bg-green-800"
-                        >
-                          인증번호 전송
-                        </button>
-                      </div>
-                    )}
+          {!isVerificationSent && (
+            <div className="mb-6">
+              <button
+                type="button"
+                onClick={handleSendVerificationCode}
+                className="w-full px-4 py-2 text-white bg-green-700 rounded focus:outline-none hover:bg-green-800"
+              >
+                인증번호 전송
+              </button>
+            </div>
+          )}
 
-                    {isVerificationSent && (
-                      <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700">인증번호</label>
-                        <input
-                          type="text"
-                          value={certificationNumber}
-                          onChange={handleVerificationCodeChange}
-                          className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-green-500"
-                          placeholder="인증번호를 입력해주세요"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleVerifyCode}
-                          className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
-                        >
-                          인증 완료
-                        </button>
-                        {verificationMessage && (
-                          <p className={`text-sm mt-2 ${isVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
-                            {verificationMessage}
-                          </p>
-                        )}
-                      </div>
-                    )}
+          {isVerificationSent && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700">인증번호</label>
+              <input
+                type="text"
+                value={certificationNumber}
+                onChange={handleVerificationCodeChange}
+                className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-green-500"
+                placeholder="인증번호를 입력해주세요"
+              />
+              <button
+                type="button"
+                onClick={handleVerifyCode}
+                className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+              >
+                인증 완료
+              </button>
+              {verificationMessage && (
+                <p className={`text-sm mt-2 ${isVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
+                  {verificationMessage}
+                </p>
+              )}
+            </div>
+          )}
 
-      <div className="mb-6">
-        <label className={`block text-sm font-medium ${isPasswordFocused ? "text-green-500" : "text-gray-700"}`}>비밀번호</label>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-          onFocus={() => setIsPasswordFocused(true)}
-          onBlur={() => setIsPasswordFocused(false)}
-          className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPasswordFocused ? 'border-green-500' : 'border-gray-300'}`}
-          placeholder="비밀번호를 입력해주세요"
-          style={{
-            border: 'none',
-            borderBottom: isPasswordFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
-            backgroundColor: 'transparent'
-          }}
-        />
-        {passwordMessage && (
-          <p className={`text-sm mt-2 ${isPasswordValid ? 'text-green-500' : 'text-red-500'}`}>
-            {passwordMessage}
-          </p>
-        )}
-      </div>
+          <div className="mb-6">
+            <label className={`block text-sm font-medium ${isPasswordFocused ? "text-green-500" : "text-gray-700"}`}>
+              비밀번호
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+              className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPasswordFocused ? 'border-green-500' : 'border-gray-300'}`}
+              placeholder="비밀번호를 입력해주세요"
+              style={{
+                border: 'none',
+                borderBottom: isPasswordFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+                backgroundColor: 'transparent'
+              }}
+            />
+            {passwordMessage && (
+              <p className={`text-sm mt-2 ${isPasswordValid ? 'text-green-500' : 'text-red-500'}`}>
+                {passwordMessage}
+              </p>
+            )}
+          </div>
 
-      <div className="mb-6">
-        <label className={`block text-sm font-medium ${isConfirmPasswordFocused ? "text-green-500" : "text-gray-700"}`}>비밀번호 확인</label>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={handleConfirmPasswordChange}
-          onFocus={() => setIsConfirmPasswordFocused(true)}
-          onBlur={() => setIsConfirmPasswordFocused(false)}
-          className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isConfirmPasswordFocused ? 'border-green-500' : 'border-gray-300'}`}
-          placeholder="비밀번호를 다시 입력해주세요"
-          style={{
-            border: 'none',
-            borderBottom: isConfirmPasswordFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
-            backgroundColor: 'transparent'
-          }}
-        />
-      </div>
-
+          <div className="mb-6">
+            <label className={`block text-sm font-medium ${isConfirmPasswordFocused ? "text-green-500" : "text-gray-700"}`}>
+              비밀번호 확인
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              onFocus={() => setIsConfirmPasswordFocused(true)}
+              onBlur={() => setIsConfirmPasswordFocused(false)}
+              className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isConfirmPasswordFocused ? 'border-green-500' : 'border-gray-300'}`}
+              placeholder="비밀번호를 다시 입력해주세요"
+              style={{
+                border: 'none',
+                borderBottom: isConfirmPasswordFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+                backgroundColor: 'transparent'
+              }}
+            />
+          </div>
 
           <button
             type="submit"
