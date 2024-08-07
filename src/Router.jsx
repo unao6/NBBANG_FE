@@ -26,7 +26,7 @@ import RefundManager from "./pages/admin/payment/RefundManager";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import SendEmail from "./pages/admin/notification/SendEmail"
-import UserInfo from "./pages/myPage/UserInfo";
+import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
 import AccountMyPage from "./pages/payment/AccountMyPage";
 import AccountRegisterPage from "./pages/payment/AccountRegister";
