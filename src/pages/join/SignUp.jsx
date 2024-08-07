@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInterceptors from "../../api/axiosInterceptors";
+import axios from "axios";
+import { Button } from "@mui/material";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
@@ -26,14 +27,6 @@ const SignUp = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [passwordMessage, setPasswordMessage] = useState("");
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isPhoneVerificationSent, setIsPhoneVerificationSent] = useState(false);
-  const [randomNumber, setPhoneVerificationCode] = useState("");
-  const [phoneVerificationMessage, setPhoneVerificationMessage] = useState("");
-  const [isPhoneVerificationSuccess, setIsPhoneVerificationSuccess] = useState(false);
-  const [isPhoneFocused, setIsPhoneFocused] = useState(false);
-  const [isPhoneVerificationFocused, setIsPhoneVerificationFocused] = useState(false);
 
   const navigate = useNavigate();
 
@@ -65,7 +58,7 @@ const SignUp = () => {
 
 const handleSendVerificationCode = async () => {
   try {
-    await axiosInterceptors.post("/api/users/email-certification", { email });
+    await axios.post("http://localhost:8080/api/users/email-certification", { email });
     setIsVerificationSent(true);
     alert("인증 이메일이 발송되었습니다. 이메일을 확인해 주세요.");
   } catch (error) {
@@ -74,16 +67,13 @@ const handleSendVerificationCode = async () => {
   }
 };
 
-  const handleVerificationCodeChange = (e) => {
-    setVerificationCode(e.target.value);
-  };
+const handleVerificationCodeChange = (e) => {
+  setVerificationCode(e.target.value);
+};
 
   const handleVerifyCode = async () => {
     try {
-      const response = await axiosInterceptors.post("/api/users/check-certification", {
-        email,
-        certificationNumber,
-      });
+      const response = await axios.post("http://localhost:8080/api/users/check-certification", { email, certificationNumber });
       if (response.status === 200) {
         setIsVerificationSuccess(true);
         setVerificationMessage("이메일 인증이 완료되었습니다.");
@@ -98,7 +88,7 @@ const handleSendVerificationCode = async () => {
     }
   };
 
-  const handlePasswordChange = (e) => {
+const handlePasswordChange = (e) => {
     const passwordInput = e.target.value;
     setPassword(passwordInput);
 
@@ -119,9 +109,9 @@ const handleSendVerificationCode = async () => {
       setIsPasswordMatch(true);
       setPasswordMessage("");
     }
-  };
+};
 
-  const handleConfirmPasswordChange = (e) => {
+const handleConfirmPasswordChange = (e) => {
     const confirmPasswordInput = e.target.value;
     setConfirmPassword(confirmPasswordInput);
 
@@ -133,15 +123,15 @@ const handleSendVerificationCode = async () => {
       setIsPasswordMatch(true);
       setPasswordMessage("");
     }
-  };
+};
 
   const handleNicknameCheck = async () => {
     try {
-      const response = await axiosInterceptors.post("/api/users/check-nickname", { nickname });
-      if (response.data === true) {
+      const response = await axios.post("http://localhost:8080/api/users/check-nickname", { nickname });
+      if (response.data === true) {  // 사용 가능한 경우
         setNicknameMessage("사용 가능한 닉네임입니다.");
         setIsNicknameValid(true);
-      } else {
+      } else {  // 이미 사용 중인 경우
         setNicknameMessage("이미 사용 중인 닉네임입니다.");
         setIsNicknameValid(false);
       }
@@ -154,11 +144,11 @@ const handleSendVerificationCode = async () => {
 
   const handleEmailCheck = async () => {
     try {
-      const response = await axiosInterceptors.post("/api/users/check-email", { email });
-      if (response.data === true) {
+      const response = await axios.post("http://localhost:8080/api/users/check-email", { email });
+      if (response.data === true) {  // 사용 가능한 경우
         setEmailMessage("사용 가능한 이메일입니다.");
         setIsEmailValid(true);
-      } else {
+      } else {  // 이미 사용 중인 경우
         setEmailMessage("이미 사용 중인 이메일입니다.");
         setIsEmailValid(false);
       }
@@ -172,13 +162,10 @@ const handleSendVerificationCode = async () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axiosInterceptors.post("/api/users/sign-up", {
+      await axios.post("http://localhost:8080/api/users/sign-up", {
         nickname,
         email,
         password,
-        phoneCerfiticationRequestDto: { // PhoneCerfiticationRequestDto 객체로 phoneNumber를 전달합니다.
-          phoneNumber: phoneNumber
-        }
       });
       navigate("/login");
     } catch (error) {
@@ -186,49 +173,9 @@ const handleSendVerificationCode = async () => {
     }
   };
 
-const handlePhoneNumberChange = (e) => {
-  setPhoneNumber(e.target.value);
-};
-
-const handleSendPhoneVerificationCode = async () => {
-  try {
-    await axiosInterceptors.post("/api/users/phone-certification", { phoneNumber });
-    setIsPhoneVerificationSent(true);
-    alert("인증번호가 발송되었습니다. 휴대폰을 확인해 주세요.");
-  } catch (error) {
-    console.error("Phone verification failed:", error);
-    alert("휴대폰 인증에 실패했습니다. 다시 시도해 주세요.");
-  }
-};
-
-const handlePhoneVerificationCodeChange = (e) => {
-  setPhoneVerificationCode(e.target.value);
-};
-
-const handleVerifyPhoneCode = async () => {
-  try {
-    const response = await axiosInterceptors.post("/api/users/phone-check", {
-      phoneNumber,
-      randomNumber,
-    });
-    if (response.status === 200) {
-      setIsPhoneVerificationSuccess(true);
-      setPhoneVerificationMessage("휴대폰 인증이 완료되었습니다.");
-    } else {
-      setIsPhoneVerificationSuccess(false);
-      setPhoneVerificationMessage("인증 코드가 올바르지 않습니다.");
-    }
-  } catch (error) {
-    console.error("Phone verification failed:", error);
-    setIsPhoneVerificationSuccess(false);
-    setPhoneVerificationMessage("인증 코드가 올바르지 않습니다.");
-  }
-};
-
   const handleBackClick = () => {
     navigate("/login");
   };
-
 
 const isFormValid =
     nickname &&
@@ -238,8 +185,7 @@ const isFormValid =
     isPasswordMatch && // 비밀번호와 확인 비밀번호가 일치하는지 확인
     isNicknameValid &&
     isEmailValid &&
-    isVerificationSuccess &&
-    isPhoneVerificationSuccess;
+    isVerificationSuccess;
 
   return (
     <div className="flex flex-col items-center h-full bg-white">
@@ -285,7 +231,7 @@ const isFormValid =
               <button
                 type="button"
                 onClick={handleNicknameCheck}
-                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
+                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-blue-600 focus:outline-none"
               >
                 중복확인
               </button>
@@ -317,7 +263,7 @@ const isFormValid =
               <button
                 type="button"
                 onClick={handleEmailCheck}
-                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
+                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-blue-600 focus:outline-none"
                 disabled={!isEmailValid}
               >
                 중복확인
@@ -330,17 +276,17 @@ const isFormValid =
             )}
           </div>
 
-
-                            <div className="mb-6">
-                              <button
-                                type="button"
-                                onClick={handleSendVerificationCode}
-                                className="w-full px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
-                              >
-                                {isVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
-                              </button>
+                    {!isVerificationSent && (
+                      <div className="mb-6">
+                        <button
+                          type="button"
+                          onClick={handleSendVerificationCode}
+                          className="w-full px-4 py-2 text-white bg-green-700 rounded focus:outline-none hover:bg-green-800"
+                        >
+                          인증번호 전송
+                        </button>
                       </div>
-
+                    )}
 
                     {isVerificationSent && (
                       <div className="mb-6">
@@ -351,11 +297,6 @@ const isFormValid =
                           onChange={handleVerificationCodeChange}
                           className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-green-500"
                           placeholder="인증번호를 입력해주세요"
-                              style={{
-                                border: 'none',
-                                borderBottom: '2px solid #d3d3d3',
-                                backgroundColor: 'transparent',
-                              }}
                         />
                         <button
                           type="button"
@@ -413,65 +354,6 @@ const isFormValid =
         />
       </div>
 
-<div className="mb-6">
-  <label className={`block text-sm font-medium ${isPhoneFocused ? "text-green-500" : "text-gray-700"}`}>휴대폰 번호</label>
-  <div className="relative">
-    <input
-      type="text"
-      value={phoneNumber}
-      onChange={handlePhoneNumberChange}
-      onFocus={() => setIsPhoneFocused(true)}
-      onBlur={() => setIsPhoneFocused(false)}
-      className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneFocused ? 'border-green-500' : 'border-gray-300'}`}
-      placeholder="휴대폰 번호를 입력해주세요"
-      style={{
-        border: 'none',
-        borderBottom: isPhoneFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
-        backgroundColor: 'transparent'
-      }}
-    />
-    <button
-      type="button"
-      onClick={handleSendPhoneVerificationCode}
-      className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
-      disabled={!phoneNumber}
-    >
-      {isPhoneVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
-    </button>
-  </div>
-</div>
-{isPhoneVerificationSent && (
-  <div className="mb-6">
-    <label className={`block text-sm font-medium ${isPhoneVerificationFocused ? "text-green-500" : "text-gray-700"}`}>인증번호</label>
-    <input
-      type="text"
-      value={randomNumber}
-      onChange={handlePhoneVerificationCodeChange}
-      onFocus={() => setIsPhoneVerificationFocused(true)}
-      onBlur={() => setIsPhoneVerificationFocused(false)}
-      className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneVerificationFocused ? 'border-green-500' : 'border-gray-300'}`}
-      placeholder="인증번호를 입력해주세요"
-      style={{
-        border: 'none',
-        borderBottom: isPhoneVerificationFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
-        backgroundColor: 'transparent'
-      }}
-    />
-    <button
-      type="button"
-      onClick={handleVerifyPhoneCode}
-      className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
-    >
-      인증 완료
-    </button>
-    {phoneVerificationMessage && (
-      <p className={`text-sm mt-2 ${isPhoneVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
-        {phoneVerificationMessage}
-      </p>
-    )}
-  </div>
-)}
-
 
           <button
             type="submit"
@@ -482,14 +364,14 @@ const isFormValid =
               color: isFormValid ? '#fff' : '#d3d3d3'
             }}
           >
-            회원가입완료
+            본인인증
           </button>
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">이미 계정이 있으신가요? </span>
-          <a onClick={() => navigate("/login")} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+          <Button onClick={() => navigate("/login")} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
             로그인
-          </a>
+          </Button>
         </div>
       </div>
     </div>

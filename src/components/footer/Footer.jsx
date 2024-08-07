@@ -1,6 +1,17 @@
+import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 
-const FooterLink = ({ href, children }) => {
+const FooterLink = ({ to, children, requireAuth }) => {
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    const token = localStorage.getItem("access");
+    if (requireAuth && !token) {
+      e.preventDefault(); // 링크의 기본 동작을 막습니다.
+      navigate("/login"); // 로그인 페이지로 리디렉션합니다.
+    }
+  };
+
   return (
     <Link
       to={to}
