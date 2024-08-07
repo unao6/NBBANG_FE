@@ -14,36 +14,6 @@ export const startChat = async () => {
     }
   };
 
-//   export const sendMessage = async (stompClient, messageRequest, chatId) => {
-//     if (stompClient && stompClient.connected) {
-//       const destination = `/app/chat/send/${chatId}`;
-//       stompClient.publish(destination, {}, JSON.stringify(messageRequest));
-//       console.log('Message sent:', messageRequest);
-//     }
-//   };
-export const sendMessage = async (stompClient, message, chatId) => {
-    if (stompClient && stompClient.connected) {
-      const destination = `/app/chat/send/${chatId}`;
-  
-      // Publish the message using the correct destination
-      try {
-        stompClient.publish({
-          destination: destination,
-          body: JSON.stringify(message),
-        });
-        console.log('Message sent:', message);
-  
-        // Return the message to update the client UI
-        return message; 
-      } catch (error) {
-        console.error('Error sending message:', error);
-        throw error;  // Rethrow error to handle it in handleSend
-      }
-    } else {
-      throw new Error('STOMP client is not connected');
-    }
-  };
-
 export const fetchAllChats = async () => {
     const response = await axiosInterceptors.get(`${adminChatUrl}/all`);
     return response.data;
@@ -57,6 +27,11 @@ export const fetchChatMessages = async (chatId) => {
 
 export const endChat = async (chatId) => {
     const response = await axiosInterceptors.post(`${adminChatUrl}/end/${chatId}`);
+    return response.data;
+};
+
+export const deleteEmptyChat = async () => {
+    const response = await axiosInterceptors.delete(`${chatUrl}/empty`);
     return response.data;
 };
 

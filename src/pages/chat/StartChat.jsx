@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { startChat } from '../../api/chat/chatApi';
-import useUserStore from '../../store/useUserStore';
+import { startChat, deleteEmptyChat } from '../../api/chat/chatApi';
 
 const StartChat = () => {
   const navigate = useNavigate();
-  const user = useUserStore(state => state.user);
+
+  useEffect(() => {
+    const cleanupEmptyChats = async () => {
+      try {
+        console.log("Attempting to delete empty chats at URL");
+        await deleteEmptyChat();
+        console.log('빈 채팅방 삭제 완료');
+      } catch (error) {
+        console.error('빈 채팅방 삭제 실패:', error.response ? error.response.data : error.message);
+      }
+    };
+
+    cleanupEmptyChats();
+  }, []);
 
   const handleButtonClick = async () => {
     try {

@@ -13,6 +13,7 @@ const Chat = () => {
   const chatEndRef = useRef(null);
   const stompClientRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isChatEnded, setIsChatEnded] = useState(false);
 
   const { user, setUser } = useUserStore((state) => ({
     user: state.user,
@@ -66,8 +67,13 @@ const Chat = () => {
 
                 console.log('받은 메세지:', newMessage);
 
+                // 상담 종료 메세지를 받은 경우 input창 비활성화
+                if (newMessage.nickname === 'System' && newMessage.text.includes('상담이 종료되었습니다. 감사합니다.')) {
+                  setIsChatEnded(true);
+                }
+
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
-              }
+              }, {ack: "client-individual"}
             );
 
 
@@ -75,6 +81,10 @@ const Chat = () => {
               client,
               subscriptionId: subscription.id,
             };
+
+            if (messages.length === 0) {
+              sendWelcomeMessage();
+            }
           },
           onStompError: (frame) => {
             console.error('STOMP Error: ', frame.headers['message'], frame.body);
@@ -94,8 +104,31 @@ const Chat = () => {
       if (stompClientRef.current) {
         stompClientRef.current.client.deactivate();
       }
+      setIsLoading(false);
     };
-  }, [chatId, setUser]);
+  }, [chatId, setUser, messages]);
+
+  const sendWelcomeMessage = () => {
+    if (!stompClientRef.current || !stompClientRef.current.client.connected) {
+      console.error('WebSocket is not connected');
+      return;
+    }
+    
+    const welcomeMessage = {
+      chatId: chatId,
+      // userId: user.id,
+      message: {
+        nickname: 'System',
+        text: '환영합니다! 문의사항을 남겨주시면 확인 후 답변 드리겠습니다:)',
+        sentAt: getCurrentKSTTimeString(),
+      },
+    };
+  
+    stompClientRef.current.client.publish({
+      destination: '/app/chat/send/' + chatId,
+      body: JSON.stringify(welcomeMessage),
+    });
+  };
 
   const parseSentAt = (sentAt) => {
     if (Array.isArray(sentAt)) {
@@ -137,7 +170,6 @@ const Chat = () => {
       body: JSON.stringify(newMessage),
     });
 
-    setMessages((prevMessages) => [...prevMessages, newMessage.message]);
     setInput('');
   };
 
@@ -199,9 +231,15 @@ const Chat = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="flex-1 p-2 border border-gray-300 rounded mr-2"
-          placeholder="메세지 입력"
+          placeholder={isChatEnded ? "상담이 종료되었습니다." : "메세지 입력"}
+          disabled={isChatEnded}
         />
-        <button onClick={handleSend} className="bg-blue-500 text-white p-2 rounded">
+        <button 
+          onClick={handleSend} 
+          className={`${
+            isChatEnded ? 'bg-gray-400' : 'bg-blue-500 text-white p-2 rounded'
+            } text-white px-3 py-1.5 rounded-md transition duration-200`} 
+          disabled={isChatEnded} >
           Send
         </button>
       </div>

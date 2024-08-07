@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import { fetchChatMessages, sendMessage, endChat, archiveChat } from '../../../api/chat/chatApi';
+import { fetchChatMessages, endChat, archiveChat } from '../../../api/chat/chatApi';
 import useUserStore from '../../../store/useUserStore';
 import { fetchUserInfo } from '../../../api/user/userApi';
 
@@ -125,7 +125,6 @@ const AdminChat = () => {
       body: JSON.stringify(newMessage),
     });
 
-    setMessages((prevMessages) => [...prevMessages, newMessage.message]);
     setInput('');
   };
 
@@ -133,10 +132,27 @@ const AdminChat = () => {
     try {
       await endChat(chatId);
       setIsChatEnded(true);
+      sendEndNotification();
       alert('채팅을 종료하였습니다.');
     } catch (error) {
       console.error('Failed to end chat', error);
     }
+  };
+
+  const sendEndNotification = () => {
+    const endMessage = {
+        chatId: chatId,
+        message: {
+            nickname: 'System',
+            text: '상담이 종료되었습니다. 감사합니다.',
+            sentAt: getCurrentKSTTimeString(),
+        },
+    };
+
+    stompClientRef.current.client.publish({
+        destination: '/app/chat/send/' + chatId,
+        body: JSON.stringify(endMessage),
+    });
   };
 
   const handleOpenMemoModal = () => {
@@ -159,8 +175,9 @@ const AdminChat = () => {
   };
 
   const userNickname =
-    messages.find((msg) => msg.nickname !== 'N/BBANG')?.nickname ||
-    'User';
+    messages.find(
+        (msg) => msg.nickname !== 'N/BBANG' && msg.nickname !== 'System'
+    )?.nickname || 'User';
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });

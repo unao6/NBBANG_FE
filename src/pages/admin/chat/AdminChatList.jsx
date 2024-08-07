@@ -54,15 +54,23 @@ const AdminChatList = () => {
     setCurrentPage(0);
   };
 
+  const welcomeMessageText = 'System: 환영합니다! 문의사항을 남겨주시면 확인 후 답변 드리겠습니다:)';
+
+
   const filteredChats = chats.filter((chat) => {
     const matchesStatus =
       filter === 'ALL' ||
       (filter === 'ONGOING' && chat.status) ||
       (filter === 'ENDED' && !chat.status);
+
     const matchesSearch = chat.nickname
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
+
+    const validLastMessage =
+    chat.lastMessage !== null && chat.lastMessage !== welcomeMessageText;
+
+    return matchesStatus && matchesSearch && validLastMessage;
   });
 
   const pageCount = Math.ceil(filteredChats.length / chatsPerPage);
