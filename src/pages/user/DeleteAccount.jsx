@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import axiosInterceptors from '../../api/axiosInterceptors'; // axiosInterceptors 임포트
+import axiosInterceptors from '../../api/axiosInterceptors';
 
 const DeleteAccount = () => {
     const [user, setUser] = useState(null);

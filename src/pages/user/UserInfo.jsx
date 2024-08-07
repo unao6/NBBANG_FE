@@ -7,19 +7,19 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import axiosInterceptors from '../../api/axiosInterceptors';
 
 const UserInfo = () => {
-    const [user, setUser] = useState({ nickname: '', phoneNumber: '' });
-    const navigate = useNavigate();
+  const [user, setUser] = useState({ nickname: '', phoneNumber: '' });
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axiosInterceptors.get('/api/users/user-info'); // axiosInterceptors 사용
-                setUser({
-                    ...response.data,
-                    phoneNumber: formatPhoneNumber(response.data.phoneNumber)
-                });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInterceptors.get('/api/users/user-info');
+          setUser({
+            ...response.data,
+              phoneNumber: formatPhoneNumber(response.data.phoneNumber)
+             });
             } catch (error) {
-                console.error('Error fetching user data:', error);
+              console.error('Error fetching user data:', error);
             }
         };
 

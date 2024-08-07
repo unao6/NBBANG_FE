@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useUserStore from "../../store/useUserStore.js";
 import { fetchUserInfo } from "../../api/user/userApi.js";
-import axiosInterceptors from "../../api/axiosInterceptors"; // axiosInterceptors를 가져옵니다
+import axiosInterceptors from "../../api/axiosInterceptors";
 
 axios.defaults.withCredentials = true;
 

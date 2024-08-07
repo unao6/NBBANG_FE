@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInterceptors from "../../api/axiosInterceptors"; // axiosInterceptors를 가져옵니다
+import axiosInterceptors from "../../api/axiosInterceptors";
 
 const Login = () => {
     const navigate = useNavigate();
