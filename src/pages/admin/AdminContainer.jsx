@@ -77,7 +77,9 @@ const AdminContainer = ({ children }) => {
           </ul>
         </nav>
       </aside>
-      <main className="flex-1 p-4 max-w-7xl mx-auto">{children}</main>
+      <main className="flex-1 p-4 max-w-7xl mx-auto" style={{ overflowY: 'auto' }}>
+        {children}
+      </main>
     </div>
   );
 };

@@ -11,3 +11,33 @@ export const subscribeOtt = () => {
 export const partyMatching = (partyMatching) => {
   return axiosInterceptors.post('/api/matching', partyMatching)
 };
+
+export const getMyParty = () => {
+  return axiosInterceptors.get('/api/my-party')
+};
+export const getPartyByAdmin = (page = 0, size = 5) => {
+  return axiosInterceptors.get('/api/admin/party', {
+    params: {
+      page: page,
+      size: size
+    }
+  });
+};
+
+export const searchPartyByEmail = (email, page = 0, size = 5) => {
+  return axiosInterceptors.get('/api/admin/party-search', {
+    params: {
+      email: email,
+      page: page,
+      size: size
+    }
+  });
+};
+
+export const getPartyById = (partyId) => {
+  return axiosInterceptors.get(`/api/party/${partyId}`)
+};
+
+export const updateOttAccount = (partyId, partyUpdateRequest) => {
+  return axiosInterceptors.put(`/api/party/${partyId}`,partyUpdateRequest);
+};

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";  // useNavigate 훅 가져오기
 import { getAllOtt } from "../../api/ott/ottApi.js";
 import { getOttImage } from '../../components/OttImage.js';
-import { subscribeOtt} from "../../api/party/partyApi.js";
+import { subscribeOtt } from "../../api/party/partyApi.js";
 
 const OttSelection = () => {
   const [ottList, setOttList] = useState([]);

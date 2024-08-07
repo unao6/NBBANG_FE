@@ -12,8 +12,8 @@ export const getOttById = (ottId) => {
   return axiosInterceptors.get(`/api/ott/${ottId}`);
 };
 
-export const updateOtt = (ottUpdateRequest) => {
-  return axiosInterceptors.put(`/api/admin/ott`, ottUpdateRequest);
+export const updateOtt = (ottId, ottUpdateRequest) => {
+  return axiosInterceptors.put(`/api/admin/ott/${ottId}`,ottUpdateRequest);
 };
 
 export const deleteOtt = (ottId) => {

@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { createOtt, getOttById, updateOtt } from '../../../api/ott/ottApi';
 
-const OttForm = ({ ottId, onSave }) => {
+const OttForm = ({ ottId, onSave, initialData }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [capacity, setCapacity] = useState('');
 
   useEffect(() => {
-    if (ottId) {
+    if (initialData) {
+      setName(initialData.name);
+      setPrice(initialData.price);
+      setCapacity(initialData.capacity);
+    } else if (ottId) {
       fetchOtt(ottId);
     } else {
       setName('');
       setPrice('');
       setCapacity('');
     }
-  }, [ottId]);
+  }, [ottId, initialData]);
 
   const fetchOtt = async (ottId) => {
     try {
@@ -30,13 +34,13 @@ const OttForm = ({ ottId, onSave }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const ottData = { name, price: parseInt(price, 10), capacity: parseInt(capacity, 10) };
+    const ottUpdateRequest = { name, price: parseInt(price, 10), capacity: parseInt(capacity, 10) };
 
     try {
       if (ottId) {
-        await updateOtt(ottId, ottData);
+        await updateOtt(ottId, ottUpdateRequest); // ottId를 URL에 포함시켜 호출
       } else {
-        await createOtt(ottData);
+        await createOtt(ottUpdateRequest);
       }
       onSave();
     } catch (error) {
@@ -86,8 +90,17 @@ const OttForm = ({ ottId, onSave }) => {
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
-          등록
+          {ottId ? '수정' : '등록'}
         </button>
+        {ottId && (
+          <button
+            type="button"
+            className="ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() => onSave(null)} // 폼 초기화 및 수정 모드 종료
+          >
+            취소
+          </button>
+        )}
       </div>
     </form>
   );

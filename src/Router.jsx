@@ -31,6 +31,11 @@ import UserList from "./pages/admin/user/UserList";
 import AccountMyPage from "./pages/payment/AccountMyPage";
 import AccountRegisterPage from "./pages/payment/AccountRegister";
 import ChangeNumber from "./pages/myPage/ChangeNumber";
+import MyParty from "./pages/party/MyParty";
+import PartyDetail from "./pages/party/PartyDetail";
+import PartySettings from "./pages/party/PartySettings";
+import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
+import PartySettingsUser from "./pages/party/PartySettingsUser";
 
 const Router = () => {
   return (
@@ -67,6 +72,11 @@ const Router = () => {
         path="/add-party/account-registration/:ottId"
         element={<AccountRegistration />}
       />
+      <Route path="/my-party" element={<MyParty />} />
+      <Route path="/my-party/:partyId" element={<PartyDetail />} />
+      <Route path="/party-settings/:partyId" element={<PartySettings />} />
+      <Route path="/party-settings-user/:partyId" element={<PartySettingsUser />} />
+      <Route path="/admin/parties" element={<AdminPartyManagement />} />
       <Route path="/mypage/account" element={<AccountMyPage />} />
       <Route path="/mypage/account/register" element={<AccountRegisterPage />} />
     </Routes>
