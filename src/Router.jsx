@@ -7,6 +7,7 @@ import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
 import ChatList from "./pages/admin/chat/ChatList";
 import DeleteAccount from "./pages/myPage/DeleteAccount";
+import Guide from "./pages/guide/Guide.jsx";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
 import KakaoPayFail from "./pages/payment/kakaoPay/KakaoPayFail";
@@ -29,6 +30,7 @@ import UserInfo from "./pages/myPage/UserInfo";
 import UserList from "./pages/admin/user/UserList";
 import AccountMyPage from "./pages/payment/AccountMyPage";
 import AccountRegisterPage from "./pages/payment/AccountRegister";
+import ChangeNumber from "./pages/myPage/ChangeNumber";
 import MyParty from "./pages/party/MyParty";
 import PartyDetail from "./pages/party/PartyDetail";
 import PartySettings from "./pages/party/PartySettings";
@@ -39,6 +41,7 @@ const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Main />} />
+      <Route path="/guide" element={<Guide />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/payment/kakaopay/register" element={<KakaoPayRegister />} />
       <Route path="/payment/card/register" element={<CardRegister />} />
@@ -56,6 +59,7 @@ const Router = () => {
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />
       <Route path="/mypage/delete-account" element={<DeleteAccount />} />
+      <Route path="/mypage/change-number" element={<ChangeNumber />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
