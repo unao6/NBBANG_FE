@@ -1,35 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInterceptors from "../../api/axiosInterceptors";
 
 const Login = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const handleEmailLogin = () => {
-    navigate("/users/user-login");
+    const handleEmailLogin = () => {
+        navigate("/users/user-login");
+    };
+
+  const handleGoogleLogin = () => {
+    // 구글 로그인 시작: Spring Security OAuth2 엔드포인트로 리디렉션
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      // axiosInterceptors를 사용하여 요청을 보냅니다
-      const response = await axiosInterceptors.get("/api/auth/google");
-
-      // 구글 로그인 성공 시 리다이렉션
-      window.location.href = response.request.responseURL;
-    } catch (error) {
-      console.error("구글 로그인 실패", error);
-      alert("구글 로그인에 실패했습니다. 다시 시도해주세요.");
-    }
-  };
-
-  const handleSignUpClick = () => {
-    navigate("/users/sign-up");
-  };
+    const handleSignUpClick = () => {
+        navigate("/users/sign-up");
+    };
 
   return (
     <div className="flex flex-col items-center justify-center h-full bg-gray-50">
       <div className="w-full max-w-md p-6">
-        <button onClick={() => navigate("/")} className="p-1 rounded bg-gray-100">
+        <button
+          onClick={() => navigate("/")}
+          className="p-1 rounded bg-gray-100"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
@@ -63,12 +58,12 @@ const Login = () => {
         </div>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">엔빵 계정이 없으신가요? </span>
-          <button
+          <a
             onClick={handleSignUpClick}
             className="text-xs font-bold text-green-500 hover:underline cursor-pointer"
           >
             회원가입
-          </button>
+          </a>
         </div>
       </div>
     </div>
