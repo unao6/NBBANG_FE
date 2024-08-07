@@ -15,6 +15,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import { getAllOtt } from "../../api/ott/ottApi.js";
 import { getCardInfo } from "../../api/payment/paymentApi.js";
 import { getOttImage } from "../../components/OttImage.js";
+import { partyMatching } from '../../api/party/partyApi';
+
 
 const PartyMemberStep = () => {
   const { ottId } = useParams();
@@ -58,9 +60,18 @@ const PartyMemberStep = () => {
     setIsAgreed(!isAgreed);
   };
 
-  const handleSubscription = () => {
+  const handleSubscription = async () => {
     if (ottInfo) {
-      navigate(`/subscription/confirmation/${ottInfo.ottId}`);
+      try {
+        // partyMatching API 호출
+        await partyMatching({ ottId: ottInfo.ottId });
+
+        // API 호출이 성공하면 리디렉션
+        navigate('/party-matching-success');
+      } catch (error) {
+        console.error("매칭 중 오류 발생:", error);
+        // 오류 처리 (필요에 따라 사용자에게 알림 등)
+      }
     }
   };
 

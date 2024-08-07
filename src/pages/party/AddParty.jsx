@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { partyMatching } from '../../api/party/partyApi';
 import useOttStore from '../../store/ottStore';
 
 const AddParty = () => {

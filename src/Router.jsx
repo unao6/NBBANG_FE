@@ -34,6 +34,7 @@ import PartyDetail from "./pages/party/PartyDetail";
 import PartySettings from "./pages/party/PartySettings";
 import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
 import PartySettingsUser from "./pages/party/PartySettingsUser";
+import PartyMatchingSuccess from "./pages/party/PartyMatchingSuccess.jsx";
 
 const Router = () => {
   return (
@@ -75,6 +76,8 @@ const Router = () => {
       <Route path="/admin/parties" element={<AdminPartyManagement />} />
       <Route path="/mypage/account" element={<AccountMyPage />} />
       <Route path="/mypage/account/register" element={<AccountRegisterPage />} />
+      <Route path="/party-matching-success" element={<PartyMatchingSuccess />} />
+
     </Routes>
   );
 };
