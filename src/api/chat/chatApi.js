@@ -14,12 +14,6 @@ export const startChat = async () => {
     }
   };
 
-export const sendMessage = async (stompClient, messageRequest) => {
-    if(stompClient && stompClient.connected) {
-        stompClient.send("/app/chat/send", {}, JSON.stringify(messageRequest));
-    }
-};
-
 export const fetchAllChats = async () => {
     const response = await axiosInterceptors.get(`${adminChatUrl}/all`);
     return response.data;
@@ -27,6 +21,7 @@ export const fetchAllChats = async () => {
 
 export const fetchChatMessages = async (chatId) => {
     const response = await axiosInterceptors.get(`${adminChatUrl}/${chatId}`);
+    console.log("fetchChatMessages: ", response);
     return response.data;
 };
 
@@ -35,12 +30,22 @@ export const endChat = async (chatId) => {
     return response.data;
 };
 
-export const archiveChat = async (chatId, memo) => {
-    const response = await axiosInterceptors.post(`${adminChatUrl}/archive`, { chatId, memo });
+export const deleteEmptyChat = async () => {
+    const response = await axiosInterceptors.delete(`${chatUrl}/empty`);
     return response.data;
 };
 
-export const fetchArchivedChat = async (chatId, memo) => {
-    const response = await axiosInterceptors.post(`${adminChatUrl}/archived`);
+export const archiveChat = async (chatId, memo) => {
+    const response = await axiosInterceptors.post(`${adminChatUrl}/archive/${chatId}`, { memo });
+    return response.data;
+};
+
+export const fetchArchivedChats = async () => {
+    const response = await axiosInterceptors.get(`${adminChatUrl}/archived`);
+    return response.data;
+};
+
+export const fetchArchivedChatMessages = async (archivedId) => {
+    const response = await axiosInterceptors.get(`${adminChatUrl}/${archivedId}`);
     return response.data;
 };

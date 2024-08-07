@@ -1,21 +1,22 @@
 import useUserStore from '../../store/useUserStore.js';
 import axiosInterceptors from "../axiosInterceptors.js";
 
-// 유저 정보 가져오기
 export const fetchUserInfo = async () => {
   try {
+    console.log('Fetching user info...');
     const response = await axiosInterceptors.get('/api/users/user-info');
 
     if (response.status === 200) {
       const userData = response.data;
       useUserStore.getState().setUser(userData);
-      return userData; // 유저 정보를 반환
+      console.log('유저 정보를 성공적으로 가져왔습니다.', userData);
+      return userData;
     } else {
-      console.error('Failed to fetch user info');
+      console.error('유저 정보 가져오기 실패');
       return null; // 에러가 발생하면 null을 반환
     }
   } catch (error) {
-    console.error('Error fetching user info:', error.response ? error.response.data : error.message);
+    console.error('유저 정보를 가져오던 중 에러 발생:', error.response ? error.response.data : error.message);
     return null; // 에러가 발생하면 null을 반환
   }
 };

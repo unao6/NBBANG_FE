@@ -5,7 +5,7 @@ import AddParty from "./pages/party/AddParty";
 import AdminChat from "./pages/admin/chat/AdminChat";
 import CardRegister from "./pages/payment/CardRegister";
 import Chat from "./pages/chat/Chat";
-import ChatList from "./pages/admin/chat/ChatList";
+import ChatList from "./pages/admin/chat/AdminChatList";
 import Guide from "./pages/guide/Guide.jsx";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
@@ -48,7 +48,7 @@ const Router = () => {
       <Route path="/payment/kakaopay/approve" element={<KakaoPayApprove />} />
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
-      <Route path="/chat" element={<Chat />} />
+      <Route path="/chat/:chatId" element={<Chat />} />
       <Route path="/chat/start" element={<StartChat />} />
       <Route path="/admin/payments" element={<Manager />} />
       <Route path="/admin/refunds" element={<RefundManager />} />
