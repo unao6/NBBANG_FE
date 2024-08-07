@@ -2,32 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import axiosInterceptors from '../../api/axiosInterceptors';
+import { fetchUserInfo, deleteAccount } from '../../api/user/userApi';
 
 const DeleteAccount = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const loadUserInfo = async () => {
       try {
-        const response = await axiosInterceptors.get('/api/users/user-info');
-        setUser(response.data);
+        const userInfo = await fetchUserInfo();
+        if (userInfo) {
+          setUser(userInfo);
+        } else {
+          navigate('/login');
+        }
       } catch (error) {
         console.error('Error fetching user info:', error);
-        if (error.response && error.response.status === 401) {
-          navigate('/login'); // 인증이 필요한 경우 로그인 페이지로 이동
-        }
+        navigate('/login'); // 인증이 필요한 경우 로그인 페이지로 이동
       }
     };
 
-    fetchUserInfo();
+    loadUserInfo();
   }, [navigate]);
 
   const handleDeleteAccount = async () => {
     if (user && user.email) {
       try {
-        await axiosInterceptors.delete(`/api/users/delete-account/${user.email}`);
+        await deleteAccount(user.email);
         alert('회원 탈퇴가 완료되었습니다.');
         localStorage.removeItem('access'); // 저장된 토큰 제거
         window.dispatchEvent(new Event('storage')); // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
@@ -53,8 +55,7 @@ const DeleteAccount = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '100vh',
-        justifyContent: 'center',
+        height: '100%',
         backgroundColor: '#f3f4f6',
         padding: '16px',
       }}

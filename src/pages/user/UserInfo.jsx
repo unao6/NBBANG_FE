@@ -4,7 +4,7 @@ import { Box, Typography, Avatar, List, ListItem, ListItemIcon, ListItemText, Di
 import PhoneIcon from '@mui/icons-material/Phone';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import axiosInterceptors from '../../api/axiosInterceptors';
+import { fetchUserInfo } from '../../api/user/userApi';
 
 const UserInfo = () => {
   const [user, setUser] = useState({ nickname: '', phoneNumber: '' });
@@ -13,10 +13,10 @@ const UserInfo = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInterceptors.get('/api/users/user-info');
+        const response = await fetchUserInfo();
         setUser({
-          ...response.data,
-          phoneNumber: formatPhoneNumber(response.data.phoneNumber)
+          ...response,
+          phoneNumber: formatPhoneNumber(response.phoneNumber)
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
