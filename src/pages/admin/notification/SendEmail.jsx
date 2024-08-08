@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { sendEmail } from "../../../api/notification/emailApi"; // sendEmail 함수 가져오기
+import { sendEmail } from "../../../api/notification/emailApi";
 
 const SendEmail = () => {
   const [emails, setEmails] = useState(""); // 이메일 주소를 저장할 상태
@@ -20,7 +20,7 @@ const SendEmail = () => {
 
       // 각 이메일에 대해 sendEmail 함수 호출
       for (const email of emailList) {
-        await sendEmail(email, subject, message);
+        await sendEmail(email, subject, message.replace(/\n/g, '<br>'));
       }
 
       setSuccessMessage("이메일이 성공적으로 발송되었습니다.");

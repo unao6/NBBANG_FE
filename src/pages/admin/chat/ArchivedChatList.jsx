@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import { fetchArchivedChats } from '../../../api/chat/chatApi';
 import CircularProgress from '@mui/material/CircularProgress';
+import { fetchArchivedChats } from '../../../api/chat/chatApi';
 
 const ArchivedChatList = () => {
   const [chats, setChats] = useState([]);
@@ -10,7 +10,6 @@ const ArchivedChatList = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('ALL');
   const chatsPerPage = 10;
   const navigate = useNavigate();
 
@@ -18,6 +17,9 @@ const ArchivedChatList = () => {
     const loadChats = async () => {
       try {
         const data = await fetchArchivedChats();
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format");
+        }
         setChats(data);
       } catch (error) {
         setError('Failed to fetch chats');
@@ -32,24 +34,46 @@ const ArchivedChatList = () => {
     setCurrentPage(data.selected);
   };
 
-  const handleChatClick = (archivedId) => {
-    navigate(`/admin/chat/${archivedId}`);
+  const handleChatClick = (chat) => {
+    navigate(`/admin/chat/archived/${chat.id}`);
   };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setCurrentPage(0); // Reset to first page when search term changes
+    setCurrentPage(0); 
+  };
+
+  const getUserNickname = (messages) => {
+    for (let message of messages) {
+      if (message.nickname && !['N/BBANG', 'System'].includes(message.nickname)) {
+        return message.nickname;
+      }
+    }
+    return '';
+  };
+
+  const getMemoText = (memo) => {
+    try {
+      const memoObject = JSON.parse(memo);
+      return memoObject.memo || '';
+    } catch (e) {
+      return memo;
+    }
+  };
+
+  const truncateText = (text, maxLength = 50) => {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + ' ...';
+    }
+    return text;
   };
 
   const filteredChats = chats.filter((chat) => {
-    const matchesStatus =
-      filter === 'ALL' ||
-      (filter === 'ONGOING' && chat.status) ||
-      (filter === 'ENDED' && !chat.status);
-    const matchesSearch = chat.user.nickname
+    const nickname = getUserNickname(chat.messages);
+    const matchesSearch = nickname
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
+    return matchesSearch;
   });
 
   const pageCount = Math.ceil(filteredChats.length / chatsPerPage);
@@ -73,7 +97,15 @@ const ArchivedChatList = () => {
 
   return (
     <div className="p-6 h-full overflow-y-auto bg-gray-50">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">채팅 관리</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">채팅 아카이브</h1>
+        <button
+          onClick={() => navigate('/admin/chat')}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          채팅 목록
+        </button>
+      </div>
       <div className="flex justify-between items-center mb-6">
         <input
           type="text"
@@ -82,33 +114,24 @@ const ArchivedChatList = () => {
           onChange={handleSearchChange}
           className="w-64 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm"
         />
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        >
-          <option value="ALL">전체</option>
-          <option value="ONGOING">진행중</option>
-          <option value="ENDED">종료됨</option>
-        </select>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg table-fixed">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                사용자 닉네임
+              <th className="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                닉네임
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                마지막 메시지
+              <th className="w-3/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                저장 메모
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                상태
+              <th className="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                상담 종료일
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                종료일
+              <th className="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                상담 저장일
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="w-1/8 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 액션
               </th>
             </tr>
@@ -116,36 +139,30 @@ const ArchivedChatList = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {displayChats.map((chat) => (
               <tr key={chat.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {chat.user.nickname}
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                  {getUserNickname(chat.messages) || '?'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {chat.lastMessage}
+                  {truncateText(getMemoText(chat.memo)) || '?'}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      chat.status
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}
-                  >
-                    {chat.status ? '진행중' : '종료됨'}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(chat.endedAt).toLocaleDateString('ko-KR', {
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                  {chat.endedAt ? new Date(chat.endedAt).toLocaleDateString('ko-KR', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
+                  }) : 'N/A'}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                  {chat.savedAt ? new Date(chat.savedAt).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  }) : 'N/A'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                   <button
-                    onClick={() => handleChatClick(chat.id)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                    onClick={() => handleChatClick(chat)}
+                    className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500 transition duration-300"
                   >
                     열기
                   </button>
@@ -170,16 +187,16 @@ const ArchivedChatList = () => {
         nextClassName={'mx-1'}
         breakClassName={'mx-1'}
         pageLinkClassName={
-          'text-sm px-2 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors duration-300'
+          'text-sm px-2 py-1 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors duration-300'
         }
         previousLinkClassName={
-          'text-sm px-2 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors duration-300'
+          'text-sm px-2 py-1 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors duration-300'
         }
         nextLinkClassName={
-          'text-sm px-2 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors duration-300'
+          'text-sm px-2 py-1 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors duration-300'
         }
         breakLinkClassName={
-          'text-sm px-2 py-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors duration-300'
+          'text-sm px-2 py-1 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors duration-300'
         }
       />
     </div>
