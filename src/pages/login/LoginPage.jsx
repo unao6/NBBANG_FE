@@ -11,7 +11,7 @@ const Login = () => {
 
   const handleGoogleLogin = () => {
     // 구글 로그인 시작: Spring Security OAuth2 엔드포인트로 리디렉션
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = "/oauth2/authorization/google";
   };
 
     const handleSignUpClick = () => {
