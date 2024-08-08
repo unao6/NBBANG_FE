@@ -1,11 +1,17 @@
 import { Route, Routes } from "react-router-dom";
 
+import AccountMyPage from "./pages/payment/AccountMyPage";
+import AccountRegisterPage from "./pages/payment/AccountRegister";
 import AccountRegistration from "./pages/party/AccountRegistration.jsx";
 import AddParty from "./pages/party/AddParty";
 import AdminChat from "./pages/admin/chat/AdminChat";
+import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
 import CardRegister from "./pages/payment/CardRegister";
+import ChangeNumber from "./pages/myPage/ChangeNumber";
 import Chat from "./pages/chat/Chat";
 import ChatList from "./pages/admin/chat/AdminChatList";
+import DeleteAccount from "./pages/myPage/DeleteAccount";
+import GoogleRedicetHandler from "./pages/login/fragments/GoogleRedirectHandler";
 import Guide from "./pages/guide/Guide.jsx";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
@@ -16,28 +22,22 @@ import LoginPage from "./pages/login/LoginPage";
 import Main from "./pages/main/Main";
 import Manager from "./pages/admin/payment/PaymentManager";
 import MyPage from "./pages/myPage/MyPage";
+import MyParty from "./pages/party/MyParty";
 import OttList from "./pages/admin/ott/OttList";
 import OttSelection from "./pages/party/OttSection";
+import PartyDetail from "./pages/party/PartyDetail";
 import PartyLeaderStep from "./pages/party/PartyLeaderStep";
 import PartyMemberStep from "./pages/party/PartyMemberStep";
+import PartySettings from "./pages/party/PartySettings";
+import PartySettingsUser from "./pages/party/PartySettingsUser";
 import Payment from "./pages/payment/Payment";
 import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
+import SendEmail from "./pages/admin/notification/SendEmail"
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
-import SendEmail from "./pages/admin/notification/SendEmail"
-import UserInfo from "./pages/user/UserInfo";
+import UserInfo from "./pages/myPage/UserInfo";
 import UserList from "./pages/admin/user/UserList";
-import AccountMyPage from "./pages/payment/AccountMyPage";
-import AccountRegisterPage from "./pages/payment/AccountRegister";
-import ChangeNumber from "./pages/user/ChangeNumber";
-import DeleteAccount from "./pages/user/DeleteAccount";
-import MyParty from "./pages/party/MyParty";
-import PartyDetail from "./pages/party/PartyDetail";
-import PartySettings from "./pages/party/PartySettings";
-import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
-import PartySettingsUser from "./pages/party/PartySettingsUser";
-import PartyMatchingSuccess from "./pages/party/PartyMatchingSuccess.jsx";
 
 const Router = () => {
   return (
@@ -66,6 +66,7 @@ const Router = () => {
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/redirect" element={<GoogleRedicetHandler />} />
       <Route path="/admin/ott" element={<OttList />} />
       <Route path="/add-party" element={<OttSelection />} />
       <Route path="/add-party/:ottId" element={<AddParty />} />
