@@ -35,7 +35,9 @@ const KakaoPayApprove = () => {
       try {
         const response = await approveKakaoPay(tid, pgToken);
 
-        navigate("/payment/success");
+        navigate("/mypage/payment", {
+          state: { payment: response },
+        });
       } catch (error) {
         console.error("Error approving KakaoPay:", error);
       }
