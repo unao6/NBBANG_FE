@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -10,8 +9,19 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    // 구글 로그인 시작: Spring Security OAuth2 엔드포인트로 리디렉션
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
+    const newWindow = window.open(
+      googleLoginUrl,
+      "_blank",
+      "width=500,height=600",
+    );
+
+    const interval = setInterval(() => {
+      if (newWindow.closed) {
+        clearInterval(interval);
+        navigate("/redirect");
+      }
+    }, 500);
   };
 
   const handleSignUpClick = () => {
@@ -41,7 +51,7 @@ const Login = () => {
           </svg>
         </button>
         <h1 className="text-4xl font-bold text-center mt-4">N/BBANG</h1>
-        <p className="text-center text-gray-600 mt-2">안녕하세용</p>
+        <p className="text-center text-gray-600 mt-2">안녕하세요</p>
         <div className="mt-6">
           <button
             onClick={handleEmailLogin}
