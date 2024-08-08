@@ -472,9 +472,9 @@ const isFormValid =
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">이미 계정이 있으신가요? </span>
-          <a onClick={() => navigate("/login")} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+          <button onClick={() => navigate("/login")} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
             로그인
-          </a>
+          </button>
         </div>
       </div>
     </div>

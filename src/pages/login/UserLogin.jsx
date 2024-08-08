@@ -130,9 +130,9 @@ const UserLogin = () => {
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">엔빵 계정이 없으신가요? </span>
-          <a onClick={handleSignUpClick} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+          <button onClick={handleSignUpClick} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
             회원가입
-          </a>
+          </button>
         </div>
       </div>
     </div>
