@@ -34,6 +34,10 @@ export const searchPartyByEmail = (email, page = 0, size = 5) => {
   });
 };
 
+export const partyBreakUp = (partyId) => {
+  return axiosInterceptors.delete(`/api/party-breakup/${partyId}`)
+};
+
 export const getPartyById = (partyId) => {
   return axiosInterceptors.get(`/api/party/${partyId}`)
 };
