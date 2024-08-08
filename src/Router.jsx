@@ -7,11 +7,11 @@ import AddParty from "./pages/party/AddParty";
 import AdminChat from "./pages/admin/chat/AdminChat";
 import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
 import CardRegister from "./pages/payment/CardRegister";
-import ChangeNumber from "./pages/myPage/ChangeNumber";
+import ChangeNumber from "./pages/user/ChangeNumber";
 import Chat from "./pages/chat/Chat";
 import ChatList from "./pages/admin/chat/AdminChatList";
-import DeleteAccount from "./pages/myPage/DeleteAccount";
-import GoogleRedicetHandler from "./pages/login/fragments/GoogleRedirectHandler";
+import DeleteAccount from "./pages/user/DeleteAccount";
+import GoogleRedirectHandler from "./pages/login/fragments/GoogleRedirectHandler";
 import Guide from "./pages/guide/Guide.jsx";
 import KakaoPayApprove from "./pages/payment/kakaoPay/KakaoPayApprove";
 import KakaoPayCancel from "./pages/payment/kakaoPay/KakaoPayCancel";
@@ -27,16 +27,17 @@ import OttList from "./pages/admin/ott/OttList";
 import OttSelection from "./pages/party/OttSection";
 import PartyDetail from "./pages/party/PartyDetail";
 import PartyLeaderStep from "./pages/party/PartyLeaderStep";
+import PartyMatchingSuccess from "./pages/party/PartyMatchingSuccess";
 import PartyMemberStep from "./pages/party/PartyMemberStep";
 import PartySettings from "./pages/party/PartySettings";
 import PartySettingsUser from "./pages/party/PartySettingsUser";
 import Payment from "./pages/payment/Payment";
 import PaymentMypage from "./pages/payment/PaymentMypage";
 import RefundManager from "./pages/admin/payment/RefundManager";
-import SendEmail from "./pages/admin/notification/SendEmail"
+import SendEmail from "./pages/admin/notification/SendEmail";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
-import UserInfo from "./pages/myPage/UserInfo";
+import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
 
 const Router = () => {
@@ -66,7 +67,7 @@ const Router = () => {
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/redirect" element={<GoogleRedicetHandler />} />
+      <Route path="/redirect" element={<GoogleRedirectHandler />} />
       <Route path="/admin/ott" element={<OttList />} />
       <Route path="/add-party" element={<OttSelection />} />
       <Route path="/add-party/:ottId" element={<AddParty />} />
@@ -79,12 +80,20 @@ const Router = () => {
       <Route path="/my-party" element={<MyParty />} />
       <Route path="/my-party/:partyId" element={<PartyDetail />} />
       <Route path="/party-settings/:partyId" element={<PartySettings />} />
-      <Route path="/party-settings-user/:partyId" element={<PartySettingsUser />} />
+      <Route
+        path="/party-settings-user/:partyId"
+        element={<PartySettingsUser />}
+      />
       <Route path="/admin/parties" element={<AdminPartyManagement />} />
       <Route path="/mypage/account" element={<AccountMyPage />} />
-      <Route path="/mypage/account/register" element={<AccountRegisterPage />} />
-      <Route path="/party-matching-success" element={<PartyMatchingSuccess />} />
-
+      <Route
+        path="/mypage/account/register"
+        element={<AccountRegisterPage />}
+      />
+      <Route
+        path="/party-matching-success"
+        element={<PartyMatchingSuccess />}
+      />
     </Routes>
   );
 };
