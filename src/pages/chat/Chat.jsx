@@ -95,7 +95,7 @@ const Chat = () => {
       }
       setIsLoading(false);
     };
-  }, [chatId, setUser, messages]);
+  }, []);
 
   const sendWelcomeMessage = () => {
     if (!stompClientRef.current || !stompClientRef.current.client.connected) {
