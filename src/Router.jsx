@@ -6,6 +6,8 @@ import AccountRegistration from "./pages/party/AccountRegistration.jsx";
 import AddParty from "./pages/party/AddParty";
 import AdminChat from "./pages/admin/chat/AdminChat";
 import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
+import ArchivedChatMessages from "./pages/admin/chat/ArchivedChatMessages.jsx"
+import ArchivedChatList from "./pages/admin/chat/ArchivedChatList.jsx";
 import CardRegister from "./pages/payment/CardRegister";
 import ChangeNumber from "./pages/user/ChangeNumber";
 import Chat from "./pages/chat/Chat";
@@ -57,6 +59,8 @@ const Router = () => {
       <Route path="/admin/refunds" element={<RefundManager />} />
       <Route path="/admin/chat" element={<ChatList />} />
       <Route path="/admin/chat/:chatId" element={<AdminChat />} />
+      <Route path="/admin/chat/archived/list" element={<ArchivedChatList />} />
+      <Route path="/admin/chat/archived/:archivedId" element={<ArchivedChatMessages />} />
       <Route path="/admin/users" element={<UserList />} />
       <Route path="/admin/notification/email" element={<SendEmail />} />
       <Route path="/mypage" element={<MyPage />} />

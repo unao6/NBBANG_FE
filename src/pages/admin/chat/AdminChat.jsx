@@ -17,6 +17,7 @@ const AdminChat = () => {
   const [isChatEnded, setIsChatEnded] = useState(location.state?.isChatEnded || false);
   const [open, setOpen] = useState(false);
   const stompClientRef = useRef(null);
+  const inputRef = useRef(null);
 
   const { user, setUser } = useUserStore((state) => ({
     user: state.user,
@@ -49,10 +50,9 @@ const AdminChat = () => {
           },
           onConnect: () => {
             console.log('WebSocket connected');
-            const token = localStorage.getItem('access');
             client.publish({
               destination: '/app/auth',
-              body: JSON.stringify({ token }),
+              body: localStorage.getItem('access'),
             });
 
             const subscription = client.subscribe(
@@ -126,6 +126,7 @@ const AdminChat = () => {
     });
 
     setInput('');
+    inputRef.current.focus();
   };
 
   const handleEndChat = async () => {
@@ -141,17 +142,17 @@ const AdminChat = () => {
 
   const sendEndNotification = () => {
     const endMessage = {
-        chatId: chatId,
-        message: {
-            nickname: 'System',
-            text: '상담이 종료되었습니다. 감사합니다.',
-            sentAt: getCurrentKSTTimeString(),
-        },
+      chatId: chatId,
+      message: {
+        nickname: 'System',
+        text: '상담이 종료되었습니다. 감사합니다.',
+        sentAt: getCurrentKSTTimeString(),
+      },
     };
 
     stompClientRef.current.client.publish({
-        destination: '/app/chat/send/' + chatId,
-        body: JSON.stringify(endMessage),
+      destination: '/app/chat/send/' + chatId,
+      body: JSON.stringify(endMessage),
     });
   };
 
@@ -161,27 +162,55 @@ const AdminChat = () => {
 
   const handleSaveMemo = async () => {
     try {
-        await archiveChat(chatId, memo);
-        setOpen(false); // Close dialog
-        alert('채팅이 성공적으로 저장되었습니다.');
+      await archiveChat(chatId, memo);
+      setOpen(false); // Close dialog
+      alert('채팅이 성공적으로 저장되었습니다.');
     } catch (error) {
-        if (error.response && error.response.status === 400) {
-            alert('이미 저장된 채팅입니다.');
-        } else {
-            console.error('저장 실패', error);
-            alert('저장에 실패했습니다. 다시 시도해주세요.');
-        }
+      if (error.response && error.response.status === 400) {
+        alert('이미 저장된 채팅입니다.');
+      } else {
+        console.error('저장 실패', error);
+        alert('저장에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 
   const userNickname =
     messages.find(
-        (msg) => msg.nickname !== 'N/BBANG' && msg.nickname !== 'System'
+      (msg) => msg.nickname !== 'N/BBANG' && msg.nickname !== 'System'
     )?.nickname || 'User';
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+    });
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const isSameDay = (d1, d2) => {
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  };
+
+  let lastDate = null;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -221,37 +250,64 @@ const AdminChat = () => {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`my-2 p-3 rounded-lg max-w-lg ${
-              msg.nickname === 'N/BBANG' ? 'self-end text-right bg-blue-100' : 'self-start text-left bg-white shadow'
-            }`}
-          >
-            <p className="text-xs text-gray-500">{msg.nickname}</p>
-            <p className="text-sm text-gray-700">{msg.text}</p>
-            <p className="text-xs text-gray-400 mt-1">
-              {new Date(msg.sentAt).toLocaleTimeString('ko-KR', {
-                timeZone: 'Asia/Seoul',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-              })}
-            </p>
-          </div>
-        ))}
+      {messages.map((msg, index) => {
+        const msgDate = new Date(msg.sentAt);
+        const showDate = !lastDate || !isSameDay(lastDate, msgDate);
+        lastDate = msgDate;
+
+        return (
+          <React.Fragment key={index}>
+            {showDate && (
+              <div className="text-center my-2 text-sm text-gray-500">
+                {formatDate(msgDate)}
+              </div>
+            )}
+            <div
+              className={`my-1 ${
+                msg.nickname === 'N/BBANG'
+                  ? 'self-end text-right'
+                  : 'self-start text-left'
+              }`}
+            >
+              <div className="text-xs text-gray-500 mb-1">{msg.nickname}</div>
+              <div
+                className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
+                  msg.nickname === 'N/BBANG'
+                    ? 'bg-blue-500 text-white'
+                    : msg.nickname === 'System'
+                    ? 'bg-gray-300 text-black'
+                    : 'bg-yellow-400 text-black'
+                }`}
+              >
+                {msg.text}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                {formatTime(msgDate)}
+              </div>
+            </div>
+          </React.Fragment>
+        );
+      })}
         <div ref={chatEndRef} />
       </div>
       {!isChatEnded && (
         <div className="flex-none p-4 bg-white border-t border-gray-200 flex items-center justify-center">
           <div className="flex items-center w-full max-w-3xl">
             <input
+              ref={inputRef}
+              type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSend();
+                }
+              }}
               className="flex-1 p-2 border border-gray-300 rounded-md mr-2 text-sm placeholder-gray-400"
               placeholder="메시지를 입력하세요"
             />
             <button
+              type="button"
               onClick={handleSend}
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
             >

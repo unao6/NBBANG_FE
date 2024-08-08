@@ -46,6 +46,6 @@ export const fetchArchivedChats = async () => {
 };
 
 export const fetchArchivedChatMessages = async (archivedId) => {
-    const response = await axiosInterceptors.get(`${adminChatUrl}/${archivedId}`);
+    const response = await axiosInterceptors.get(`${adminChatUrl}/archived/${archivedId}`);
     return response.data;
 };

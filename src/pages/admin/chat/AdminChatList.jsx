@@ -56,6 +56,12 @@ const AdminChatList = () => {
 
   const welcomeMessageText = 'System: 환영합니다! 문의사항을 남겨주시면 확인 후 답변 드리겠습니다:)';
 
+  const truncateText = (text, maxLength = 50) => {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + ' ...';
+    }
+    return text;
+  };
 
   const filteredChats = chats.filter((chat) => {
     const matchesStatus =
@@ -94,7 +100,15 @@ const AdminChatList = () => {
 
   return (
     <div className="p-6 h-full overflow-y-auto bg-gray-50">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">채팅 목록</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">채팅 목록</h1>
+        <button
+          onClick={() => navigate('/admin/chat/archived/list')}
+          className="bg-yellow-400 px-4 py-2 rounded-lg hover:bg-yellow-500 transition duration-300"
+        >
+          채팅 아카이브
+        </button>
+      </div>
       <div className="flex justify-between items-center mb-6">
         <input
           type="text"
@@ -114,22 +128,22 @@ const AdminChatList = () => {
         </select>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg table-fixed">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 닉네임
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="w-3/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 최근 메시지
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 최근 응답 시간
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="w-1/8 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 상태
               </th>          
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="w-1/8 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 액션
               </th>
             </tr>
@@ -137,11 +151,11 @@ const AdminChatList = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {displayChats.map((chat) => (
               <tr key={chat.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
                   {chat.nickname || '?'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {chat.lastMessage || '?'}
+                  {truncateText(chat.lastMessage) || '?'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {chat.lastRepliedAt ? (
@@ -172,7 +186,7 @@ const AdminChatList = () => {
                     onClick={() => handleChatClick(chat)}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
                   >
-                    채팅
+                    열기
                   </button>
                 </td>
               </tr>
