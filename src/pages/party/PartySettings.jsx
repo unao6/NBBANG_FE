@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IconButton, Button, TextField } from "@mui/material";
+import { IconButton, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { updateOttAccount } from '../../api/party/partyApi'; // API 함수 import
+import { updateOttAccount, partyBreakUp } from '../../api/party/partyApi'; // API 함수 import
 
 const PartySettings = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ const PartySettings = () => {
 
   const [ottAccountId, setOttAccountId] = useState(partyDetails?.ottAccountId || '');
   const [ottAccountPassword, setOttAccountPassword] = useState(partyDetails?.ottAccountPassword || '');
+  const [open, setOpen] = useState(false); // 모달 창의 상태 관리
   const partyId = partyDetails?.partyId; // partyId를 가져옴
   const leaderFee = 200;
   const settlementAmount = (partyDetails.ottPrice / partyDetails.capacity) * 3 - leaderFee;
@@ -43,8 +44,23 @@ const PartySettings = () => {
   };
 
   const handlePartyDisband = () => {
-    // 파티 해체 로직
-    console.log("파티 해체 로직 실행");
+    setOpen(true); // 모달 창 열기
+  };
+
+  const handleClose = () => {
+    setOpen(false); // 모달 창 닫기
+  };
+
+  const handleConfirmDisband = async () => {
+    try {
+      await partyBreakUp(partyId);
+      alert('파티가 성공적으로 해체되었습니다.');
+      navigate("/"); // 해체 후 이전 페이지로 이동
+    } catch (error) {
+      console.error('파티 해체 중 오류가 발생했습니다:', error);
+      alert('파티 해체 중 오류가 발생했습니다.');
+    }
+    setOpen(false); // 모달 창 닫기
   };
 
   return (
@@ -129,6 +145,29 @@ const PartySettings = () => {
           </Button>
         </div>
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">정말 파티를 해체하겠습니까?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            파티를 해체하면 되돌릴 수 없습니다. 정말로 해체하시겠습니까?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            아니오
+          </Button>
+          <Button onClick={handleConfirmDisband} color="secondary" autoFocus>
+            네
+          </Button>
+        </DialogActions>
+      </Dialog>
     </main>
   );
 };

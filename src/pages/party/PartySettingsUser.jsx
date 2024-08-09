@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { partyMemberWithdraw } from '../../api/party/partyApi';
 import { IconButton, Button, Modal, Box } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
-import useUserStore from '../../store/useUserStore'; // Zustand store import
+import useUserStore from '../../store/useUserStore';
 
 const PartySettingsUser = () => {
   const navigate = useNavigate();
@@ -65,10 +66,18 @@ const PartySettingsUser = () => {
     setAlertOpen(false);
   };
 
-  const handleConfirm = () => {
-    console.log("파티 탈퇴 확인됨");
-    handleClose();
-    // 파티 탈퇴 처리 로직 추가
+  const handleConfirm = async () => {
+    try {
+      // 파티 탈퇴 API 호출
+      await partyMemberWithdraw(partyDetails.partyId);
+      console.log("파티 탈퇴 확인됨");
+      handleClose();
+      // 탈퇴 후 적절한 페이지로 이동
+      navigate('/');
+    } catch (error) {
+      console.error("파티 탈퇴 중 오류 발생:", error);
+      // 오류 처리 로직 추가 가능
+    }
   };
 
   return (
