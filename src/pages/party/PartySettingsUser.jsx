@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { partyMemberWithdraw } from '../../api/party/partyApi';
+import { fetchUserInfo } from '../../api/user/userApi';
 import { IconButton, Button, Modal, Box } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
-import useUserStore from '../../store/useUserStore';
 
 const PartySettingsUser = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { partyDetails } = location.state || {}; // 전송된 상태를 가져오고 없을 시 기본값 설정
-  const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
+  const [user, setUser] = useState(null); // 사용자 정보를 저장할 상태
   console.log(user);
   const [open, setOpen] = useState(false); // 모달 상태 관리
   const [alertOpen, setAlertOpen] = useState(false); // 경고 메시지 상태 관리
 
   const partyMemberFee = 500;
   const paymentAmount = (partyDetails.ottPrice / partyDetails.capacity) + partyMemberFee;
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo); // 사용자 정보를 상태로 설정
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    getUserInfo();
+  }, []);
 
   // 날짜 형식을 변환하는 함수
   const formatDate = (dateString) => {
