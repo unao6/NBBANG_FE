@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { startChat, deleteEmptyChat } from '../../api/chat/chatApi';
+import { sendSms } from '../../api/notification/smsApi';
 
 const StartChat = () => {
   const navigate = useNavigate();
