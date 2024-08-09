@@ -1,27 +1,44 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { IconButton, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { updateOttAccount, partyBreakUp } from '../../api/party/partyApi'; // API 함수 import
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import React, { useState } from "react";
+import { partyBreakUp, updateOttAccount } from "../../api/party/partyApi";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const PartySettings = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { partyDetails } = location.state || {}; // 전송된 상태를 가져오고 없을 시 기본값 설정
+  const { partyDetails } = location.state || {};
 
-  const [ottAccountId, setOttAccountId] = useState(partyDetails?.ottAccountId || '');
-  const [ottAccountPassword, setOttAccountPassword] = useState(partyDetails?.ottAccountPassword || '');
-  const [open, setOpen] = useState(false); // 모달 창의 상태 관리
-  const partyId = partyDetails?.partyId; // partyId를 가져옴
+  const [ottAccountId, setOttAccountId] = useState(
+    partyDetails?.ottAccountId || "",
+  );
+  const [ottAccountPassword, setOttAccountPassword] = useState(
+    partyDetails?.ottAccountPassword || "",
+  );
+  const [open, setOpen] = useState(false);
+  const partyId = partyDetails?.partyId;
   const leaderFee = 200;
-  const settlementAmount = (partyDetails.ottPrice / partyDetails.capacity) * 3 - leaderFee;
+  const settlementAmount =
+    (partyDetails.ottPrice / partyDetails.capacity) * 3 - leaderFee;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월 ${String(date.getDate()).padStart(2, '0')}일`;
+    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(
+      2,
+      "0",
+    )}월 ${String(date.getDate()).padStart(2, "0")}일`;
   };
 
-  // partyDetails가 없을 경우 에러 처리
   if (!partyDetails) {
     return <div>파티 정보를 불러올 수 없습니다.</div>;
   }
@@ -33,34 +50,34 @@ const PartySettings = () => {
         ottAccountPassword,
       };
 
-      await updateOttAccount(partyId, partyUpdateRequest); // partyId를 함께 전달
+      await updateOttAccount(partyId, partyUpdateRequest);
 
-      alert('계정 정보가 성공적으로 변경되었습니다.');
-      navigate(-1); // 변경 후 이전 페이지로 이동
+      alert("계정 정보가 성공적으로 변경되었습니다.");
+      navigate(-1);
     } catch (error) {
-      console.error('계정 정보를 변경하는 중 오류가 발생했습니다:', error);
-      alert('계정 정보 변경 중 오류가 발생했습니다.');
+      console.error("계정 정보를 변경하는 중 오류가 발생했습니다:", error);
+      alert("계정 정보 변경 중 오류가 발생했습니다.");
     }
   };
 
   const handlePartyDisband = () => {
-    setOpen(true); // 모달 창 열기
+    setOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false); // 모달 창 닫기
+    setOpen(false);
   };
 
   const handleConfirmDisband = async () => {
     try {
       await partyBreakUp(partyId);
-      alert('파티가 성공적으로 해체되었습니다.');
-      navigate("/"); // 해체 후 이전 페이지로 이동
+      alert("파티가 성공적으로 해체되었습니다.");
+      navigate("/");
     } catch (error) {
-      console.error('파티 해체 중 오류가 발생했습니다:', error);
-      alert('파티 해체 중 오류가 발생했습니다.');
+      console.error("파티 해체 중 오류가 발생했습니다:", error);
+      alert("파티 해체 중 오류가 발생했습니다.");
     }
-    setOpen(false); // 모달 창 닫기
+    setOpen(false);
   };
 
   return (
@@ -84,21 +101,29 @@ const PartySettings = () => {
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">파티생성 날짜</div>
-            <div className="text-gray-800">{formatDate(partyDetails.createdAt)}</div>
+            <div className="text-gray-800">
+              {formatDate(partyDetails.createdAt)}
+            </div>
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">정산 일자</div>
-            <div className="text-gray-800">{formatDate(partyDetails.settlementDate)}</div>
+            <div className="text-gray-800">
+              {formatDate(partyDetails.settlementDate)}
+            </div>
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">정산 받는금액</div>
-            <div className="text-gray-800">월 {settlementAmount.toLocaleString()}원</div>
+            <div className="text-gray-800">
+              월 {settlementAmount.toLocaleString()}원
+            </div>
           </div>
         </div>
 
         {/* Account Information Change */}
         <h2 className="text-xl font-bold mb-4">공유 계정 설정</h2>
-        <div className="mb-4">
+        <div className="space-y-6">
+          {" "}
+          {/* 여기에 space-y-6 클래스를 추가하여 간격을 넓힘 */}
           <TextField
             label="OTT 계정 ID"
             value={ottAccountId}
@@ -106,8 +131,6 @@ const PartySettings = () => {
             fullWidth
             variant="outlined"
           />
-        </div>
-        <div className="mb-4">
           <TextField
             label="OTT 계정 비밀번호"
             value={ottAccountPassword}
@@ -122,7 +145,7 @@ const PartySettings = () => {
           color="primary"
           onClick={handleAccountChange}
           fullWidth
-          sx={{ mb: 4 }}
+          sx={{ mt: 2 }}
         >
           계정 정보 변경하기
         </Button>
@@ -132,6 +155,7 @@ const PartySettings = () => {
             color="primary"
             fullWidth
             onClick={() => console.log("정산계좌 변경하기 클릭됨")}
+            sx={{ mt: 2 }}
           >
             정산계좌 변경하기
           </Button>
@@ -140,6 +164,7 @@ const PartySettings = () => {
             color="secondary"
             fullWidth
             onClick={handlePartyDisband}
+            sx={{ mt: 2 }}
           >
             파티 해체하기
           </Button>
@@ -153,7 +178,9 @@ const PartySettings = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">정말 파티를 해체하겠습니까?</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          정말 파티를 해체하겠습니까?
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             파티를 해체하면 되돌릴 수 없습니다. 정말로 해체하시겠습니까?

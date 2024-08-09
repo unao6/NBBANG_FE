@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { partyMemberWithdraw } from '../../api/party/partyApi';
-import { fetchUserInfo } from '../../api/user/userApi';
-import { IconButton, Button, Modal, Box } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, IconButton, Modal } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
+import { fetchUserInfo } from "../../api/user/userApi";
+import { partyMemberWithdraw } from "../../api/party/partyApi";
 
 const PartySettingsUser = () => {
   const navigate = useNavigate();
@@ -16,7 +17,8 @@ const PartySettingsUser = () => {
   const [alertOpen, setAlertOpen] = useState(false); // 경고 메시지 상태 관리
 
   const partyMemberFee = 500;
-  const paymentAmount = (partyDetails.ottPrice / partyDetails.capacity) + partyMemberFee;
+  const paymentAmount =
+    partyDetails.ottPrice / partyDetails.capacity + partyMemberFee;
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -24,7 +26,7 @@ const PartySettingsUser = () => {
         const userInfo = await fetchUserInfo();
         setUser(userInfo); // 사용자 정보를 상태로 설정
       } catch (error) {
-        console.error('Error fetching user info:', error);
+        console.error("Error fetching user info:", error);
       }
     };
 
@@ -34,7 +36,7 @@ const PartySettingsUser = () => {
   // 날짜 형식을 변환하는 함수
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월 ${String(date.getDate()).padStart(2, '0')}일`;
+    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, "0")}월 ${String(date.getDate()).padStart(2, "0")}일`;
   };
 
   // 한 달 뒤 날짜를 계산하는 함수
@@ -46,7 +48,9 @@ const PartySettingsUser = () => {
 
   // 현재 사용자의 joinDate를 가져오는 함수
   const getJoinDate = () => {
-    const currentUser = partyDetails.members.find(member => member.userId === user?.userId);
+    const currentUser = partyDetails.members.find(
+      (member) => member.userId === user?.userId,
+    );
     return currentUser ? currentUser.joinDate : null;
   };
 
@@ -86,7 +90,7 @@ const PartySettingsUser = () => {
       console.log("파티 탈퇴 확인됨");
       handleClose();
       // 탈퇴 후 적절한 페이지로 이동
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.error("파티 탈퇴 중 오류 발생:", error);
       // 오류 처리 로직 추가 가능
@@ -116,15 +120,21 @@ const PartySettingsUser = () => {
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">파티가입 날짜</div>
-            <div className="text-gray-800">{joinDate ? formatDate(joinDate) : '정보 없음'}</div>
+            <div className="text-gray-800">
+              {joinDate ? formatDate(joinDate) : "정보 없음"}
+            </div>
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">결제 일자</div>
-            <div className="text-gray-800">{joinDate ? calculateOneMonthLater(joinDate) : '정보 없음'}</div>
+            <div className="text-gray-800">
+              {joinDate ? calculateOneMonthLater(joinDate) : "정보 없음"}
+            </div>
           </div>
           <div className="flex justify-between items-center mb-2">
             <div className="text-gray-800 font-semibold">결제 금액</div>
-            <div className="text-gray-800">월 {paymentAmount.toLocaleString()}원</div>
+            <div className="text-gray-800">
+              월 {paymentAmount.toLocaleString()}원
+            </div>
           </div>
         </div>
 
@@ -134,7 +144,7 @@ const PartySettingsUser = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            onClick={() => navigate('/mypage/payment')}
+            onClick={() => navigate("/mypage/payment")}
           >
             결제카드 변경하기
           </Button>
@@ -155,7 +165,9 @@ const PartySettingsUser = () => {
             <div className="text-gray-800 text-sm">
               잦은 파티탈퇴 발생 시 파티장님에게 부담이 되기 때문에 파티탈퇴는
               <br />
-              최초 가입 한달 뒤인 {joinDate ? calculateOneMonthLater(joinDate) : '정보 없음'}부터 가능해요.
+              최초 가입 한달 뒤인{" "}
+              {joinDate ? calculateOneMonthLater(joinDate) : "정보 없음"}부터
+              가능해요.
               <br />
               결제일에 탈퇴해도 전액 환불이 가능하니 걱정하지 마세요!
             </div>
@@ -180,21 +192,17 @@ const PartySettingsUser = () => {
             <CloseIcon />
           </IconButton>
 
-          <h2 id="modal-title" className="text-xl font-bold mb-4">정말 파티 탈퇴하시겠습니까?</h2>
-          <p id="modal-description" className="text-gray-800 mb-4">남은 기간만큼 환불됩니다.</p>
+          <h2 id="modal-title" className="text-xl font-bold mb-4">
+            정말 파티 탈퇴하시겠습니까?
+          </h2>
+          <p id="modal-description" className="text-gray-800 mb-4">
+            남은 기간만큼 환불됩니다.
+          </p>
           <div className="flex justify-between mt-4">
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleConfirm}
-            >
+            <Button variant="outlined" color="primary" onClick={handleConfirm}>
               네
             </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={handleClose}
-            >
+            <Button variant="outlined" color="secondary" onClick={handleClose}>
               아니오
             </Button>
           </div>
@@ -209,9 +217,12 @@ const PartySettingsUser = () => {
         aria-describedby="alert-description"
       >
         <Box className="bg-white p-6 rounded-lg shadow-lg mx-auto mt-20 max-w-md">
-          <h2 id="alert-title" className="text-xl font-bold mb-4">탈퇴 불가</h2>
+          <h2 id="alert-title" className="text-xl font-bold mb-4">
+            탈퇴 불가
+          </h2>
           <p id="alert-description" className="text-gray-800 mb-4">
-            최초 가입한 날로부터 한 달이 지나지 않았습니다. 한 달 이후에 탈퇴 가능합니다.
+            최초 가입한 날로부터 한 달이 지나지 않았습니다. 한 달 이후에 탈퇴
+            가능합니다.
           </p>
           <Button
             variant="contained"

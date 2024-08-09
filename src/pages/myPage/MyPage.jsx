@@ -56,7 +56,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow">
         <List component="nav" aria-label="main mailbox folders">
           {menuItems.map((item, index) => (

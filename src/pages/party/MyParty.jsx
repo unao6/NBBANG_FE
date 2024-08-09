@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+
 import { getMyParty } from '../../api/party/partyApi'; // API 함수 import
 import { getOttImage } from '../../components/OttImage.js'; // OTT 이미지 함수 import
+import { useNavigate } from 'react-router-dom';
 
 const MyParty = () => {
   const [myParties, setMyParties] = useState([]);
@@ -33,16 +34,20 @@ const MyParty = () => {
 
   return (
     <main className="container mx-auto mt-8 px-4 md:px-0">
-      <div className="bg-white rounded-lg shadow-lg">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {myParties.length > 0 ? (
           myParties.map(party => (
             <div
               key={party.partyId}
-              className="flex items-center justify-between p-4 border-b cursor-pointer hover:bg-gray-50"
+              className="flex items-center justify-between p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors duration-200"
               onClick={() => handlePartyClick(party.partyId)} // 파티 클릭 이벤트 설정
             >
               <div className="flex items-center">
-                <img src={getOttImage(party.name)} alt={party.name} className="w-12 h-12 rounded-full mr-4" />
+                <img
+                  src={getOttImage(party.name)}
+                  alt={party.name}
+                  className="w-12 h-12 object-contain rounded-full mr-4"
+                />
                 <div>
                   <h3 className="text-base font-bold text-gray-800">{party.name} 파티</h3>
                 </div>
@@ -56,7 +61,7 @@ const MyParty = () => {
 
         {/* 파티 추가 버튼 */}
         <div
-          className="flex items-center justify-between p-4 cursor-pointer"
+          className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200"
           onClick={() => navigate('/add-party')}
         >
           <div className="flex items-center">

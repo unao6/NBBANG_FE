@@ -3,7 +3,7 @@ export const getOttImage = (name) => {
     case 'disney+':
       return "/assets/imgs/disney.png";
     case 'chatgpt':
-      return "/assets/imgs/ChatGPT.png";
+      return "/assets/imgs/ChatGPT.svg";
     case 'tving':
       return "/assets/imgs/tving.png";
     default:
