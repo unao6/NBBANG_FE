@@ -38,6 +38,10 @@ export const partyBreakUp = (partyId) => {
   return axiosInterceptors.delete(`/api/party-breakup/${partyId}`)
 };
 
+export const partyMemberWithdraw = (partyId) => {
+  return axiosInterceptors.delete(`/api/party-withdraw/${partyId}`)
+};
+
 export const getPartyById = (partyId) => {
   return axiosInterceptors.get(`/api/party/${partyId}`)
 };
