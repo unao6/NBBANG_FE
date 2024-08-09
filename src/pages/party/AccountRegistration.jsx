@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import useOttStore from '../../store/ottStore';  // Zustand 스토어 import
-import { getOttImage } from '../../components/OttImage.js';
-import { createParty } from '../../api/party/partyApi';  // 파티 생성 API 함수 import
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { createParty } from "../../api/party/partyApi";
+import { getOttImage } from "../../components/OttImage.js";
+import useOttStore from "../../store/ottStore";
 
 const AccountRegistration = () => {
-  const { ottId } = useParams(); // URL 파라미터로 ottId 받아오기
-  const { ottInfo, setOttInfo } = useOttStore(); // Zustand 스토어의 상태와 함수 사용
+  const { ottId } = useParams();
+  const { ottInfo, setOttInfo } = useOttStore();
   const navigate = useNavigate();
-  const [ottAccount, setOttAccount] = useState(''); // OTT ID 상태
-  const [password, setPassword] = useState(''); // 비밀번호 상태
-  const [partyCreated, setPartyCreated] = useState(false); // 파티 생성 성공 상태
+  const [ottAccount, setOttAccount] = useState("");
+  const [password, setPassword] = useState("");
+  const [partyCreated, setPartyCreated] = useState(false);
 
   useEffect(() => {
     if (!ottInfo) {
-      setOttInfo(ottId);  // OTT 정보를 Zustand 스토어에 설정
+      setOttInfo(ottId);
     }
   }, [ottId, ottInfo, setOttInfo]);
 
   if (!ottInfo) {
-    // 데이터가 로드될 때까지 로딩 상태를 표시
     return <div>Loading...</div>;
   }
 
-  const { name } = ottInfo; // OTT 정보 구조 분해 할당
-  const ottImage = getOttImage(name); // OTT 이름을 기반으로 이미지 가져오기
+  const { name } = ottInfo;
+  const ottImage = getOttImage(name);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,25 +36,31 @@ const AccountRegistration = () => {
     };
 
     try {
-      await createParty(partyData);  // 파티 생성 API 호출
-      setPartyCreated(true);  // 파티 생성 성공 시 상태 업데이트
+      await createParty(partyData);
+      setPartyCreated(true);
     } catch (error) {
-      console.error('파티 생성 중 오류 발생:', error);
-      alert('파티 생성에 실패했습니다. 다시 시도해주세요.');
+      console.error("파티 생성 중 오류 발생:", error);
+      alert("파티 생성에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   if (partyCreated) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-        <main className="w-full max-w-lg mx-auto p-4 bg-white rounded-lg shadow-lg text-center">
-          <h2 className="text-lg font-semibold mb-4">{name} 파티 생성</h2>
-          <img src={ottImage} alt="티빙 파티 생성 성공 이미지" className="mx-auto my-8" />
+      <div className="min-h-full flex flex-col items-center justify-center bg-gray-100 p-2">
+        <main className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg text-center">
+          <h2 className="text-2xl font-semibold mb-4">{name} 파티 생성</h2>
+          <img
+            src={ottImage}
+            alt={`${name} 파티 생성 성공 이미지`}
+            className="mx-auto my-8 w-32 h-32 object-contain"
+          />
           <p className="text-2xl font-bold">{name} 파티가 생성됐습니다!</p>
-          <p className="text-gray-500 mt-2">이제 더 저렴한 금액으로 {name}을 즐길 수 있어요</p>
+          <p className="text-gray-500 mt-2">
+            이제 더 저렴한 금액으로 {name}을 즐길 수 있어요
+          </p>
           <button
-            onClick={() => navigate('/')}
-            className="mt-6 bg-green-500 text-white py-2 px-8 rounded-full shadow-lg w-full"
+            onClick={() => navigate("/")}
+            className="mt-6 bg-green-500 text-white py-2 px-32 rounded-full shadow-lg hover:bg-green-600 transition duration-200"
           >
             홈으로 이동
           </button>
@@ -64,29 +70,38 @@ const AccountRegistration = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100">
-      <main className="w-full max-w-lg mx-auto mt-8 p-4 bg-white rounded-lg shadow-lg">
-        <h2 className="text-lg font-semibold mb-4">마지막으로, 계정을 등록해주세요!</h2>
+    <div className="min-h-screen flex flex-col items-center bg-gray-100 p-2">
+      <main className="w-full max-w-2xl mx-auto mt-8 p-4 bg-white rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold mb-6 text-center">
+          계정을 등록해주세요
+        </h2>
 
         {/* OTT 정보 표시 */}
-        <div className="bg-gray-100 p-4 rounded-lg mb-4">
-          <h3 className="text-center text-green-500">계정을 준비해주세요</h3>
-          <div className="flex justify-center items-center mt-2">
-            <img src={ottImage} alt={name} className="w-16 h-16" />
-            <span className="ml-4 text-green-500">{name} 프리미엄 이용권<br />구독중인 계정</span>
+        <div className="bg-white p-4 rounded-lg mb-6 flex items-center shadow-md">
+          <img src={ottImage} alt={name} className="w-20 h-20 object-contain" />
+          <div className="ml-4 text-green-500 text-sm">
+            <p className="font-bold">{name} 프리미엄 이용권</p>
+            <p>구독 중인 계정</p>
           </div>
         </div>
 
         {/* 주의사항 */}
-        <div className="bg-yellow-100 p-4 rounded-lg mb-4">
-          <h4 className="text-yellow-800 font-semibold">주의해주세요</h4>
-          <p className="text-sm mt-2">{name} ID로 가입한 계정만 공유가 가능해요.</p>
+        <div className="bg-yellow-100 p-4 rounded-lg mb-6">
+          <h4 className="text-yellow-800 font-semibold">주의사항</h4>
+          <p className="text-sm mt-2">
+            {name} ID로 가입한 계정만 공유가 가능합니다.
+          </p>
         </div>
 
         {/* 계정 입력 폼 */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="ottAccount" className="block text-gray-700 font-semibold mb-2">ID</label>
+            <label
+              htmlFor="ottAccount"
+              className="block text-gray-700 font-semibold mb-2"
+            >
+              ID
+            </label>
             <input
               type="text"
               id="ottAccount"
@@ -98,7 +113,12 @@ const AccountRegistration = () => {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 font-semibold mb-2">PW</label>
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-semibold mb-2"
+            >
+              PW
+            </label>
             <input
               type="password"
               id="password"

@@ -41,9 +41,9 @@ const OttSelection = () => {
     selectedOtt && subscribedOttIds.includes(selectedOtt.ottId);
 
   return (
-    <div className="min-h-full flex flex-col items-center bg-gray-100">
+    <div className="min-h-full flex flex-col items-center bg-gray-100 p-2">
       <main className="w-full flex flex-col items-center mt-8 max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 gap-4 p-6 bg-white rounded-lg shadow-lg w-full">
+        <div className="grid grid-cols-1 gap-4 p-6 bg-white rounded shadow-lg w-full">
           <h2 className="text-lg font-semibold mb-4 text-center">
             보고싶은 OTT를 선택해주세요
           </h2>

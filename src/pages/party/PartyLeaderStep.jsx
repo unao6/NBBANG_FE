@@ -48,8 +48,8 @@ const PartyLeaderStep = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100">
-      <main className="w-full max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow-lg">
+    <div className="min-h-screen flex flex-col items-center bg-gray-100 p-2">
+      <main className="w-full max-w-lg mx-auto mt-10 p-4 bg-white rounded shadow-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
           {name} 파티 생성
         </h2>
