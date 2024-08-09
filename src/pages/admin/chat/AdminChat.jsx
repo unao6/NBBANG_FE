@@ -213,7 +213,7 @@ const AdminChat = () => {
   let lastDate = null;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex justify-between items-center p-4 bg-white border-b border-gray-200">
         <div className="flex items-center">
           <button
@@ -249,45 +249,45 @@ const AdminChat = () => {
           </button>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col">
-      {messages.map((msg, index) => {
-        const msgDate = new Date(msg.sentAt);
-        const showDate = !lastDate || !isSameDay(lastDate, msgDate);
-        lastDate = msgDate;
+      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col"> 
+        {messages.map((msg, index) => {
+          const msgDate = new Date(msg.sentAt);
+          const showDate = !lastDate || !isSameDay(lastDate, msgDate);
+          lastDate = msgDate;
 
-        return (
-          <React.Fragment key={index}>
-            {showDate && (
-              <div className="text-center my-2 text-sm text-gray-500">
-                {formatDate(msgDate)}
-              </div>
-            )}
-            <div
-              className={`my-1 ${
-                msg.nickname === 'N/BBANG'
-                  ? 'self-end text-right'
-                  : 'self-start text-left'
-              }`}
-            >
-              <div className="text-xs text-gray-500 mb-1">{msg.nickname}</div>
+          return (
+            <React.Fragment key={index}>
+              {showDate && (
+                <div className="text-center my-2 text-sm text-gray-500">
+                  {formatDate(msgDate)}
+                </div>
+              )}
               <div
-                className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
+                className={`my-1 ${
                   msg.nickname === 'N/BBANG'
-                    ? 'bg-blue-500 text-white'
-                    : msg.nickname === 'System'
-                    ? 'bg-gray-300 text-black'
-                    : 'bg-yellow-400 text-black'
+                    ? 'self-end text-right'
+                    : 'self-start text-left'
                 }`}
               >
-                {msg.text}
+                <div className="text-xs text-gray-500 mb-1">{msg.nickname}</div>
+                <div
+                  className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
+                    msg.nickname === 'N/BBANG'
+                      ? 'bg-blue-500 text-white'
+                      : msg.nickname === 'System'
+                      ? 'bg-gray-300 text-black'
+                      : 'bg-yellow-400 text-black'
+                  }`}
+                >
+                  {msg.text}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {formatTime(msgDate)}
+                </div>
               </div>
-              <div className="text-xs text-gray-500 mt-1">
-                {formatTime(msgDate)}
-              </div>
-            </div>
-          </React.Fragment>
-        );
-      })}
+            </React.Fragment>
+          );
+        })}
         <div ref={chatEndRef} />
       </div>
       {!isChatEnded && (

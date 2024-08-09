@@ -73,7 +73,7 @@ const ArchivedChatMessages = () => {
   let lastDate = null;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex justify-between items-center p-4 bg-white border-b border-gray-200">
         <div className="flex items-center">
           <button
