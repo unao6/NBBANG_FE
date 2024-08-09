@@ -100,7 +100,7 @@ const OttSelection = () => {
             </div>
             <div className="flex justify-center">
               <button
-                className={`py-3 px-12 rounded-full shadow-md transition-all duration-300 ${
+                className={`py-3 px-32 rounded-full shadow-md transition-all duration-300 ${
                   isSubscribedOtt
                     ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                     : "bg-green-500 hover:bg-green-600 text-white"
