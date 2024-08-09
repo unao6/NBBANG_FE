@@ -47,18 +47,15 @@ const KakaoPayApprove = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-between bg-gray-100">
-      <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto mt-16 rounded">
-        <h2 className="text-2xl font-bold mb-4">피클플러스 카드등록</h2>
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold">자동결제</h3>
-          <p className="text-3xl font-bold text-black mt-1">100원</p>
-          <p className="text-sm text-gray-500 mt-1">2024.07.25</p>
-        </div>
+    <div className="flex flex-col justify-between bg-gray-100">
+      <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto rounded">
+        <h2 className="text-2xl font-bold mb-4">엔빵 카카오페이 카드등록</h2>
+
         <div className="mb-4 p-4 bg-gray-100 rounded">
           <p className="text-sm text-gray-700">
-            결제 금액 <span className="font-bold">100원</span>은 정상카드 확인
-            완료 이후 바로 취소됩니다.
+            등록하기를 누르면 카카오페이 카드등록이 완료되고
+            <br />
+            카카오톡으로 알림이 전송됩니다.
           </p>
         </div>
         <div className="mt-4">
@@ -70,13 +67,13 @@ const KakaoPayApprove = () => {
               onChange={handleAgreementChange}
             />
             <span className="ml-2 text-sm text-gray-700">
-              결제 내용을 확인하였으며, 위 내용에 동의 합니다.
+              서비스 내용을 확인하였으며, 위 내용에 동의 합니다.
             </span>
           </label>
         </div>
       </div>
 
-      <div className="p-8 bg-white shadow-md w-full max-w-2xl mx-auto mt-4 rounded">
+      <div className="p-8 bg-white shadow-md w-full max-w-2xl mx-auto rounded">
         <button
           disabled={!isAgreed}
           className={`w-full py-3 rounded ${
@@ -86,7 +83,7 @@ const KakaoPayApprove = () => {
           }`}
           onClick={handleSubmit}
         >
-          결제하기
+          등록하기
         </button>
       </div>
     </div>
