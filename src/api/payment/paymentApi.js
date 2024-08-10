@@ -1,32 +1,27 @@
-import axiosInterceptors from "../axiosInterceptors.js";
+import axios from "axios";
 
-const paymentUrl = `/api/payment`;
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
+const paymentUrl = `${baseUrl}/api/payment`;
 
 export const getPayments = async () => {
-  return axiosInterceptors.get(`${paymentUrl}/list`);
+  return axios.get(`${paymentUrl}/list`);
 };
 
-export const getUserPayments = async () => {
-  return axiosInterceptors.get(`${paymentUrl}/user`);
+export const getUserPayments = async (userId = 1) => {
+  return axios.get(`${paymentUrl}/user/${userId}`);
 };
 
 export const getPaymentsByStatus = async (status) => {
-  return axiosInterceptors.get(`${paymentUrl}/status/${status}`);
+  return axios.get(`${paymentUrl}/status/${status}`);
 };
 
-// 환불 요청 일단 payment 테이블만 변경
-export const requestRefund = async (ottId) => {
-  try {
-    const response = await axiosInterceptors.post(`${paymentUrl}/refund/${ottId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const requestRefund = async (paymentId, refundData) => {
+  return axios.post(`${paymentUrl}/${paymentId}/refund`, refundData);
 };
 
-export const getCardInfo = async () => {
+export const getCardInfo = async (userId) => {
   try {
-    const response = await axiosInterceptors.get(`/api/card/info`);
+    const response = await axios.get(`/api/card/info/${userId}`);
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -34,8 +29,4 @@ export const getCardInfo = async () => {
     }
     throw error;
   }
-};
-
-export const deleteCardInfo = async () => {
-  return axiosInterceptors.delete(`/api/card/delete`);
 };
