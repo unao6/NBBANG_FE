@@ -1,126 +1,127 @@
 import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { Bootpay } from '@bootpay/client-js';
+import { postCardInfo } from "../../api/payment/bootPayApi";
 
-const GeneralCardRegister = () => {
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [password, setPassword] = useState("");
-  const [isFormValid, setIsFormValid] = useState(false);
+const BootpaySubscription = () => {
+  const [isAgreed, setIsAgreed] = useState(false);
   const navigate = useNavigate();
 
-  const handleCardNumberChange = (e) => {
-    setCardNumber(e.target.value);
-    validateForm();
+  const handleAgreementChange = () => {
+    setIsAgreed(!isAgreed);
   };
 
-  const handleExpiryDateChange = (e) => {
-    setExpiryDate(e.target.value);
-    validateForm();
-  };
+  const handleSubscription = () => {
+    Bootpay.requestSubscription({
+      application_id: '669e45b893784376c33fbe8c',
+      pg: '나이스페이먼츠',
+      price: 100,
+      tax_free: 0,
+      order_name: '정기결제 입니다',
+      subscription_id: (new Date()).getTime(),
+      redirect_url: 'http://localhost:3000/mypage/payment',
+      user: {
+        username: '홍길동',
+        phone: '01000000000'
+      },
+      extra: {
+        subscription_comment: '매월 100원이 결제됩니다',
+        subscribe_test_payment: true
+      }
+    }).then(
+      async function (response) {
+        if (response.event === 'done') {
+          console.log(response.data);
+          alert('빌링키 발급이 완료되었습니다.');
 
-  const handleBirthDateChange = (e) => {
-    setBirthDate(e.target.value);
-    validateForm();
-  };
+          try {
+            // axiosInterceptors를 통해 API 호출
+            const cardInfo = {
+              receiptId: response.data.receipt_id,
+              cardCompany: response.data.receipt_data.card_data.card_company,
+              cardNumber: response.data.receipt_data.card_data.card_no
+            };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    validateForm();
-  };
+            const result = await postCardInfo(cardInfo);
+            console.log('서버 응답:', result);
 
-  const validateForm = () => {
-    setIsFormValid(cardNumber && expiryDate && birthDate && password);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // 카드 등록 처리 로직을 여기에 추가합니다.
-    console.log("Card registered");
-    navigate("/payment/success"); // 결제 성공 페이지로 이동합니다.
+            navigate("/mypage/payment");
+          } catch (error) {
+            console.error('Error posting card info:', error);
+          }
+        }
+      },
+      function (error) {
+        console.log(error.message);
+      }
+    );
   };
 
   return (
-    <div className="h-screen flex justify-center items-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <button onClick={() => navigate(-1)} className="text-gray-600">
-            &#8592;
-          </button>
-          <h2 className="text-xl font-bold">체크/신용카드 등록</h2>
+    <div className="flex flex-col justify-center items-center bg-gray-100 flex-grow">
+      <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto rounded">
+        <h2 className="text-2xl font-bold mb-4">엔빵 카드등록</h2>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">자동결제</h3>
+          <p className="text-3xl font-bold text-black mt-1">100원</p>
+          <p className="text-sm text-gray-500 mt-1">2024.07.24</p>
         </div>
-        <h3 className="text-lg font-semibold mb-4">
-          파티 이용료 결제를 위한 카드를 등록해주세요
-        </h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              카드 번호
-            </label>
+        <div className="mb-4 p-4 bg-gray-100 rounded">
+          <p className="text-sm text-gray-700">
+            결제 금액 <span className="font-bold">100원</span>은 정상카드 확인
+            완료 이후 바로 취소됩니다.
+          </p>
+          <p className="text-sm text-gray-700 mt-2">
+            카드결제만 가능합니다.
+          </p>
+        </div>
+        <div className="mt-4">
+          <label className="inline-flex items-center">
             <input
-              type="text"
-              value={cardNumber}
-              onChange={handleCardNumberChange}
-              placeholder="0000 0000 0000 0000"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              maxLength="16"
+              type="checkbox"
+              className="form-checkbox"
+              checked={isAgreed}
+              onChange={handleAgreementChange}
             />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              유효기간
-            </label>
-            <input
-              type="text"
-              value={expiryDate}
-              onChange={handleExpiryDateChange}
-              placeholder="MM / YY"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              maxLength="5"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              생년월일
-            </label>
-            <input
-              type="text"
-              value={birthDate}
-              onChange={handleBirthDateChange}
-              placeholder="YYYYMMDD"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              maxLength="8"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              비밀번호
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="비밀번호 앞 2자리"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              maxLength="2"
-            />
-          </div>
-          <button
-            type="submit"
-            className={`w-full py-2 rounded ${
-              isFormValid
-                ? "bg-green-500 text-white hover:bg-green-600"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-            disabled={!isFormValid}
-          >
-            결제카드 등록
-          </button>
-        </form>
+            <span className="ml-2 text-sm text-gray-700">
+              자동결제 서비스 이용에 동의 합니다.
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto mt-4 rounded">
+        <h3 className="text-sm font-bold mb-2">모두 동의합니다.</h3>
+        <ul className="list-disc pl-5 space-y-2">
+          <li className="text-sm text-gray-700">
+            전자금융거래 이용약관 <span className="text-blue-500">보기</span>
+          </li>
+          <li className="text-sm text-gray-700">
+            개인정보수집 및 이용동의 <span className="text-blue-500">보기</span>
+          </li>
+          <li className="text-sm text-gray-700">
+            개인(신용)정보 제 3자 제공 및 위탁동의{" "}
+            <span className="text-blue-500">보기</span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="p-8 bg-white shadow-md w-full max-w-2xl mx-auto mt-4 rounded">
+        <button
+          disabled={!isAgreed}
+          className={`w-full py-3 rounded ${
+            isAgreed
+              ? "bg-green-500 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+          onClick={handleSubscription}
+        >
+          동의하고 넘어가기
+        </button>
       </div>
     </div>
   );
 };
 
-export default GeneralCardRegister;
+export default BootpaySubscription;

@@ -8,6 +8,8 @@ const OttList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedOttId, setSelectedOttId] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editData, setEditData] = useState(null);
 
   useEffect(() => {
     fetchOtts();
@@ -25,12 +27,16 @@ const OttList = () => {
   };
 
   const handleEdit = (ottId) => {
-
+    const selectedOtt = otts.find((ott) => ott.ottId === ottId);
+    setEditData(selectedOtt);
     setSelectedOttId(ottId);
+    setIsEditMode(true);
   };
 
   const handleSave = async () => {
     setSelectedOttId(null);
+    setIsEditMode(false);
+    setEditData(null);
     await fetchOtts();
   };
 
@@ -59,7 +65,11 @@ const OttList = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl mb-4">OTT Management</h1>
-      <OttForm ottId={selectedOttId} onSave={handleSave} />
+      {isEditMode ? (
+        <OttForm ottId={selectedOttId} onSave={handleSave} initialData={editData} />
+      ) : (
+        <OttForm onSave={handleSave} />
+      )}
       <div className="overflow-x-auto mt-6">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">

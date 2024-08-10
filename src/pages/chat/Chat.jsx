@@ -1,79 +1,206 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import axios from 'axios';
+import useUserStore from '../../store/useUserStore';
+import { fetchUserInfo } from '../../api/user/userApi';
 
 const Chat = () => {
+  const { chatId } = useParams();
   const location = useLocation();
-  const chatId = location.state?.chatId || null;
-  const initialMessages = location.state?.messages || [];
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState(location.state?.messages || []);
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
-  const [stompClient, setStompClient] = useState(null);
-  const userId = 1; // 예제 사용자 ID. 실제 애플리케이션에서는 로그인한 사용자 ID를 사용.
+  const stompClientRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isChatEnded, setIsChatEnded] = useState(false);
+  const inputRef = useRef(null);
+
+  const { user, setUser } = useUserStore((state) => ({
+    user: state.user,
+    setUser: state.setUser,
+  }));
+
+  const getCurrentKSTTimeString = () => {
+    const currentDate = new Date();
+    const kstOffset = 9 * 60 * 60 * 1000; // 9시간
+    const kstTime = new Date(currentDate.getTime() + kstOffset);
+    return kstTime.toISOString().slice(0, 19);
+  };
 
   useEffect(() => {
-    if (chatId !== null) {
-      const client = new Client({
-        webSocketFactory: () => new SockJS('/ws'),
-        debug: (str) => {
-          console.log(str);
-        },
-        onConnect: () => {
-          client.subscribe('/queue/messages', (message) => {
-            const newMessage = JSON.parse(message.body);
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-          });
-        },
-      });
+    const initialize = async () => {
+      try {
+        setIsLoading(true);
+        const userInfo = await fetchUserInfo();
 
-      client.activate();
-      setStompClient(client);
+        setUser(userInfo);
+        setIsLoading(false);
 
-      return () => {
-        if (client) {
-          client.deactivate();
-        }
-      };
+        const client = new Client({
+          webSocketFactory: () => new SockJS(`${process.env.REACT_APP_API_BASE_URL}/ws`),
+          debug: (str) => {
+            console.log(str);
+          },
+          onConnect: () => {
+            console.log('WebSocket connected');
+
+            client.publish({
+              destination: '/app/auth',
+              body: localStorage.getItem('access'),
+            });
+
+            const subscription = client.subscribe(
+              `/topic/messages/${chatId}`,
+              (message) => {
+                const newMessage = JSON.parse(message.body);
+                newMessage.sentAt = parseSentAt(newMessage.sentAt);
+
+                console.log('받은 메세지:', newMessage);
+
+                if (newMessage.nickname === 'System' && newMessage.text.includes('상담이 종료되었습니다. 감사합니다.')) {
+                  setIsChatEnded(true);
+                }
+
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+              }
+            );
+
+            stompClientRef.current = {
+              client,
+              subscriptionId: subscription.id,
+            };
+
+            if (messages.length === 0) {
+              sendWelcomeMessage();
+            }
+          },
+          onStompError: (frame) => {
+            console.error('STOMP Error: ', frame.headers['message'], frame.body);
+          },
+        });
+
+        client.activate();
+      } catch (error) {
+        console.error('Error during initialization:', error);
+        setIsLoading(false);
+      }
+    };
+
+    initialize();
+
+    return () => {
+      if (stompClientRef.current) {
+        stompClientRef.current.client.deactivate();
+      }
+      setIsLoading(false);
+    };
+  }, []);
+
+  const sendWelcomeMessage = () => {
+    if (!stompClientRef.current || !stompClientRef.current.client.connected) {
+      console.error('WebSocket is not connected');
+      return;
     }
-  }, [chatId]);
+
+    const welcomeMessage = {
+      chatId: chatId,
+      message: {
+        nickname: 'System',
+        text: '환영합니다! 문의사항을 남겨주시면 확인 후 답변 드리겠습니다:)',
+        sentAt: getCurrentKSTTimeString(),
+      },
+    };
+
+    stompClientRef.current.client.publish({
+      destination: '/app/chat/send/' + chatId,
+      body: JSON.stringify(welcomeMessage),
+    });
+  };
+
+  const parseSentAt = (sentAt) => {
+    if (Array.isArray(sentAt)) {
+      return new Date(...sentAt);
+    }
+    return new Date(sentAt);
+  };
 
   const handleSend = () => {
-    if (input.trim() !== '' && chatId !== null && stompClient) {
-      const message = {
-        chatId: chatId,
-        userId: userId,
-        message: {
-          nickname: 'User A', // Example nickname, replace with actual user nickname
-          text: input,
-          sentAt: new Date().toISOString(),
-        },
-      };
-
-      if (chatId === -1) {
-        axios.post('/api/chat/send', {
-          userId: userId,
-          message: message.message
-        })
-          .then(response => {
-            setMessages([...messages, response.data]);
-          })
-          .catch(error => console.error('Error sending message:', error));
-      } else {
-        stompClient.publish({
-          destination: '/app/chat/send',
-          body: JSON.stringify({ userId, ...message }),
-        });
-      }
-      setInput('');
+    if (!user || !user.userId || !user.nickname) {
+      console.error('User information is missing or incomplete');
+      return;
     }
+
+    if (input.trim() === '') {
+      console.error('Input message is empty');
+      return;
+    }
+
+    if (!stompClientRef.current || !stompClientRef.current.client.connected) {
+      console.error('WebSocket is not connected');
+      return;
+    }
+
+    const newMessage = {
+      chatId: chatId,
+      userId: user.id,
+      message: {
+        nickname: user.nickname,
+        text: input,
+        sentAt: getCurrentKSTTimeString(),
+      },
+    };
+
+    console.log('보낸 메세지:', newMessage);
+
+    stompClientRef.current.client.publish({
+      destination: '/app/chat/send/' + chatId,
+      body: JSON.stringify(newMessage),
+    });
+
+    setInput('');
+    inputRef.current.focus(); 
   };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [isLoading]);
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+    });
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const isSameDay = (d1, d2) => {
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate();
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  let lastDate = null;
 
   return (
     <div className="flex flex-col h-full relative">
@@ -81,46 +208,69 @@ const Chat = () => {
         className="flex-1 overflow-y-auto p-4 bg-white flex flex-col"
         style={{ paddingTop: '68px', paddingBottom: '68px' }}
       >
-        <div ref={chatEndRef} />
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`my-1 ${
-              msg.nickname === 'User A'
-                ? 'self-end text-right'
-                : 'self-start text-left'
-            }`}
-          >
-            <div className="text-xs text-gray-500 mb-1">{msg.nickname}</div>
-            <div
-              className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
-                msg.nickname === 'User A'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-300 text-black'
-              }`}
-            >
-              {msg.text}
-            </div>
-            <div className="text-xs text-gray-500 mt-1">
-              {new Date(msg.sentAt).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </div>
-          </div>
-        ))}
+        {messages.map((msg, index) => {
+          const msgDate = new Date(msg.sentAt);
+          const showDate = !lastDate || !isSameDay(lastDate, msgDate);
+          lastDate = msgDate;
+
+          return (
+            <React.Fragment key={index}>
+              {showDate && (
+                <div className="text-center my-2 text-sm text-gray-500">
+                  {formatDate(msgDate)}
+                </div>
+              )}
+              <div
+                className={`my-1 ${
+                  msg.nickname === user?.nickname
+                    ? 'self-end text-right'
+                    : 'self-start text-left'
+                }`}
+              >
+                <div className="text-xs text-gray-500 mb-1">{msg.nickname}</div>
+                <div
+                className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
+                  msg.nickname === 'N/BBANG'
+                    ? 'bg-blue-500 text-white'
+                    : msg.nickname === 'System'
+                    ? 'bg-gray-300 text-black'
+                    : 'bg-yellow-400 text-black'
+                }`}
+              >
+                  {msg.text}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {formatTime(msgDate)}
+                </div>
+              </div>
+            </React.Fragment>
+          );
+        })}
         <div ref={chatEndRef} />
       </div>
       <div className="fixed bottom-[68px] left-0 right-0 flex p-2 bg-white z-50 max-w-[540px] mx-auto">
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleSend();
+            }
+          }}
           className="flex-1 p-2 border border-gray-300 rounded mr-2"
-          placeholder="Type a message..."
+          placeholder={isChatEnded ? "상담이 종료되었습니다." : "메세지를 입력하세요"}
+          disabled={isChatEnded}
         />
-        <button onClick={handleSend} className="bg-blue-500 text-white p-2 rounded">
-          Send
+        <button 
+          type="button"
+          onClick={handleSend} 
+          className={`${
+            isChatEnded ? 'bg-gray-400' : 'bg-blue-500 text-white p-2 rounded'
+            } text-white px-3 py-1.5 rounded-md transition duration-200`} 
+          disabled={isChatEnded} >
+          보내기
         </button>
       </div>
     </div>
