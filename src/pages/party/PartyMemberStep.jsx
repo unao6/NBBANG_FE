@@ -15,8 +15,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { getAllOtt } from "../../api/ott/ottApi.js";
 import { getCardInfo } from "../../api/payment/paymentApi.js";
 import { getOttImage } from "../../components/OttImage.js";
-import { partyMatching } from '../../api/party/partyApi';
-
+import { partyMatching } from "../../api/party/partyApi";
 
 const PartyMemberStep = () => {
   const { ottId } = useParams();
@@ -67,7 +66,7 @@ const PartyMemberStep = () => {
         await partyMatching({ ottId: ottInfo.ottId });
 
         // API 호출이 성공하면 리디렉션
-        navigate('/party-matching-success');
+        navigate("/party-matching-success");
       } catch (error) {
         console.error("매칭 중 오류 발생:", error);
         // 오류 처리 (필요에 따라 사용자에게 알림 등)
@@ -79,11 +78,17 @@ const PartyMemberStep = () => {
     navigate("/mypage/payment");
   };
 
+  const getButtonStyles = () => ({
+    color: "primary.main",
+    fontWeight: "bold",
+    width: "40%", // 버튼 가로 사이즈 줄이기
+  });
+
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100">
+    <div className="min-h-full flex flex-col items-center bg-gray-100">
       <main className="w-full flex flex-col items-center max-w-4xl mx-auto">
         {ottInfo && (
-          <div className="mt-4 p-4 bg-white rounded-lg shadow-lg w-full">
+          <div className="mt-2 p-4 bg-white rounded-lg shadow-lg w-full">
             <div className="flex justify-between items-center">
               <div className="flex flex-col items-center">
                 <img
@@ -150,7 +155,7 @@ const PartyMemberStep = () => {
             color="primary"
             className="w-full"
             onClick={handleSubscription}
-            disabled={!isAgreed}
+            disabled={!isAgreed || !cardInfo} // 카드 정보가 없거나 동의하지 않은 경우 비활성화
           >
             다음
           </Button>
@@ -193,10 +198,10 @@ const PartyMemberStep = () => {
                 }}
               >
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="text"
                   startIcon={<EditIcon />}
                   onClick={handleRegisterOrChange}
+                  sx={getButtonStyles()} // 스타일 적용
                 >
                   결제 수단 변경
                 </Button>
@@ -219,11 +224,10 @@ const PartyMemberStep = () => {
               </Card>
               <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="text"
                   startIcon={<AddIcon />}
                   onClick={handleRegisterOrChange}
-                  sx={{ width: "50%" }}
+                  sx={getButtonStyles()} // 스타일 적용
                 >
                   결제 수단 등록하기
                 </Button>
