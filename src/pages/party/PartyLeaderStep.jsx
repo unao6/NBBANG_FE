@@ -48,8 +48,8 @@ const PartyLeaderStep = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100 p-2">
-      <main className="w-full max-w-lg mx-auto mt-10 p-4 bg-white rounded shadow-lg">
+    <div className="min-h-full flex flex-col items-center bg-gray-50 p-2">
+      <main className="w-full max-w-lg mx-auto mt-2 p-4 bg-white rounded shadow-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
           {name} 파티 생성
         </h2>
@@ -181,36 +181,48 @@ const PartyLeaderStep = () => {
 
         {/* 정산 일자 정보 추가 */}
         <div className="mt-4 bg-white rounded-xl shadow-lg p-4">
-          <h3 className="font-semibold text-gray-800 mb-4">
+          <h3 className="font-semibold text-gray-800 mb-4 text-base">
+            {" "}
+            {/* 폰트 크기 줄임 */}
             정산일자를 확인해주세요
           </h3>
           <div className="flex justify-between items-center mb-6">
             <div className="flex flex-col items-center">
-              <span className="font-semibold">{formatDate(today)}</span>
-              <span className="text-gray-500">파티 생성</span>
+              <span className="font-semibold text-sm">{formatDate(today)}</span>{" "}
+              {/* 폰트 크기 줄임 */}
+              <span className="text-gray-500 text-xs">파티 생성</span>{" "}
+              {/* 폰트 크기 줄임 */}
             </div>
             <div className="flex flex-col items-center">
-              <span className="font-semibold">
+              <span className="font-semibold text-sm">
                 {formatDate(firstSettlementDate)}
-              </span>
-              <span className="text-gray-500">첫 정산일</span>
+              </span>{" "}
+              {/* 폰트 크기 줄임 */}
+              <span className="text-gray-500 text-xs">첫 정산일</span>{" "}
+              {/* 폰트 크기 줄임 */}
             </div>
             <div className="flex flex-col items-center">
-              <span className="font-semibold">
+              <span className="font-semibold text-sm">
                 {formatDate(secondSettlementDate)}
-              </span>
-              <span className="text-gray-500">두 번째 정산일</span>
+              </span>{" "}
+              {/* 폰트 크기 줄임 */}
+              <span className="text-gray-500 text-xs">두 번째 정산일</span>{" "}
+              {/* 폰트 크기 줄임 */}
             </div>
           </div>
           <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
             <div className="flex items-center">
-              <span className="mr-2">🤔</span>
-              <span className="font-semibold text-gray-700">
-                왜 {formatDate(firstSettlementDate)}이 첫 정산일인가요?
+              <span className="mr-2 text-base">🤔</span> {/* 폰트 크기 줄임 */}
+              <span className="font-semibold text-gray-700 text-sm">
+                {" "}
+                {/* 폰트 크기 줄임 */}왜 {formatDate(firstSettlementDate)}이 첫
+                정산일인가요?
               </span>
             </div>
-            <p className="mt-2 text-sm text-gray-600">
-              - 한달간 계정이 안전하게 공유된 후 정산해드려요.
+            <p className="mt-2 text-xs text-gray-600">
+              {" "}
+              {/* 폰트 크기 줄임 */}- 한달간 계정이 안전하게 공유된 후
+              정산해드려요.
             </p>
           </div>
         </div>

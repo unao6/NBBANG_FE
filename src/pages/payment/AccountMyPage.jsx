@@ -9,13 +9,12 @@ import AccountRegisterModal from "./fragments/AccountRegisterModal";
 import { getBankImage } from "../../components/BankImage";
 
 const AccountMyPage = () => {
-  const userId = 1;
   const [accountInfo, setAccountInfo] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchAccountInfo = async () => {
     try {
-      const data = await getAccountInfo(userId);
+      const data = await getAccountInfo(); // userId 제거
       setAccountInfo(data);
     } catch (error) {
       console.error("Error fetching account info:", error);
@@ -23,8 +22,8 @@ const AccountMyPage = () => {
   };
 
   useEffect(() => {
-    fetchAccountInfo();
-  }, [userId]);
+    fetchAccountInfo(); // userId 제거
+  }, []);
 
   const handleRegisterOrChange = () => {
     setModalOpen(true);
@@ -36,7 +35,7 @@ const AccountMyPage = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteAccountInfo(userId);
+      await deleteAccountInfo(); // userId 제거
       setAccountInfo(null);
     } catch (error) {
       console.error("Error deleting account info:", error);

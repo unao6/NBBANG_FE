@@ -70,8 +70,8 @@ const AccountRegistration = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100 p-2">
-      <main className="w-full max-w-2xl mx-auto mt-8 p-4 bg-white rounded-lg shadow-lg">
+    <div className="min-h-full flex flex-col items-center bg-gray-100 p-2">
+      <main className="w-full max-w-2xl mx-auto mt-2 p-4 bg-white rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold mb-6 text-center">
           계정을 등록해주세요
         </h2>
