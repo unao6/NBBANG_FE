@@ -1,56 +1,36 @@
-import "./Main.css";
-
 import React from "react";
-
-// 빵 이미지의 위치를 배열로 정의
-const breadPositions = [
-  { left: "5%" },
-  { left: "25%" },
-  { left: "45%" },
-  { left: "65%" },
-  { left: "85%" },
-];
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
+  const navigate = useNavigate();
+
+  const handlePaymentClick = () => {
+    navigate("/payment");
+  };
+
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center overflow-hidden relative bg-gradient-to-b from-green-200 via-yellow-200 to-blue-200">
-      {/* 빵 이미지 */}
-      <div className="w-full flex justify-center mt-8">
-        {" "}
-        {/* Container for bread images */}
-        {breadPositions.map((position, index) => (
-          <div
-            key={index}
-            className="floating-element animate-float"
-            style={{ left: position.left, position: "absolute", top: "10%" }}
+    <>
+      <div className="h-full">
+        <h1 className="text-3xl mb-4">Welcome to the Main Page</h1>
+        <p className="text-lg mb-8">
+          This is a responsive web page that looks consistent across mobile
+          phones, PCs, and tablets.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="bg-gray-200 p-4 rounded">구역1 1</div>
+          <div className="bg-gray-200 p-4 rounded">구역2 2</div>
+          <div className="bg-gray-200 p-4 rounded">구역3 3</div>
+        </div>
+        <div className="mt-8">
+          <button
+            onClick={handlePaymentClick}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
           >
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`}
-              alt="Bread"
-              className="floating-image w-16 h-16" // 이미지 크기를 조정
-            />
-          </div>
-        ))}
+            결제하기
+          </button>
+        </div>
       </div>
-
-      {/* 메인 문구 */}
-      <h1 className="text-4xl font-extrabold text-center mt-24 text-black">
-        대한민국 N등 <br /> OTT 계정공유 서비스
-      </h1>
-
-      <p className="text-center text-gray-700 mt-4">
-        넷플릭스, 티빙, 웨이브, 디즈니플러스 등... <br />
-        매달 나가는 구독료 부담스럽다면? <br />
-        <span className="font-semibold text-black">
-          안전한 계정 공유로 더 저렴하게!
-        </span>
-      </p>
-
-      {/* 계정 공유 시작하기 버튼 */}
-      <button className="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full shadow-lg">
-        계정공유 시작하기
-      </button>
-    </div>
+    </>
   );
 };
 

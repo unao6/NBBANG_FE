@@ -19,7 +19,6 @@ const RefundManager = () => {
     const fetchPayments = async () => {
       try {
         const response = await getPaymentsByStatus(filter);
-        console.log("Fetched payments:", response.data); // 데이터 로깅
         setPayments(response.data);
       } catch (err) {
         setError(err);
@@ -75,7 +74,7 @@ const RefundManager = () => {
       <h1 className="text-2xl mb-4">환불 관리</h1>
       <div className="mb-4">
         <label htmlFor="statusFilter" className="mr-2">
-          상태 필터:
+          Filter by status:
         </label>
         <select
           id="statusFilter"
@@ -94,7 +93,7 @@ const RefundManager = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                TID(주문번호)
+                TID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Partner User ID
@@ -107,12 +106,6 @@ const RefundManager = () => {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Amount
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Refund Amount
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Refund Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
@@ -138,22 +131,16 @@ const RefundManager = () => {
                   {payment.partnerOrderId}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.paymentType || 'N/A'} {/* 기본값 설정 */}
+                  {payment.paymentType}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.amount}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.refundAmount || 'N/A'} {/* 기본값 설정 */}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.refundDate ? new Date(payment.refundDate).toLocaleString() : 'N/A'} {/* 기본값 설정 및 포맷팅 */}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.status}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.paymentApprovedAt ? new Date(payment.paymentApprovedAt).toLocaleString() : 'N/A'}
+                  {payment.paymentApprovedAt}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.status === "REFUND_REQUESTED" && (
