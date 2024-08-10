@@ -1,5 +1,6 @@
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+
 import HomeIcon from "@mui/icons-material/Home";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import React from "react";
 
 const AdminContainer = ({ children }) => {
@@ -26,9 +27,12 @@ const AdminContainer = ({ children }) => {
             <li>
               <NavLink
                 to="/admin/payments"
-                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
-                activeClassName="bg-gray-200"
-                onClick={() => handleNavigation('/admin/payments')}
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/payments")}
               >
                 결제 관리
               </NavLink>
@@ -36,9 +40,12 @@ const AdminContainer = ({ children }) => {
             <li>
               <NavLink
                 to="/admin/refunds"
-                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
-                activeClassName="bg-gray-200"
-                onClick={() => handleNavigation('/admin/refunds')}
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/refunds")}
               >
                 환불 관리
               </NavLink>
@@ -46,9 +53,12 @@ const AdminContainer = ({ children }) => {
             <li>
               <NavLink
                 to="/admin/users"
-                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
-                activeClassName="bg-gray-200"
-                onClick={() => handleNavigation('/admin/users')}
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/users")}
               >
                 회원 관리
               </NavLink>
@@ -56,9 +66,12 @@ const AdminContainer = ({ children }) => {
             <li>
               <NavLink
                 to="/admin/ott"
-                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
-                activeClassName="bg-gray-200"
-                onClick={() => handleNavigation('/admin/ott')}
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/ott")}
               >
                 OTT 관리
               </NavLink>
@@ -66,9 +79,12 @@ const AdminContainer = ({ children }) => {
             <li>
               <NavLink
                 to="/admin/parties"
-                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
-                activeClassName="bg-gray-200"
-                onClick={() => handleNavigation('/admin/parties')}
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/parties")}
               >
                 파티 관리
               </NavLink>
@@ -76,9 +92,12 @@ const AdminContainer = ({ children }) => {
             <li>
               <NavLink
                 to="/admin/chat"
-                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
-                activeClassName="bg-gray-200"
-                onClick={() => handleNavigation('/admin/chat')}
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/chat")}
               >
                 채팅 관리
               </NavLink>
@@ -86,9 +105,12 @@ const AdminContainer = ({ children }) => {
             <li>
               <NavLink
                 to="/admin/notification/email"
-                className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200"
-                activeClassName="bg-gray-200"
-                onClick={() => handleNavigation('/admin/notification/email')}
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/notification/email")}
               >
                 이메일 발송
               </NavLink>
@@ -105,7 +127,10 @@ const AdminContainer = ({ children }) => {
           </ul>
         </nav>
       </aside>
-      <main className="flex-1 p-4 max-w-7xl mx-auto" style={{ overflowY: 'auto' }}>
+      <main
+        className="flex-1 p-4 max-w-7xl mx-auto"
+        style={{ overflowY: "auto" }}
+      >
         {children}
       </main>
     </div>

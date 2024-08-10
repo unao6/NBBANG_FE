@@ -2,22 +2,42 @@ import axiosInterceptors from "../axiosInterceptors.js";
 
 const paymentUrl = `/api/payment`;
 
-export const getPayments = async () => {
-  return axiosInterceptors.get(`${paymentUrl}/list`);
+export const getPayments = (page, size) => {
+  return axiosInterceptors.get(`${paymentUrl}/list`, {
+    params: { page, size },
+  });
 };
 
 export const getUserPayments = async () => {
   return axiosInterceptors.get(`${paymentUrl}/user`);
 };
 
-export const getPaymentsByStatus = async (status) => {
-  return axiosInterceptors.get(`${paymentUrl}/status/${status}`);
+export const getPaymentsByPartnerUserId = (partnerUserId, page, size) => {
+  return axiosInterceptors.get(`${paymentUrl}/list/user/${partnerUserId}`, {
+    params: { page, size },
+  });
+};
+
+// 페이지네이션을 지원하도록 수정된 getPaymentsByStatus 함수
+export const getPaymentsByStatus = async (status, page = 0, size = 10) => {
+  return axiosInterceptors.get(`${paymentUrl}/status/${status}`, {
+    params: { page, size },
+  });
+}; // 여기 닫는 중괄호가 필요합니다.
+
+// 새로운 TID로 검색하는 API 추가
+export const getPaymentsByTid = async (tid, page, size) => {
+  return axiosInterceptors.get(`${paymentUrl}/list/tid/${tid}`, {
+    params: { page, size },
+  });
 };
 
 // 환불 요청 일단 payment 테이블만 변경
 export const requestRefund = async (ottId) => {
   try {
-    const response = await axiosInterceptors.post(`${paymentUrl}/refund/${ottId}`);
+    const response = await axiosInterceptors.post(
+      `${paymentUrl}/refund/${ottId}`,
+    );
     return response.data;
   } catch (error) {
     throw error;
