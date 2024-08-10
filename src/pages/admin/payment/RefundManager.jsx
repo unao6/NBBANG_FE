@@ -1,9 +1,12 @@
+import { Box, Button, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   getPaymentsByStatus,
   requestRefund,
 } from "../../../api/payment/paymentApi";
 
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CircularProgress from "@mui/material/CircularProgress";
 import RefundModal from "./fragments/RefundModal";
 
@@ -14,13 +17,16 @@ const RefundManager = () => {
   const [filter, setFilter] = useState("REFUND_REQUESTED");
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [page, setPage] = useState(0); // 현재 페이지 번호
+  const [size] = useState(10); // 페이지 당 항목 수
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
 
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await getPaymentsByStatus(filter);
-        console.log("Fetched payments:", response.data); // 데이터 로깅
-        setPayments(response.data);
+        const response = await getPaymentsByStatus(filter, page, size);
+        setPayments(response.data.content);
+        setTotalPages(response.data.totalPages);
       } catch (err) {
         setError(err);
       } finally {
@@ -29,7 +35,7 @@ const RefundManager = () => {
     };
 
     fetchPayments();
-  }, [filter]);
+  }, [filter, page]);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -51,11 +57,53 @@ const RefundManager = () => {
       alert("환불 요청이 성공적으로 제출되었습니다.");
       closeModal();
       // 데이터 새로고침
-      const response = await getPaymentsByStatus(filter);
-      setPayments(response.data);
+      const response = await getPaymentsByStatus(filter, page, size);
+      setPayments(response.data.content);
     } catch (error) {
       alert("환불 요청 중 오류가 발생했습니다.");
     }
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePageClick = (pageNum) => {
+    setPage(pageNum);
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 0; i < totalPages; i++) {
+      pages.push(
+        <Button
+          key={i}
+          onClick={() => handlePageClick(i)}
+          sx={{
+            margin: "0 4px",
+            minWidth: "32px",
+            height: "32px",
+            borderRadius: "50%",
+            backgroundColor: i === page ? "#e0e0e0" : "transparent",
+            color: i === page ? "black" : "inherit",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+            },
+          }}
+        >
+          {i + 1}
+        </Button>
+      );
+    }
+    return pages;
   };
 
   if (loading) {
@@ -170,6 +218,30 @@ const RefundManager = () => {
           </tbody>
         </table>
       </div>
+      {/* 페이지네이션 버튼 및 페이지 번호 */}
+      <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+        <IconButton
+          onClick={handlePreviousPage}
+          disabled={page === 0}
+          sx={{
+            backgroundColor: "#e0e0e0",
+            marginRight: "8px",
+          }}
+        >
+          <ArrowBackIosIcon />
+        </IconButton>
+        {renderPageNumbers()}
+        <IconButton
+          onClick={handleNextPage}
+          disabled={page >= totalPages - 1}
+          sx={{
+            backgroundColor: "#e0e0e0",
+            marginLeft: "8px",
+          }}
+        >
+          <ArrowForwardIosIcon />
+        </IconButton>
+      </Box>
       <RefundModal
         isOpen={isModalOpen}
         onClose={closeModal}
