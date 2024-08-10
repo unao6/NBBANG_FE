@@ -1,40 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { startChat, deleteEmptyChat } from '../../api/chat/chatApi';
+import { sendSms } from '../../api/notification/smsApi';
 
 const StartChat = () => {
   const navigate = useNavigate();
 
-  // const handleButtonClick = () => {
-  //   axios.post('/api/chat/start')
-  //     .then(response => {
-  //       const { chatId, messages } = response.data;
-  //       navigate('/chat', { state: { chatId, messages } });
-  //     })
-  //     .catch(error => console.error('Error starting chat:', error));
-  // };
+  useEffect(() => {
+    const cleanupEmptyChats = async () => {
+      try {
+        console.log("Attempting to delete empty chats at URL");
+        await deleteEmptyChat();
+        console.log('빈 채팅방 삭제 완료');
+      } catch (error) {
+        console.error('빈 채팅방 삭제 실패:', error.response ? error.response.data : error.message);
+      }
+    };
 
-  //테스트용
-	const handleButtonClick = () => {
-    const userId = 1;
-    axios.post('/api/chat/start', { userId })
-      .then(response => {
-        const { chatId, messages } = response.data;
-        navigate('/chat', { state: { chatId, messages } });
-      })
-      .catch(error => console.error('Error starting chat:', error));
-  };
+    cleanupEmptyChats();
+  }, []);
+
+  const handleButtonClick = async () => {
+    try {
+      const response = await startChat();
+      const { chatId, messages } = response;
+      navigate(`/chat/${chatId}`, { state: { messages } });
+    } catch (error) {
+      console.log("Error starting chat: ", error);
+    }
+  }
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 flex items-center justify-center mt-10">
+      <div className="flex-1 flex items-start justify-center mt-10">
         <div className="w-full max-w-lg bg-white p-4 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-4">
-            <div className="text-2xl font-bold">NBBANG</div>
+            <div className="text-2xl font-bold">N/BBANG 채팅 문의</div>
           </div>
           <div className="mb-4">
+            <div className="flex flex-wrap justify-between">
+              <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
+              <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
+              <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
+              <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
+            </div>
             <p className="text-lg font-semibold">NBBANG</p>
-            <p className="text-md text-gray-500">OTT 계정 공유 서비스, NBBANG</p>
+            <p className="text-md text-gray-500">대한민국 2등 OTT 계정 공유 서비스, NBBANG입니다.</p>
+            <p className="text-md text-gray-500">궁금하신 사항이 있다면 언제든지 문의해주세요.</p>
+            <p className="text-md text-black">운영시간 : 10:00 ~ 19:00</p>
           </div>
           <button className="w-full bg-yellow-400 text-black py-2 rounded-lg text-center"
                   onClick={handleButtonClick}>
@@ -47,6 +60,7 @@ const StartChat = () => {
       </div>
     </div>
   );
+  
 };
 
 export default StartChat;

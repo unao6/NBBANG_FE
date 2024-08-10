@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInterceptors from "../../api/axiosInterceptors";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => setEmail(e.target.value);
@@ -16,14 +16,30 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/users/user-login", {
+      const response = await axiosInterceptors.post("/login", {
         email,
         password
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-      console.log(response.data);
-      // 로그인 성공 처리 로직 추가 (예: 토큰 저장, 페이지 리디렉션 등)
+
+      // Store access token from response header
+      const accessToken = response.headers['access'];  // 'authorization' 대신 'access' 사용
+      localStorage.setItem('access', accessToken);
+
+      // 이후 요청에 access 헤더에 토큰 포함
+      axiosInterceptors.defaults.headers.common['access'] = accessToken;
+
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
+      if (error.response) {
+        setErrorMessage("로그인 실패: 아이디나 비밀번호를 다시 확인하세요.");
+      } else {
+        setErrorMessage("서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.");
+      }
     }
   };
 
@@ -58,6 +74,11 @@ const UserLogin = () => {
           <h2 className="text-sm font-bold ml-2 text-center w-full">이메일 로그인</h2>
         </div>
         <h2 className="text-2xl font-bold mb-6 text-left">이메일로 <br /> 로그인 하기</h2>
+        {errorMessage && (
+          <div className="mb-4 text-red-500 text-sm text-center">
+            {errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label className={`block text-sm font-medium ${isEmailFocused ? "text-green-500" : "text-gray-700"}`}>이메일</label>
@@ -109,9 +130,9 @@ const UserLogin = () => {
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">엔빵 계정이 없으신가요? </span>
-          <a onClick={handleSignUpClick} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+          <button onClick={handleSignUpClick} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
             회원가입
-          </a>
+          </button>
         </div>
       </div>
     </div>
