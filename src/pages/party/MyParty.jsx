@@ -29,7 +29,7 @@ const MyParty = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">로딩 중...</div>;
+    return <div className="min-h-full flex items-center justify-center">로딩 중...</div>;
   }
 
   return (

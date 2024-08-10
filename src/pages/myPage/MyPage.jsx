@@ -36,11 +36,7 @@ const MyPage = () => {
     { text: "알림 설정", icon: <NotificationsIcon />, href: "/notifications" },
     // { text: "자주 묻는 질문", icon: <HelpIcon />, href: "/faq" },
     { text: "1:1 채팅문의", icon: <ChatIcon />, href: "/chat/start" },
-    {
-      text: "프로모션 코드 입력",
-      icon: <LocalOfferIcon />,
-      href: "/promo-code",
-    },
+    { text: "프로모션 코드 입력", icon: <LocalOfferIcon />, href: "/mypage/promoCode" },
     // { text: "제안하기", icon: <FeedbackIcon />, href: "/suggestions" },
   ];
 
@@ -56,7 +52,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-full bg-gray-50 p-4">
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow">
         <List component="nav" aria-label="main mailbox folders">
           {menuItems.map((item, index) => (

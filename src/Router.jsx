@@ -40,6 +40,7 @@ import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
+import PromoCode from "./pages/myPage/promotion/PromoCode.jsx";
 
 const Router = () => {
   return (
@@ -70,6 +71,7 @@ const Router = () => {
       <Route path="/mypage/user-info" element={<UserInfo />} />
       <Route path="/mypage/delete-account" element={<DeleteAccount />} />
       <Route path="/mypage/change-number" element={<ChangeNumber />} />
+      <Route path="/mypage/promoCode" element={<PromoCode />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
