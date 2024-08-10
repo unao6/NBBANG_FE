@@ -37,7 +37,7 @@ const KakaoPayCardRegister = () => {
   return (
     <div className="flex flex-col justify-center items-center bg-gray-100 flex-grow">
       <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">엔빵 카카오페이 카드등록</h2>
+        <h2 className="text-2xl font-bold mb-4">N/BBANG 카카오페이 카드등록</h2>
         
         <div className="mb-4 p-4 bg-gray-100 rounded">
           <p className="text-sm text-gray-700 mt-2">

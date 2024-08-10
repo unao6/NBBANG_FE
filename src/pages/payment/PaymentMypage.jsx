@@ -8,7 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { deleteCardInfo, getCardInfo, requestRefund } from "../../api/payment/paymentApi";
+import {
+  deleteCardInfo,
+  getCardInfo,
+  requestRefund,
+} from "../../api/payment/paymentApi";
 
 import AddIcon from "@mui/icons-material/Add";
 import Container from "../../components/Container";
@@ -72,7 +76,7 @@ const PaymentMypage = () => {
     setModalOpen(true);
   };
 
-  const handleRefund = async (ottId=2) => {
+  const handleRefund = async (ottId = 2) => {
     try {
       await requestRefund(ottId);
       setSnackbarMessage("환불 요청이 성공적으로 처리되었습니다!");
@@ -85,6 +89,12 @@ const PaymentMypage = () => {
       setSnackbarOpen(true);
     }
   };
+
+  const getButtonStyles = () => ({
+    color: "primary.main",
+    fontWeight: "bold",
+    width: "40%", // 버튼 가로 사이즈 줄이기
+  });
 
   return (
     <Container>
@@ -100,7 +110,7 @@ const PaymentMypage = () => {
                 sx={{
                   width: "300px",
                   height: "180px",
-                  backgroundColor: "#8EF740",
+                  backgroundColor: "#ffff26",
                   position: "relative",
                 }}
               >
@@ -125,27 +135,27 @@ const PaymentMypage = () => {
                 }}
               >
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="text"
                   startIcon={<EditIcon />}
                   onClick={handleChange}
+                  sx={getButtonStyles()}
                 >
                   결제 수단 변경
                 </Button>
                 <Button
-                  variant="contained"
-                  color="secondary"
+                  variant="text"
                   startIcon={<DeleteIcon />}
                   onClick={handleDelete}
+                  sx={getButtonStyles()}
                 >
                   결제 수단 제거
                 </Button>
               </Box>
               <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="text"
                   onClick={() => handleRefund(2)} // 여기에 실제 ottId를 넣으세요.
+                  sx={getButtonStyles()}
                 >
                   환불 요청하기
                 </Button>
@@ -158,21 +168,23 @@ const PaymentMypage = () => {
                 sx={{ width: "300px", height: "180px" }}
               >
                 <CardContent>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h6" component="div">
                     등록된 결제수단이 없어요
                   </Typography>
-                  <Typography color="textSecondary" className="mb-4">
-                    피클플러스 서비스 이용을 위해 결제 수단을 등록해 주세요.
+                  <Typography
+                    color="textSecondary"
+                    sx={{ fontSize: "0.875rem", marginTop: "8px" }}
+                  >
+                    N/BBANG 서비스 이용을 위해 결제 수단을 등록해 주세요.
                   </Typography>
                 </CardContent>
               </Card>
               <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="text"
                   startIcon={<AddIcon />}
                   onClick={handleRegister}
-                  sx={{ width: "50%" }}
+                  sx={getButtonStyles()}
                 >
                   결제 수단 등록하기
                 </Button>
