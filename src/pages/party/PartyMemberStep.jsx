@@ -163,7 +163,7 @@ const PartyMemberStep = () => {
 
         {/* 카드 정보 섹션 */}
         <Box className="w-full bg-white rounded-lg shadow p-4 mt-4">
-          <Typography variant="h6" component="div" gutterBottom>
+          <Typography variant="h7" component="div" gutterBottom>
             현재 결제수단 (변경 및 등록은 마이페이지에서 가능합니다)
           </Typography>
           {cardInfo ? (
@@ -203,7 +203,7 @@ const PartyMemberStep = () => {
                   onClick={handleRegisterOrChange}
                   sx={getButtonStyles()} // 스타일 적용
                 >
-                  결제 수단 변경
+                  결제 수단 변경하러 가기
                 </Button>
               </Box>
             </>
@@ -215,10 +215,10 @@ const PartyMemberStep = () => {
               >
                 <CardContent>
                   <Typography variant="h5" component="div">
-                    등록된 결제수단이 없어요
+                    등록된 결제수단이 없어요.
                   </Typography>
                   <Typography color="textSecondary" className="mb-4">
-                    서비스를 이용하기 위해 결제 수단을 등록해 주세요.
+                    서비스를 이용하기 위해 마이페이지에서 결제 수단을 등록해 주세요.
                   </Typography>
                 </CardContent>
               </Card>
@@ -229,7 +229,7 @@ const PartyMemberStep = () => {
                   onClick={handleRegisterOrChange}
                   sx={getButtonStyles()} // 스타일 적용
                 >
-                  결제 수단 등록하기
+                  결제 수단 등록하러 가기
                 </Button>
               </Box>
             </>

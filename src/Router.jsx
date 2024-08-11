@@ -34,13 +34,14 @@ import PartySettings from "./pages/party/PartySettings";
 import PartySettingsUser from "./pages/party/PartySettingsUser";
 import Payment from "./pages/payment/Payment";
 import PaymentMypage from "./pages/payment/PaymentMypage";
+import PaymentRefund from "./pages/payment/PaymentRefund.jsx";
+import PromoCode from "./pages/myPage/promotion/PromoCode.jsx";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SendEmail from "./pages/admin/notification/SendEmail";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
-import PromoCode from "./pages/myPage/promotion/PromoCode.jsx";
 
 const Router = () => {
   return (
@@ -53,6 +54,7 @@ const Router = () => {
       <Route path="/payment/kakaopay/approve" element={<KakaoPayApprove />} />
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
+      <Route path="/payment/refund" element={<PaymentRefund />} />
       <Route path="/chat/:chatId" element={<Chat />} />
       <Route path="/chat/start" element={<StartChat />} />
       <Route path="/admin/payments" element={<Manager />} />

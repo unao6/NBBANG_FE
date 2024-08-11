@@ -32,7 +32,19 @@ export const getPaymentsByTid = async (tid, page, size) => {
   });
 };
 
-// 환불 요청 일단 payment 테이블만 변경
+//환불 정보 조회 API
+export const getRefundInfo = async (partyId) => {
+  try {
+    const response = await axiosInterceptors.get(
+      `${paymentUrl}/refund/${partyId}/info`,
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 환불 요청 API
 export const requestRefund = async (ottId) => {
   try {
     const response = await axiosInterceptors.post(
