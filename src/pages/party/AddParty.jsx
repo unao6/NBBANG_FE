@@ -29,7 +29,7 @@ const AddParty = () => {
   return (
     <div className="min-h-full flex flex-col items-center bg-gray-50">
       {!showImage ? (
-        <main className="w-full max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow-lg">
+        <main className="w-full max-w-lg mx-auto mt-2 p-6 bg-white rounded shadow-lg">
           <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">
             이용 역할 선택
           </h2>
