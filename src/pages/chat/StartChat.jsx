@@ -9,9 +9,7 @@ const StartChat = () => {
   useEffect(() => {
     const cleanupEmptyChats = async () => {
       try {
-        console.log("Attempting to delete empty chats at URL");
         await deleteEmptyChat();
-        console.log('빈 채팅방 삭제 완료');
       } catch (error) {
         console.error('빈 채팅방 삭제 실패:', error.response ? error.response.data : error.message);
       }
