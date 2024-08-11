@@ -1,11 +1,12 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-
 import HomeIcon from "@mui/icons-material/Home";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { fetchNewMessagesCount } from "../../api/chat/chatApi";
 
 const AdminContainer = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [newMessagesCount, setNewMessagesCount] = useState(0);
 
   // 현재위치와 동일한 메뉴를 눌렀을때 새로고침하도록 설정
   const handleNavigation = (path) => {
@@ -15,6 +16,21 @@ const AdminContainer = ({ children }) => {
       navigate(path);
     }
   };
+
+  // 새로운 메시지 카운트를 가져오는 함수
+  const updateNewMessagesCount = async () => {
+    try {
+      const newMessagesData = await fetchNewMessagesCount();
+      const totalNewMessages = Object.values(newMessagesData).reduce((sum, count) => sum + count, 0);
+      setNewMessagesCount(totalNewMessages);
+    } catch (error) {
+      console.error("Failed to fetch new messages count", error);
+    }
+  };
+
+  useEffect(() => {
+    updateNewMessagesCount(); 
+  }, [location]);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -99,7 +115,12 @@ const AdminContainer = ({ children }) => {
                 }
                 onClick={() => handleNavigation("/admin/chat")}
               >
-                채팅 관리
+                <span>채팅 관리</span>
+                  {newMessagesCount > 0 && (
+                    <span className="ml-2 text-xs font-semibold text-white bg-red-500 rounded-full px-1 py-0.5">
+                      {newMessagesCount}
+                    </span>
+                  )}
               </NavLink>
             </li>
             <li>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import { fetchChatMessages, endChat, archiveChat } from '../../../api/chat/chatApi';
+import { fetchChatMessages, endChat, archiveChat, resetNewMessagesCount } from '../../../api/chat/chatApi';
 import useUserStore from '../../../store/useUserStore';
 import { fetchUserInfo } from '../../../api/user/userApi';
 
@@ -67,7 +67,6 @@ const AdminChat = () => {
               }
             );
 
-            // Store the client and subscription in a ref
             stompClientRef.current = {
               client,
               subscriptionId: subscription.id,
@@ -97,8 +96,9 @@ const AdminChat = () => {
       if (stompClientRef.current) {
         stompClientRef.current.client.deactivate();
       }
+      resetNewMessagesCount(chatId);
     };
-  }, [chatId, setUser]);
+  }, []);
 
   const parseSentAt = (sentAt) => {
     if (Array.isArray(sentAt)) {
