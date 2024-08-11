@@ -33,17 +33,17 @@ const AdminPartyManagement = () => {
 
   useEffect(() => {
     if (page === 0) {
-      fetchPartyData(true); // 초기 데이터 로드 또는 검색어가 변경될 때 데이터 초기화
+      fetchPartyData(true); // 페이지가 0일 때만 초기 데이터 로드
     } else {
       fetchPartyData(); // 추가 데이터 로드
     }
-  }, [page, fetchPartyData]);
+  }, [page]);
 
   const handleSearch = () => {
     setPage(0); // 페이지를 초기화
     setPartyData([]); // 기존 데이터를 초기화
     setHasMore(true); // 추가 데이터 로드 가능 상태로 설정
-    fetchPartyData(true); // 데이터를 다시 가져옴
+    fetchPartyData(true); // 검색 데이터를 가져옴
   };
 
   const lastPartyElementRef = (node) => {
