@@ -1,6 +1,7 @@
 import "./Main.css";
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 // 빵 이미지의 위치를 배열로 정의
 const breadPositions = [
@@ -11,9 +12,19 @@ const breadPositions = [
   { left: "85%" },
 ];
 
+
+
 const Main = () => {
+
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate('/add-party');
+  };
+
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center overflow-hidden relative bg-gradient-to-b from-green-200 via-yellow-200 to-blue-200">
+    <div
+      className="h-full w-full flex flex-col items-center justify-center overflow-hidden relative bg-gradient-to-b from-green-200 via-yellow-200 to-blue-200">
       {/* 빵 이미지 */}
       <div className="w-full flex justify-center mt-8">
         {" "}
@@ -47,9 +58,13 @@ const Main = () => {
       </p>
 
       {/* 계정 공유 시작하기 버튼 */}
-      <button className="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full shadow-lg">
+      <button
+        onClick={handleButtonClick}
+        className="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full shadow-lg"
+      >
         계정공유 시작하기
       </button>
+
     </div>
   );
 };
