@@ -42,7 +42,7 @@ import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
-import AddNumber from "./pages/login/AddNumber"; // AddNumber로 변경
+import AddNumber from "./pages/login/AddNumber";
 
 const Router = () => {
   return (

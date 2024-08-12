@@ -82,7 +82,7 @@ const ChangeNumber = ({ email }) => {
             className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${
               isPhoneFocused ? 'border-green-500' : 'border-gray-300'
             }`}
-            placeholder="휴대폰 번호를 입력해주세요"
+            placeholder="휴대폰 번호를 - 없이 숫자만 입력해주세요"
             style={{
               border: 'none',
               borderBottom: isPhoneFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
