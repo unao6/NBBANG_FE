@@ -76,9 +76,10 @@ export const deleteAccount = async (email) => {
 
 
 // 휴대폰 번호 변경 API
-export const changePhoneNumber = async (phoneNumber, randomNumber) => {
+export const changePhoneNumber = async (email, phoneNumber, randomNumber) => {
   try {
     const response = await axiosInterceptors.put('/api/users/change-phone-number', {
+      email: email,
       newPhoneNumber: phoneNumber,
       randomNumber: randomNumber,
     });
