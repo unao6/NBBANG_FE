@@ -42,7 +42,7 @@ import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
-import PhoneInputPage from "./pages/login/PhoneInputPage"; // PhoneInputPage 추가
+import AddNumber from "./pages/login/AddNumber"; // AddNumber로 변경
 
 const Router = () => {
   return (
@@ -74,6 +74,7 @@ const Router = () => {
       <Route path="/mypage/user-info" element={<UserInfo />} />
       <Route path="/mypage/delete-account" element={<DeleteAccount />} />
       <Route path="/mypage/change-number" element={<ChangeNumber />} />
+      <Route path="/mypage/add-number" element={<AddNumber />} /> {/* AddNumber 경로 추가 */}
       <Route path="/mypage/promoCode" element={<PromoCode />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
@@ -101,7 +102,6 @@ const Router = () => {
         path="/party-matching-success"
         element={<PartyMatchingSuccess />}
       />
-      <Route path="/phone-input" element={<PhoneInputPage />} /> 
     </Routes>
   );
 };

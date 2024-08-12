@@ -20,7 +20,7 @@ const GoogleRedirectHandler = () => {
         if (token) {
           localStorage.setItem("access", token);
           console.log("JWT 토큰을 로컬 스토리지에 저장했습니다.");
-          window.opener.location.href = "/phone-input"; // 부모 창을 홈으로 리다이렉트
+          window.opener.location.href = "mypage/add-number"; // 부모 창을 홈으로 리다이렉트
           window.close(); // 현재 창을 닫음
         } else {
           console.error("토큰을 가져오지 못했습니다.");
