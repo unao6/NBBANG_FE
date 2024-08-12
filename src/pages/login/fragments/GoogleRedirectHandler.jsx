@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInterceptors from "../../../api/axiosInterceptors";
 
 const GoogleRedirectHandler = () => {
   const navigate = useNavigate();
@@ -27,9 +28,9 @@ const GoogleRedirectHandler = () => {
           console.log("JWT 토큰을 로컬 스토리지에 저장했습니다.");
 
           // 토큰이 있는 경우, 전화번호가 등록되어 있는지 확인하는 API 호출
-          const phoneCheckResponse = await fetch("http://localhost:8080/api/users/user-info", {
+          const phoneCheckResponse = await axiosInterceptors.get("/api/users/user-info", {
             headers: {
-              "access": `${token}`
+              "access": `${token}`,
             },
           });
 
