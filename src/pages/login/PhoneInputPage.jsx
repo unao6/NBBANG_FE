@@ -7,16 +7,17 @@ const PhoneInputPage = () => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [phoneVerificationMessage, setPhoneVerificationMessage] = useState("");
-  const [isPhoneVerificationSuccess, setIsPhoneVerificationSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSendVerificationCode = async () => {
+    const token = localStorage.getItem("access");
+
     try {
       const response = await fetch("http://localhost:8080/api/auth/send-verification-code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT 토큰 포함
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ phoneNumber }),
       });
@@ -34,39 +35,40 @@ const PhoneInputPage = () => {
   };
 
   const handleVerifyCode = async () => {
+    const token = localStorage.getItem("access");
+
     try {
-      const response = await fetch("http://localhost:8080/api/auth/verify-phone-number", {
+      const response = await fetch("http://localhost:8080/api/users/phone-check", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT 토큰 포함
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ phoneNumber, verificationCode }),
+        body: JSON.stringify({ phoneNumber, randomNumber: verificationCode }),
       });
 
       if (response.ok) {
         setIsVerified(true);
-        setIsPhoneVerificationSuccess(true);
         setPhoneVerificationMessage("휴대폰 인증이 완료되었습니다.");
       } else {
-        setIsPhoneVerificationSuccess(false);
         setPhoneVerificationMessage("인증에 실패했습니다. 인증번호를 확인해주세요.");
       }
     } catch (error) {
       console.error("인증번호 검증 중 에러 발생:", error);
       setPhoneVerificationMessage("인증번호 검증 중 에러가 발생했습니다.");
-      setIsPhoneVerificationSuccess(false);
     }
   };
 
   const handleSavePhoneNumber = async () => {
+    const token = localStorage.getItem("access");
+
     if (isVerified) {
       try {
         const response = await fetch("http://localhost:8080/api/auth/add-phone-number", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT 토큰 포함
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ phoneNumber }),
         });
@@ -141,7 +143,7 @@ const PhoneInputPage = () => {
               인증 완료
             </button>
             {phoneVerificationMessage && (
-              <p className={`text-center mt-2 ${isPhoneVerificationSuccess ? "text-green-500" : "text-red-500"}`}>
+              <p className={`text-center mt-2 ${isVerified ? "text-green-500" : "text-red-500"}`}>
                 {phoneVerificationMessage}
               </p>
             )}

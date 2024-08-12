@@ -41,6 +41,7 @@ import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
+import PhoneInputPage from "./pages/login/PhoneInputPage"; // PhoneInputPage 추가
 
 const Router = () => {
   return (
@@ -98,6 +99,7 @@ const Router = () => {
         path="/party-matching-success"
         element={<PartyMatchingSuccess />}
       />
+      <Route path="/phone-input" element={<PhoneInputPage />} /> 
     </Routes>
   );
 };
