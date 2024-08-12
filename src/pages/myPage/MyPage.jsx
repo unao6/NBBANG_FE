@@ -12,6 +12,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import PaymentIcon from "@mui/icons-material/Payment";
 import React from "react";
+import axiosInterceptors from "../../api/axiosInterceptors";
 import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
@@ -40,18 +41,14 @@ const MyPage = () => {
     // { text: "제안하기", icon: <FeedbackIcon />, href: "/suggestions" },
   ];
 
-  const handleLogout = async () => {
+const handleLogout = async () => {
     try {
       // 로그아웃 API 요청 보내기
-      const response = await fetch("http://localhost:8080/logout", {
-        method: "POST",
-        credentials: "include", // 쿠키를 포함하여 요청
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await axiosInterceptors.post("/logout", null, {
+        withCredentials: true, // 쿠키를 포함하여 요청
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         // 로그아웃 성공 시 로컬 스토리지에서 토큰 제거
         localStorage.removeItem("access");
 
@@ -67,6 +64,7 @@ const MyPage = () => {
       console.error("Logout error:", error);
     }
   };
+
 
   return (
     <div className="min-h-full bg-gray-50 p-4">
