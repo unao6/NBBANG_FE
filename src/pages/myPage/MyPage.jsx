@@ -45,7 +45,7 @@ const MyPage = () => {
     // { text: "제안하기", icon: <FeedbackIcon />, href: "/suggestions" },
   ];
 
-  const handleLogout = async () => {
+const handleLogout = async () => {
     try {
       // 로그아웃 API 요청 보내기
       const response = await axiosInterceptors.post("/logout", null, {
@@ -68,6 +68,7 @@ const MyPage = () => {
       console.error("Logout error:", error);
     }
   };
+
 
   return (
     <div className="min-h-full bg-gray-50 p-4">
