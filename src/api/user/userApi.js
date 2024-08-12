@@ -89,6 +89,18 @@ export const changePhoneNumber = async (email, phoneNumber, randomNumber) => {
     throw error;
   }
 };
+// addPhoneNumber 함수는 동일한 방식으로 구현
+export const addPhoneNumber = async (phoneNumber) => {
+  try {
+    const response = await axiosInterceptors.post('/api/auth/add-phone-number', {
+      phoneNumber: phoneNumber, // 이제 phoneNumber만 전송
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding phone number:', error);
+    throw error;
+  }
+};
 
 // 활성 사용자 목록 가져오기
 export const fetchActiveUsers = async () => {
@@ -118,3 +130,8 @@ export const restoreUserAccount = async (email) => {
     throw error;
   }
 };
+
+export const checkIfAdmin = async() => {
+  const response = await axiosInterceptors.get('/api/role/check');
+  return response.data;
+}
