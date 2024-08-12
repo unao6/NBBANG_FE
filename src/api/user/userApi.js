@@ -74,7 +74,6 @@ export const deleteAccount = async (email) => {
   }
 };
 
-
 // 휴대폰 번호 변경 API
 export const changePhoneNumber = async (email, phoneNumber, randomNumber) => {
   try {
@@ -89,6 +88,7 @@ export const changePhoneNumber = async (email, phoneNumber, randomNumber) => {
     throw error;
   }
 };
+
 // addPhoneNumber 함수는 동일한 방식으로 구현
 export const addPhoneNumber = async (phoneNumber) => {
   try {
