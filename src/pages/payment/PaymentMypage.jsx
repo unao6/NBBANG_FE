@@ -8,7 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { deleteCardInfo, getCardInfo } from "../../api/payment/paymentApi";
+import {
+  deleteCardInfo,
+  getCardInfo,
+  requestRefund,
+} from "../../api/payment/paymentApi";
 
 import AddIcon from "@mui/icons-material/Add";
 import Container from "../../components/Container";
@@ -17,15 +21,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import PaymentMethodModal from "./fragments/PaymentMethodModal";
 
 const PaymentMypage = () => {
-  const userId = 1; // 사용자의 ID를 설정합니다. 실제로는 로그인된 사용자의 ID를 가져와야 합니다.
   const [cardInfo, setCardInfo] = useState(null);
   const [modalOpen, setModalOpen] = useState(false); // 모달 상태 관리
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar 상태 관리
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // Snackbar 메시지
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // Snackbar 알림 타입
 
   useEffect(() => {
     const fetchCardInfo = async () => {
       try {
-        const data = await getCardInfo(userId);
+        const data = await getCardInfo();
         console.log("Fetched card info:", data);
         setCardInfo(data);
       } catch (error) {
@@ -34,7 +39,7 @@ const PaymentMypage = () => {
     };
 
     fetchCardInfo();
-  }, [userId]);
+  }, []);
 
   const handleRegister = () => {
     // 모달을 여는 함수
@@ -53,11 +58,16 @@ const PaymentMypage = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteCardInfo(userId);
+      await deleteCardInfo();
       setCardInfo(null);
+      setSnackbarMessage("결제 수단이 성공적으로 삭제되었습니다!");
+      setSnackbarSeverity("success");
       setSnackbarOpen(true); // 삭제 성공 시 Snackbar를 엽니다.
     } catch (error) {
       console.error("카드 삭제 중 오류 발생:", error);
+      setSnackbarMessage("카드 삭제 중 오류가 발생했습니다.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -65,6 +75,26 @@ const PaymentMypage = () => {
     // 모달을 여는 함수 (카드 변경)
     setModalOpen(true);
   };
+
+  const handleRefund = async (ottId = 2) => {
+    try {
+      await requestRefund(ottId);
+      setSnackbarMessage("환불 요청이 성공적으로 처리되었습니다!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true); // 환불 요청 성공 시 Snackbar를 엽니다.
+    } catch (error) {
+      console.error("환불 요청 중 오류 발생:", error);
+      setSnackbarMessage("환불 요청 중 오류가 발생했습니다.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const getButtonStyles = () => ({
+    color: "primary.main",
+    fontWeight: "bold",
+    width: "40%", // 버튼 가로 사이즈 줄이기
+  });
 
   return (
     <Container>
@@ -80,19 +110,19 @@ const PaymentMypage = () => {
                 sx={{
                   width: "300px",
                   height: "180px",
-                  backgroundColor: "#8EF740",
+                  backgroundColor: "#ffff26",
                   position: "relative",
                 }}
               >
                 <CardContent>
                   <Typography variant="h5" component="div">
-                    {cardInfo.issuerCorp}
+                    {cardInfo.issuerCorp || cardInfo.cardCompany}
                   </Typography>
                   <Typography
                     color="textSecondary"
                     sx={{ position: "absolute", bottom: 16, right: 16 }}
                   >
-                    {cardInfo.cardType}
+                    {cardInfo.cardType || cardInfo.cardNumber}
                   </Typography>
                 </CardContent>
               </Card>
@@ -105,20 +135,29 @@ const PaymentMypage = () => {
                 }}
               >
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="text"
                   startIcon={<EditIcon />}
                   onClick={handleChange}
+                  sx={getButtonStyles()}
                 >
                   결제 수단 변경
                 </Button>
                 <Button
-                  variant="contained"
-                  color="secondary"
+                  variant="text"
                   startIcon={<DeleteIcon />}
                   onClick={handleDelete}
+                  sx={getButtonStyles()}
                 >
                   결제 수단 제거
+                </Button>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+                <Button
+                  variant="text"
+                  onClick={() => handleRefund(2)} // 여기에 실제 ottId를 넣으세요.
+                  sx={getButtonStyles()}
+                >
+                  환불 요청하기
                 </Button>
               </Box>
             </>
@@ -129,21 +168,23 @@ const PaymentMypage = () => {
                 sx={{ width: "300px", height: "180px" }}
               >
                 <CardContent>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h6" component="div">
                     등록된 결제수단이 없어요
                   </Typography>
-                  <Typography color="textSecondary" className="mb-4">
-                    피클플러스 서비스 이용을 위해 결제 수단을 등록해 주세요.
+                  <Typography
+                    color="textSecondary"
+                    sx={{ fontSize: "0.875rem", marginTop: "8px" }}
+                  >
+                    N/BBANG 서비스 이용을 위해 결제 수단을 등록해 주세요.
                   </Typography>
                 </CardContent>
               </Card>
               <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="text"
                   startIcon={<AddIcon />}
                   onClick={handleRegister}
-                  sx={{ width: "50%" }}
+                  sx={getButtonStyles()}
                 >
                   결제 수단 등록하기
                 </Button>
@@ -159,10 +200,10 @@ const PaymentMypage = () => {
         >
           <Alert
             onClose={handleCloseSnackbar}
-            severity="success"
+            severity={snackbarSeverity}
             sx={{ width: "100%" }}
           >
-            결제 수단이 성공적으로 삭제되었습니다!
+            {snackbarMessage}
           </Alert>
         </Snackbar>
       </Box>

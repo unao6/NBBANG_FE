@@ -1,17 +1,28 @@
+import React, { useEffect, useState } from "react";
+import { IconButton } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import { IconButton } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import axiosInterceptors from "../../api/axiosInterceptors";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const checkLoginStatus = () => {
+  const checkLoginStatus = async () => {
     const token = localStorage.getItem("access");
     if (token) {
       setIsLoggedIn(true);
+      try {
+        // 사용자 정보를 가져와서 isAdmin 값을 설정
+        const response = await axiosInterceptors.get("/api/users/user-info");
+        setIsAdmin(response.data.admin);
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+        setIsAdmin(false); // 오류 발생 시 관리자 여부를 false로 설정
+      }
     } else {
       setIsLoggedIn(false);
+      setIsAdmin(false); // 로그아웃 시 관리자 여부 초기화
     }
   };
 
@@ -45,21 +56,25 @@ const Header = () => {
               <AccountCircleIcon />
             </IconButton>
           ) : (
-            <IconButton
-              href="/mypage"
-              aria-label="my page"
-              className="text-black"
-            >
-              <AccountCircleIcon />
-            </IconButton>
+            <>
+              <IconButton
+                href="/mypage"
+                aria-label="my page"
+                className="text-black"
+              >
+                <AccountCircleIcon />
+              </IconButton>
+              {isAdmin && (
+                <IconButton
+                  href="/admin/payments"
+                  aria-label="admin"
+                  className="text-black ml-2"
+                >
+                  <AdminPanelSettingsIcon />
+                </IconButton>
+              )}
+            </>
           )}
-          <IconButton
-            href="/admin/payments"
-            aria-label="admin"
-            className="text-black ml-2"
-          >
-            <AdminPanelSettingsIcon />
-          </IconButton>
         </div>
       </div>
     </header>

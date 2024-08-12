@@ -13,10 +13,7 @@ export default defineConfig([
       parserOptions: {
         requireConfigFile: false,
         ecmaVersion: 2021,
-        sourceType: 'module',
-//         babelOptions: {
-//           presets: ['@babel/preset-react'],
-//         },
+        sourceType: 'module'
       },
       globals: globals.browser,
     },
