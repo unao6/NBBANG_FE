@@ -48,7 +48,13 @@ const PaymentRefund = () => {
     try {
       await partyMemberWithdraw(selectedPartyId);
       alert("환불 요청이 성공적으로 처리되었습니다.");
-      setRefundInfo(null); // 환불 후 정보 초기화
+
+      // 파티 정보를 다시 불러와서 최신화
+      const response = await getMyParty();
+      setMyParties(response.data);
+
+      // 상태 초기화
+      setRefundInfo(null);
       setSelectedPartyId(null);
       setIsExpanded(false);
     } catch (error) {
@@ -59,6 +65,12 @@ const PaymentRefund = () => {
 
   return (
     <main className="container mx-auto mt-8 px-4 md:px-0">
+      {/* 페이지 제목 및 안내 문구 */}
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-bold mb-2">환불 페이지</h1>
+        <p className="text-gray-700">환불을 원하시는 파티를 선택해 주세요.</p>
+      </div>
+
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {myParties.length > 0 ? (
           myParties.map((party) => (
@@ -141,6 +153,21 @@ const PaymentRefund = () => {
                           {refundInfo.refundAmount}원
                         </p>
                       </div>
+                    </div>
+
+                    {/* 환불 금액 계산식 추가 */}
+                    <div className="mt-4 bg-gray-100 p-4 rounded-lg">
+                      <h4 className="text-md font-semibold text-gray-800 mb-2">
+                        환불 금액 계산식:
+                      </h4>
+                      <p className="text-sm text-gray-700">
+                        <strong>{refundInfo.paymentAmount}원</strong> (결제
+                        금액) - <strong>{refundInfo.fee}원</strong> (수수료) -{" "}
+                        <strong>{refundInfo.oneDayPrice}원</strong> (1일 이용
+                        금액) × <strong>{refundInfo.daysUsed}일</strong> (이용
+                        일수) = <strong>{refundInfo.refundAmount}원</strong>{" "}
+                        (환불 금액)
+                      </p>
                     </div>
 
                     <p className="mt-4 text-sm text-red-500">

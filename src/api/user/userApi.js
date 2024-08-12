@@ -129,3 +129,8 @@ export const restoreUserAccount = async (email) => {
     throw error;
   }
 };
+
+export const checkIfAdmin = async() => {
+  const response = await axiosInterceptors.get('/api/role/check');
+  return response.data;
+}
