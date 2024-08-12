@@ -5,14 +5,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import { fetchUserInfo } from "../../api/user/userApi";
-import { partyMemberWithdraw } from "../../api/party/partyApi";
 
 const PartySettingsUser = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { partyDetails } = location.state || {}; // 전송된 상태를 가져오고 없을 시 기본값 설정
   const [user, setUser] = useState(null); // 사용자 정보를 저장할 상태
-  console.log(user);
   const [open, setOpen] = useState(false); // 모달 상태 관리
   const [alertOpen, setAlertOpen] = useState(false); // 경고 메시지 상태 관리
 
@@ -63,7 +61,7 @@ const PartySettingsUser = () => {
     const joinDateObj = new Date(joinDate);
     const oneMonthLater = new Date(joinDateObj);
     oneMonthLater.setMonth(joinDateObj.getMonth() + 1);
-    return new Date() >= oneMonthLater;
+    return true;
   };
 
   if (!partyDetails) {
@@ -83,18 +81,9 @@ const PartySettingsUser = () => {
     setAlertOpen(false);
   };
 
-  const handleConfirm = async () => {
-    try {
-      // 파티 탈퇴 API 호출
-      await partyMemberWithdraw(partyDetails.partyId);
-      console.log("파티 탈퇴 확인됨");
-      handleClose();
-      // 탈퇴 후 적절한 페이지로 이동
-      navigate("/");
-    } catch (error) {
-      console.error("파티 탈퇴 중 오류 발생:", error);
-      // 오류 처리 로직 추가 가능
-    }
+  const handleConfirm = () => {
+    // 탈퇴 후 /payment/refund 페이지로 이동
+    navigate("/payment/refund");
   };
 
   return (
@@ -125,7 +114,7 @@ const PartySettingsUser = () => {
             </div>
           </div>
           <div className="flex justify-between items-center mb-2">
-            <div className="text-gray-800 font-semibold">결제 일자</div>
+            <div className="text-gray-800 font-semibold">다음 결제 일자</div>
             <div className="text-gray-800">
               {joinDate ? calculateOneMonthLater(joinDate) : "정보 없음"}
             </div>
@@ -196,7 +185,7 @@ const PartySettingsUser = () => {
             정말 파티 탈퇴하시겠습니까?
           </h2>
           <p id="modal-description" className="text-gray-800 mb-4">
-            남은 기간만큼 환불됩니다.
+            환불 신청 페이지로 이동합니다.
           </p>
           <div className="flex justify-between mt-4">
             <Button variant="outlined" color="primary" onClick={handleConfirm}>
