@@ -6,7 +6,7 @@ import { sendPhoneCertification, verifyPhoneCertification, changePhoneNumber } f
 
 const ChangeNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
+  const [randomNumber, setRandomNumber] = useState('');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [isPhoneFocused, setIsPhoneFocused] = useState(false);
@@ -27,7 +27,7 @@ const ChangeNumber = () => {
 
   const handleVerifyCode = async () => {
     try {
-      await verifyPhoneCertification(phoneNumber, verificationCode);
+      await verifyPhoneCertification(phoneNumber, randomNumber);
       setIsVerified(true);
       setIsPhoneVerificationSuccess(true);
       setPhoneVerificationMessage('휴대폰 인증이 완료되었습니다.');
@@ -40,7 +40,7 @@ const ChangeNumber = () => {
   const handleSavePhoneNumber = async () => {
     if (isVerified) {
       try {
-        await changePhoneNumber(phoneNumber);
+        await changePhoneNumber(phoneNumber, randomNumber); // randomNumber 추가
         alert('휴대폰 번호가 성공적으로 변경되었습니다.');
         navigate('/mypage/user-info');
       } catch (error) {
@@ -111,8 +111,8 @@ const ChangeNumber = () => {
           </label>
           <input
             type="text"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
+            value={randomNumber}
+            onChange={(e) => setRandomNumber(e.target.value)}
             onFocus={() => setIsPhoneVerificationFocused(true)}
             onBlur={() => setIsPhoneVerificationFocused(false)}
             className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${

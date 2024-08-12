@@ -47,13 +47,13 @@ export const sendPhoneCertification = async (phoneNumber) => {
 };
 
 // 인증번호 확인 API
-export const verifyPhoneCertification = async (phoneNumber, verificationCode) => {
-  return axiosInterceptors.post('/api/users/phone-check', { phoneNumber, verificationCode });
+export const verifyPhoneCertification = async (phoneNumber, randomNumber) => {
+  return axiosInterceptors.post('/api/users/phone-check', { phoneNumber, randomNumber });
 };
 
 // 회원가입 API
 export const signUpUser = (nickname, email, password, phoneNumber) => {
-  return axiosInterceptors.post("/api/users/sign-up", {
+  return axiosInterceptors.post('/api/users/sign-up', {
     nickname,
     email,
     password,
@@ -66,7 +66,7 @@ export const signUpUser = (nickname, email, password, phoneNumber) => {
 // 회원 탈퇴 API
 export const deleteAccount = async (email) => {
   try {
-    const response = await axiosInterceptors.delete(`/api/users/delete-account/${email}`);
+    const response = await axiosInterceptors.delete('/api/users/delete-account/${email}');
     return response;
   } catch (error) {
     console.error('회원 탈퇴 실패:', error.response ? error.response.data : error.message);
@@ -75,10 +75,13 @@ export const deleteAccount = async (email) => {
 };
 
 // 휴대폰 번호 변경 API
-export const changePhoneNumber = async (phoneNumber) => {
+export const changePhoneNumber = async (phoneNumber, randomNumber) => {
   try {
-    const response = await axiosInterceptors.put('/api/users/change-phone-number', { phoneNumber });
-    return response;
+    const response = await axiosInterceptors.put('/api/users/change-phone-number', {
+      newPhoneNumber: phoneNumber,
+      randomNumber: randomNumber,
+    });
+    return response.data;
   } catch (error) {
     console.error('Error changing phone number:', error);
     throw error;
@@ -108,7 +111,7 @@ export const fetchInactiveUsers = async () => {
 // 사용자 계정 복구
 export const restoreUserAccount = async (email) => {
   try {
-    await axiosInterceptors.put(`/api/admin/restore-account/${email}`);
+    await axiosInterceptors.put('/api/admin/restore-account/${email}');
   } catch (error) {
     throw error;
   }
