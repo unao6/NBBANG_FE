@@ -29,9 +29,12 @@ function App() {
       }
     }
 
-    fetchRole();
-  }, []);
-
+    if (location.pathname.startsWith('/admin')) {
+      fetchRole();
+    } else {
+      setIsLoading(false); // /admin이 아닌 페이지에서는 바로 로딩 완료
+    }
+  }, [location.pathname]);
   const hideHeaderFooter = [
     "/payment/kakaopay/register",
     "/payment/card/register",
@@ -66,7 +69,7 @@ function App() {
 
   if (isLoading) {
     // 로딩 상태일 때는 로딩 표시 또는 빈 화면
-    return <div>로딩 중...</div>;
+    return <div></div>;
   }
 
   return (
