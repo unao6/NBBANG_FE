@@ -46,6 +46,7 @@ const OttList = () => {
       await deleteOtt(ottId);
       await fetchOtts();
     } catch (error) {
+      alert("삭제할 수 없는 OTT 입니다.")
       console.error('Error deleting OTT:', error);
     }
   };

@@ -219,8 +219,8 @@ const isFormValid =
     nickname &&
     email &&
     password.length >= 8 &&
-    isPasswordValid && // 비밀번호가 유효한지 확인
-    isPasswordMatch && // 비밀번호와 확인 비밀번호가 일치하는지 확인
+    isPasswordValid &&
+    isPasswordMatch &&
     isNicknameValid &&
     isEmailValid &&
     isVerificationSuccess &&

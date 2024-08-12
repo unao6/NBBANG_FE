@@ -1,163 +1,164 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { Box, Typography, Button, IconButton } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useNavigate } from 'react-router-dom';
+import { sendPhoneCertification, verifyPhoneCertification, changePhoneNumber } from '../../api/user/userApi';
 
-const PhoneInputPage = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
+const ChangeNumber = () => {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [randomNumber, setRandomNumber] = useState('');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
-  const [phoneVerificationMessage, setPhoneVerificationMessage] = useState("");
+  const [isPhoneFocused, setIsPhoneFocused] = useState(false);
+  const [isPhoneVerificationFocused, setIsPhoneVerificationFocused] = useState(false);
+  const [phoneVerificationMessage, setPhoneVerificationMessage] = useState('');
   const [isPhoneVerificationSuccess, setIsPhoneVerificationSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSendVerificationCode = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/send-verification-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT 토큰 포함
-        },
-        body: JSON.stringify({ phoneNumber }),
-      });
-
-      if (response.ok) {
-        setIsVerificationSent(true);
-        alert("인증번호가 발송되었습니다. 휴대폰을 확인해주세요.");
-      } else {
-        alert("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
-      }
+      await sendPhoneCertification(phoneNumber);
+      setIsVerificationSent(true);
+      alert('인증번호가 발송되었습니다. 휴대폰을 확인해주세요.');
     } catch (error) {
-      console.error("인증번호 발송 중 에러 발생:", error);
-      alert("인증번호 발송 중 에러가 발생했습니다.");
+      alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
   const handleVerifyCode = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/verify-phone-number", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT 토큰 포함
-        },
-        body: JSON.stringify({ phoneNumber, verificationCode }),
-      });
-
-      if (response.ok) {
-        setIsVerified(true);
-        setIsPhoneVerificationSuccess(true);
-        setPhoneVerificationMessage("휴대폰 인증이 완료되었습니다.");
-      } else {
-        setIsPhoneVerificationSuccess(false);
-        setPhoneVerificationMessage("인증에 실패했습니다. 인증번호를 확인해주세요.");
-      }
+      await verifyPhoneCertification(phoneNumber, randomNumber);
+      setIsVerified(true);
+      setIsPhoneVerificationSuccess(true);
+      setPhoneVerificationMessage('휴대폰 인증이 완료되었습니다.');
     } catch (error) {
-      console.error("인증번호 검증 중 에러 발생:", error);
-      setPhoneVerificationMessage("인증번호 검증 중 에러가 발생했습니다.");
       setIsPhoneVerificationSuccess(false);
+      setPhoneVerificationMessage('인증에 실패했습니다. 인증번호를 확인해주세요.');
     }
   };
 
   const handleSavePhoneNumber = async () => {
     if (isVerified) {
       try {
-        const response = await fetch("http://localhost:8080/api/auth/add-phone-number", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT 토큰 포함
-          },
-          body: JSON.stringify({ phoneNumber }),
-        });
-
-        if (response.ok) {
-          alert("휴대폰 번호가 성공적으로 추가되었습니다.");
-          navigate("/"); // 홈 페이지로 리디렉트
-        } else {
-          alert("휴대폰 번호 추가에 실패했습니다. 다시 시도해주세요.");
-        }
+        await changePhoneNumber(phoneNumber, randomNumber); // randomNumber 추가
+        alert('휴대폰 번호가 성공적으로 변경되었습니다.');
+        navigate('/mypage/user-info');
       } catch (error) {
-        console.error("휴대폰 번호 추가 중 에러 발생:", error);
-        alert("휴대폰 번호 추가 중 에러가 발생했습니다.");
+        alert('휴대폰 번호 변경에 실패했습니다. 다시 시도해주세요.');
       }
     } else {
-      alert("휴대폰 번호 인증을 완료해주세요.");
+      alert('휴대폰 번호 인증을 완료해주세요.');
     }
   };
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-      <div className="w-full max-w-md p-6">
-        <button onClick={() => navigate("/")} className="p-1 rounded bg-gray-100">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <h1 className="text-4xl font-bold text-center mt-4">전화번호 추가</h1>
-        <p className="text-center text-gray-600 mt-2">전화번호를 입력하고 인증해주세요</p>
-        <div className="mt-6">
+    <Box sx={{ padding: '16px' }}>
+      <IconButton onClick={handleBackClick} sx={{ alignSelf: 'flex-start', marginBottom: 2 }}>
+        <ArrowBackIosIcon />
+      </IconButton>
+      <Typography variant="h6" gutterBottom sx={{ padding: '16px' }}>
+        휴대폰 번호 변경
+      </Typography>
+
+      <div className="mb-6">
+        <label
+          className={`block text-sm font-medium ${
+            isPhoneFocused ? 'text-green-500' : 'text-gray-700'
+          }`}
+        >
+          새 휴대폰 번호
+        </label>
+        <div className="relative">
           <input
             type="text"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="전화번호"
-            className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
+            onFocus={() => setIsPhoneFocused(true)}
+            onBlur={() => setIsPhoneFocused(false)}
+            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${
+              isPhoneFocused ? 'border-green-500' : 'border-gray-300'
+            }`}
+            placeholder="휴대폰 번호를 입력해주세요"
+            style={{
+              border: 'none',
+              borderBottom: isPhoneFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+              backgroundColor: 'transparent',
+            }}
           />
           <button
+            type="button"
             onClick={handleSendVerificationCode}
-            className="w-full px-4 py-3 mb-3 text-white bg-green-500 rounded-lg focus:outline-none"
+            className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
             disabled={!phoneNumber}
           >
-            {isVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
+            {isVerificationSent ? '인증번호 재전송' : '인증번호 전송'}
           </button>
         </div>
-        {isVerificationSent && (
-          <div className="mt-6">
-            <input
-              type="text"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder="인증번호"
-              className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none"
-              required
-            />
-            <button
-              onClick={handleVerifyCode}
-              className="w-full px-4 py-3 mb-3 text-white bg-green-500 rounded-lg focus:outline-none"
-            >
-              인증 완료
-            </button>
-            {phoneVerificationMessage && (
-              <p className={`text-center mt-2 ${isPhoneVerificationSuccess ? "text-green-500" : "text-red-500"}`}>
-                {phoneVerificationMessage}
-              </p>
-            )}
-          </div>
-        )}
-        {isVerified && (
-          <button
-            onClick={handleSavePhoneNumber}
-            className="w-full px-4 py-3 text-white bg-blue-500 rounded-lg focus:outline-none"
-          >
-            전화번호 저장
-          </button>
-        )}
       </div>
-    </div>
+
+      {isVerificationSent && (
+        <div className="mb-6">
+          <label
+            className={`block text-sm font-medium ${
+              isPhoneVerificationFocused ? 'text-green-500' : 'text-gray-700'
+            }`}
+          >
+            인증번호
+          </label>
+          <input
+            type="text"
+            value={randomNumber}
+            onChange={(e) => setRandomNumber(e.target.value)}
+            onFocus={() => setIsPhoneVerificationFocused(true)}
+            onBlur={() => setIsPhoneVerificationFocused(false)}
+            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${
+              isPhoneVerificationFocused ? 'border-green-500' : 'border-gray-300'
+            }`}
+            placeholder="인증번호를 입력해주세요"
+            style={{
+              border: 'none',
+              borderBottom: isPhoneVerificationFocused
+                ? '2px solid #5bc490'
+                : '2px solid #d3d3d3',
+              backgroundColor: 'transparent',
+            }}
+          />
+          <button
+            type="button"
+            onClick={handleVerifyCode}
+            className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+          >
+            인증 완료
+          </button>
+          {phoneVerificationMessage && (
+            <p
+              className={`text-sm mt-2 ${
+                isPhoneVerificationSuccess ? 'text-green-500' : 'text-red-500'
+              }`}
+            >
+              {phoneVerificationMessage}
+            </p>
+          )}
+        </div>
+      )}
+
+      {isVerified && (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleSavePhoneNumber}
+          fullWidth
+          sx={{ marginTop: 2 }}
+        >
+          휴대폰 번호 저장
+        </Button>
+      )}
+    </Box>
   );
 };
 
-export default PhoneInputPage;
+export default ChangeNumber;

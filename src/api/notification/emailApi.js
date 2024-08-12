@@ -4,8 +4,6 @@ const notificationUrl = `/api/notification`;
 
 export const sendEmail = async (email, subject, message) => {
   try {
-      // const { user } = useUserStore.getState();
-      // const email = user ? user.email : '';
       const response = await axiosInterceptors.post(`${notificationUrl}/email`, {
         email,
         subject,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import CircularProgress from '@mui/material/CircularProgress';
-import { fetchAllChats } from '../../../api/chat/chatApi';
+import { fetchAllChats, fetchNewMessagesCount, resetNewMessagesCount } from '../../../api/chat/chatApi';
 
 const AdminChatList = () => {
   const [chats, setChats] = useState([]);
@@ -11,6 +11,7 @@ const AdminChatList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('ALL');
+  const [newMessages, setNewMessages] = useState({});
   const chatsPerPage = 10;
   const navigate = useNavigate();
 
@@ -18,18 +19,25 @@ const AdminChatList = () => {
     const loadChats = async () => {
       try {
         const data = await fetchAllChats();
-  
         if (!Array.isArray(data)) {
           throw new Error("Invalid data format");
         }
-  
         const sortedData = data.sort((a, b) => {
           const dateA = new Date(a.lastRepliedAt);
           const dateB = new Date(b.lastRepliedAt);
           return dateB - dateA;
         });
-  
         setChats(sortedData);
+  
+        // 모든 채팅의 새 메시지 수를 한 번에 가져옵니다.
+        const newMessagesData = await fetchNewMessagesCount();
+        
+        // 키를 숫자로 변환
+        const parsedNewMessages = Object.fromEntries(
+          Object.entries(newMessagesData).map(([key, value]) => [parseInt(key), value])
+        );
+
+        setNewMessages(parsedNewMessages);
       } catch (error) {
         setError('Failed to fetch chats');
       } finally {
@@ -44,8 +52,8 @@ const AdminChatList = () => {
     setCurrentPage(data.selected);
   };
 
-  const handleChatClick = (chat) => {
-    console.log('handleChat', chat);
+  const handleChatClick = async (chat) => {
+    await resetNewMessagesCount(chat.id);
     navigate(`/admin/chat/${chat.id}`, { state: { isChatEnded: !chat.status } });
   };
 
@@ -74,7 +82,7 @@ const AdminChatList = () => {
       .includes(searchTerm.toLowerCase());
 
     const validLastMessage =
-    chat.lastMessage !== null && chat.lastMessage !== welcomeMessageText;
+      chat.lastMessage !== null && chat.lastMessage !== welcomeMessageText;
 
     return matchesStatus && matchesSearch && validLastMessage;
   });
@@ -184,9 +192,14 @@ const AdminChatList = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <button
                     onClick={() => handleChatClick(chat)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 relative"
                   >
                     열기
+                    {(newMessages[chat.id] || 0) > 0 && (
+                      <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3 text-xs font-semibold text-white bg-red-500 rounded-full px-2 py-1">
+                        {newMessages[chat.id]}
+                      </span>
+                    )}
                   </button>
                 </td>
               </tr>

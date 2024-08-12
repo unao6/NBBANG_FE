@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { Bootpay } from '@bootpay/client-js';
 import { postCardInfo } from "../../api/payment/bootPayApi";
+import { useNavigate } from "react-router-dom";
 
 const BootpaySubscription = () => {
   const [isAgreed, setIsAgreed] = useState(false);
@@ -61,7 +61,7 @@ const BootpaySubscription = () => {
   return (
     <div className="flex flex-col justify-center items-center bg-gray-100 flex-grow">
       <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto rounded">
-        <h2 className="text-2xl font-bold mb-4">엔빵 카드등록</h2>
+        <h2 className="text-2xl font-bold mb-4">N/BBANG 카드등록</h2>
         <div className="mb-4">
           <h3 className="text-lg font-semibold">자동결제</h3>
           <p className="text-3xl font-bold text-black mt-1">100원</p>
