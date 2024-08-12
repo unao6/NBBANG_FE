@@ -69,7 +69,7 @@ const AddNumber = () => {
             type="text"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="전화번호 입력"
+            placeholder="휴대폰 번호를 - 없이 숫자만 입력해주세요"
             className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none"
             required
           />
@@ -87,7 +87,7 @@ const AddNumber = () => {
               type="text"
               value={randomNumber}
               onChange={(e) => setRandomNumber(e.target.value)}
-              placeholder="인증번호 입력"
+              placeholder="인증번호를 입력해주세요"
               className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none"
               required
             />
