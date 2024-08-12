@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
 
 const GoogleRedirectHandler = () => {
@@ -12,30 +11,59 @@ const GoogleRedirectHandler = () => {
           credentials: "include",
         });
 
+        if (response.status === 401) {
+          throw new Error("Unauthorized");
+        }
+
         if (!response.ok) {
           throw new Error("토큰 요청 실패");
         }
 
         const token = response.headers.get("access");
+        const hasPhoneNumber = response.headers.get("hasPhoneNumber") === "true";
+
         if (token) {
           localStorage.setItem("access", token);
           console.log("JWT 토큰을 로컬 스토리지에 저장했습니다.");
-          window.opener.location.href = "mypage/add-number"; // 부모 창을 홈으로 리다이렉트
-          window.close(); // 현재 창을 닫음
+
+          if (hasPhoneNumber) {
+            if (window.opener) {
+              window.opener.location.href = "/home";
+            } else {
+              navigate("/home");
+            }
+          } else {
+            if (window.opener) {
+              window.opener.location.href = "/mypage/add-number";
+            } else {
+              navigate("/mypage/add-number");
+            }
+          }
         } else {
           console.error("토큰을 가져오지 못했습니다.");
-          window.opener.location.href = "/login";
-          window.close();
+          if (window.opener) {
+            window.opener.location.href = "/login";
+          } else {
+            navigate("/login");
+          }
         }
       } catch (error) {
         console.error("토큰을 가져오는 데 실패했습니다:", error);
-        window.opener.location.href = "/login";
-        window.close();
+
+        if (window.opener) {
+          window.opener.location.href = "/login";
+        } else {
+          navigate("/login");
+        }
+      } finally {
+        if (window.opener) {
+          window.close();
+        }
       }
     };
 
     fetchToken();
-  }, []);
+  }, [navigate]);
 
   return (
     <div>
