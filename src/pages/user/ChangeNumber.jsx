@@ -4,7 +4,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
 import { sendPhoneCertification, verifyPhoneCertification, changePhoneNumber } from '../../api/user/userApi';
 
-const ChangeNumber = ({ email }) => {  // email prop 추가
+const ChangeNumber = ({ email }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [randomNumber, setRandomNumber] = useState('');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
@@ -40,7 +40,7 @@ const ChangeNumber = ({ email }) => {  // email prop 추가
   const handleSavePhoneNumber = async () => {
     if (isVerified) {
       try {
-        await changePhoneNumber(email, phoneNumber, randomNumber);  // email 추가
+        await changePhoneNumber(email, phoneNumber, randomNumber);
         alert('휴대폰 번호가 성공적으로 변경되었습니다.');
         navigate('/mypage/user-info');
       } catch (error) {
@@ -147,15 +147,13 @@ const ChangeNumber = ({ email }) => {  // email prop 추가
       )}
 
       {isVerified && (
-        <Button
-          variant="contained"
-          color="secondary"
+        <button
+          type="button"
           onClick={handleSavePhoneNumber}
-          fullWidth
-          sx={{ marginTop: 2 }}
+          className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
         >
           휴대폰 번호 저장
-        </Button>
+        </button>
       )}
     </Box>
   );

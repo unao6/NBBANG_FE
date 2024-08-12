@@ -13,7 +13,6 @@ const UserList = () => {
   const [viewInactive, setViewInactive] = useState(false);
   const [hoveredPhone, setHoveredPhone] = useState(null);
   const [roleFilter, setRoleFilter] = useState('all');
-  // 페이지네이션 상태 추가
   const [page, setPage] = useState(0); // 현재 페이지 번호
   const [size] = useState(10); // 페이지 당 항목 수
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
@@ -129,7 +128,7 @@ useEffect(() => {
     }
 
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth()는 0부터 시작하므로 1을 더해야 합니다.
+  const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const hour = String(date.getHours()).padStart(2, '0');
   const minute = String(date.getMinutes()).padStart(2, '0');
@@ -223,7 +222,7 @@ useEffect(() => {
                 </td>
                 <td
                   className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                  style={{ width: '150px' }}
+                  style={{ width: '150px', maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                   onMouseEnter={() => setHoveredPhone(user.id)}  // 마우스 오버 시 user.id로 상태 변경
                   onMouseLeave={() => setHoveredPhone(null)}     // 마우스가 떠나면 상태 초기화
                 >
