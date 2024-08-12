@@ -143,6 +143,21 @@ const PaymentRefund = () => {
                       </div>
                     </div>
 
+                    {/* 환불 금액 계산식 추가 */}
+                    <div className="mt-4 bg-gray-100 p-4 rounded-lg">
+                      <h4 className="text-md font-semibold text-gray-800 mb-2">
+                        환불 금액 계산식:
+                      </h4>
+                      <p className="text-sm text-gray-700">
+                        <strong>{refundInfo.paymentAmount}원</strong> (결제
+                        금액) - <strong>{refundInfo.fee}원</strong> (수수료) -{" "}
+                        <strong>{refundInfo.oneDayPrice}원</strong> (1일 이용
+                        금액) × <strong>{refundInfo.daysUsed}일</strong> (이용
+                        일수) = <strong>{refundInfo.refundAmount}원</strong>{" "}
+                        (환불 금액)
+                      </p>
+                    </div>
+
                     <p className="mt-4 text-sm text-red-500">
                       환불 금액을 다시 한 번 정확히 확인해주세요!
                     </p>
