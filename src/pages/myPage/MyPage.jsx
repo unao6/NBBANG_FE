@@ -40,15 +40,32 @@ const MyPage = () => {
     // { text: "제안하기", icon: <FeedbackIcon />, href: "/suggestions" },
   ];
 
-  const handleLogout = () => {
-    // 로그아웃 처리: 로컬 스토리지에서 토큰 제거
-    localStorage.removeItem("access");
+  const handleLogout = async () => {
+    try {
+      // 로그아웃 API 요청 보내기
+      const response = await fetch("http://localhost:8080/logout", {
+        method: "POST",
+        credentials: "include", // 쿠키를 포함하여 요청
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
-    window.dispatchEvent(new Event("storage"));
+      if (response.ok) {
+        // 로그아웃 성공 시 로컬 스토리지에서 토큰 제거
+        localStorage.removeItem("access");
 
-    // 로그아웃 후 로그인 페이지로 리다이렉트
-    navigate("/");
+        // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
+        window.dispatchEvent(new Event("storage"));
+
+        // 로그아웃 후 로그인 페이지로 리다이렉트
+        navigate("/");
+      } else {
+        console.error("Logout failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (
