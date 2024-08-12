@@ -73,11 +73,14 @@ const SignUp = () => {
 
 // 이메일 인증 코드 전송
 const handleSendVerificationCode = async () => {
+  setIsVerificationSent(true);
+  alert("인증 이메일이 발송되었습니다. 이메일을 확인해 주세요."); // 즉시 알림
+
   try {
     await sendEmailCertification(email);
-    setIsVerificationSent(true);
-    alert("인증 이메일이 발송되었습니다. 이메일을 확인해 주세요.");
   } catch (error) {
+    // 전송 실패 시 경고 메시지 표시
+    setIsVerificationSent(false);
     alert("이메일 인증에 실패했습니다. 다시 시도해 주세요.");
   }
 };
@@ -315,47 +318,45 @@ const isFormValid =
             )}
           </div>
 
+          <div className="mb-6">
+            <button
+              type="button"
+              onClick={handleSendVerificationCode}
+              className="w-full px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+            >
+              {isVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
+            </button>
+          </div>
 
-                            <div className="mb-6">
-                              <button
-                                type="button"
-                                onClick={handleSendVerificationCode}
-                                className="w-full px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
-                              >
-                                {isVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
-                              </button>
-                      </div>
-
-
-                    {isVerificationSent && (
-                      <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700">인증번호</label>
-                        <input
-                          type="text"
-                          value={certificationNumber}
-                          onChange={handleVerificationCodeChange}
-                          className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-green-500"
-                          placeholder="인증번호를 입력해주세요"
-                              style={{
-                                border: 'none',
-                                borderBottom: '2px solid #d3d3d3',
-                                backgroundColor: 'transparent',
-                              }}
-                        />
-                        <button
-                          type="button"
-                          onClick={handleVerifyCode}
-                          className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
-                        >
-                          인증 완료
-                        </button>
-                        {verificationMessage && (
-                          <p className={`text-sm mt-2 ${isVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
-                            {verificationMessage}
-                          </p>
-                        )}
-                      </div>
-                    )}
+          {isVerificationSent && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700">인증번호</label>
+              <input
+                type="text"
+                value={certificationNumber}
+                onChange={handleVerificationCodeChange}
+                className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-green-500"
+                placeholder="인증번호를 입력해주세요"
+                style={{
+                  border: 'none',
+                  borderBottom: '2px solid #d3d3d3',
+                  backgroundColor: 'transparent',
+                }}
+              />
+              <button
+                type="button"
+                onClick={handleVerifyCode}
+                className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+              >
+                인증 완료
+              </button>
+              {verificationMessage && (
+                <p className={`text-sm mt-2 ${isVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
+                  {verificationMessage}
+                </p>
+              )}
+            </div>
+          )}
 
       <div className="mb-6">
         <label className={`block text-sm font-medium ${isPasswordFocused ? "text-green-500" : "text-gray-700"}`}>비밀번호</label>
@@ -398,77 +399,79 @@ const isFormValid =
         />
       </div>
 
-<div className="mb-6">
-  <label className={`block text-sm font-medium ${isPhoneFocused ? "text-green-500" : "text-gray-700"}`}>휴대폰 번호</label>
-  <div className="relative">
-    <input
-      type="text"
-      value={phoneNumber}
-      onChange={handlePhoneNumberChange}
-      onFocus={() => setIsPhoneFocused(true)}
-      onBlur={() => setIsPhoneFocused(false)}
-      className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneFocused ? 'border-green-500' : 'border-gray-300'}`}
-      placeholder="휴대폰 번호를 입력해주세요"
-      style={{
-        border: 'none',
-        borderBottom: isPhoneFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
-        backgroundColor: 'transparent'
-      }}
-    />
-    <button
-      type="button"
-      onClick={handleSendPhoneVerificationCode}
-      className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
-      disabled={!phoneNumber}
-    >
-      {isPhoneVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
-    </button>
-  </div>
-</div>
-{isPhoneVerificationSent && (
-  <div className="mb-6">
-    <label className={`block text-sm font-medium ${isPhoneVerificationFocused ? "text-green-500" : "text-gray-700"}`}>인증번호</label>
-    <input
-      type="text"
-      value={randomNumber}
-      onChange={handlePhoneVerificationCodeChange}
-      onFocus={() => setIsPhoneVerificationFocused(true)}
-      onBlur={() => setIsPhoneVerificationFocused(false)}
-      className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneVerificationFocused ? 'border-green-500' : 'border-gray-300'}`}
-      placeholder="인증번호를 입력해주세요"
-      style={{
-        border: 'none',
-        borderBottom: isPhoneVerificationFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
-        backgroundColor: 'transparent'
-      }}
-    />
-    <button
-      type="button"
-      onClick={handleVerifyPhoneCode}
-      className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
-    >
-      인증 완료
-    </button>
-    {phoneVerificationMessage && (
-      <p className={`text-sm mt-2 ${isPhoneVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
-        {phoneVerificationMessage}
-      </p>
-    )}
-  </div>
-)}
-
-
-          <button
-            type="submit"
-            className="w-full px-4 py-2 text-gray-400 bg-gray-100 rounded focus:outline-none"
-            disabled={!isFormValid}
+      <div className="mb-6">
+        <label className={`block text-sm font-medium ${isPhoneFocused ? "text-green-500" : "text-gray-700"}`}>
+          휴대폰 번호
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+            onFocus={() => setIsPhoneFocused(true)}
+            onBlur={() => setIsPhoneFocused(false)}
+            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneFocused ? 'border-green-500' : 'border-gray-300'}`}
+            placeholder="휴대폰 번호를 입력해주세요"
             style={{
-              backgroundColor: isFormValid ? '#5bc490' : '#f1f1f1',
-              color: isFormValid ? '#fff' : '#d3d3d3'
+              border: 'none',
+              borderBottom: isPhoneFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+              backgroundColor: 'transparent'
             }}
+          />
+          <button
+            type="button"
+            onClick={handleSendPhoneVerificationCode}
+            className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
+            disabled={!phoneNumber}
           >
-            회원가입완료
+            {isPhoneVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
           </button>
+        </div>
+      </div>
+      {isPhoneVerificationSent && (
+        <div className="mb-6">
+          <label className={`block text-sm font-medium ${isPhoneVerificationFocused ? "text-green-500" : "text-gray-700"}`}>
+            인증번호
+          </label>
+          <input
+            type="text"
+            value={randomNumber}
+            onChange={handlePhoneVerificationCodeChange}
+            onFocus={() => setIsPhoneVerificationFocused(true)}
+            onBlur={() => setIsPhoneVerificationFocused(false)}
+            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneVerificationFocused ? 'border-green-500' : 'border-gray-300'}`}
+            placeholder="인증번호를 입력해주세요"
+            style={{
+              border: 'none',
+              borderBottom: isPhoneVerificationFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+              backgroundColor: 'transparent'
+            }}
+          />
+          <button
+            type="button"
+            onClick={handleVerifyPhoneCode}
+            className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+          >
+            인증 완료
+          </button>
+          {phoneVerificationMessage && (
+            <p className={`text-sm mt-2 ${isPhoneVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
+              {phoneVerificationMessage}
+            </p>
+          )}
+        </div>
+      )}
+        <button
+          type="submit"
+          className="w-full px-4 py-2 text-gray-400 bg-gray-100 rounded focus:outline-none"
+          disabled={!isFormValid}
+          style={{
+            backgroundColor: isFormValid ? '#5bc490' : '#f1f1f1',
+            color: isFormValid ? '#fff' : '#d3d3d3'
+          }}
+        >
+          회원가입완료
+        </button>
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">이미 계정이 있으신가요? </span>
