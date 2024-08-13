@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { startChat, deleteEmptyChat } from '../../api/chat/chatApi';
-import IconButton from '@mui/material/IconButton'; // IconButton 임포트 추가
+import { deleteEmptyChat, startChat } from '../../api/chat/chatApi';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ArrowBackIcon 임포트 추가
+import IconButton from '@mui/material/IconButton'; // IconButton 임포트 추가
+import { useNavigate } from 'react-router-dom';
 
 const StartChat = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const StartChat = () => {
                   onClick={handleButtonClick}>
             문의하기
           </button>
-          <p className="text-sm text-gray-500 text-center mt-2">
+          <p className="text-sm text-gray-500 text-center mt-2 mb-20">
             몇 분 내 답변 받으실 수 있어요.
           </p>
         </div>

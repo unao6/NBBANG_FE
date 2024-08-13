@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getMyParty, partyMemberWithdraw } from "../../api/party/partyApi";
+import { getMyPartyAsMember, partyMemberWithdraw } from "../../api/party/partyApi"; // 새로운 API 임포트
 
 import { getOttImage } from "../../components/OttImage.js";
 import { getRefundInfo } from "../../api/payment/paymentApi";
@@ -13,7 +13,7 @@ const PaymentRefund = () => {
   useEffect(() => {
     const fetchMyPartyData = async () => {
       try {
-        const response = await getMyParty();
+        const response = await getMyPartyAsMember(); // getMyParty -> getMyPartyAsMember로 변경
         setMyParties(response.data);
       } catch (error) {
         console.error("파티 정보를 불러오는 중 오류 발생:", error);
@@ -50,7 +50,7 @@ const PaymentRefund = () => {
       alert("환불 요청이 성공적으로 처리되었습니다.");
 
       // 파티 정보를 다시 불러와서 최신화
-      const response = await getMyParty();
+      const response = await getMyPartyAsMember(); // getMyParty -> getMyPartyAsMember로 변경
       setMyParties(response.data);
 
       // 상태 초기화
