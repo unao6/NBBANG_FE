@@ -151,15 +151,6 @@ const PaymentMypage = () => {
                   결제 수단 제거
                 </Button>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-                <Button
-                  variant="text"
-                  onClick={() => handleRefund(2)} // 여기에 실제 ottId를 넣으세요.
-                  sx={getButtonStyles()}
-                >
-                  환불 요청하기
-                </Button>
-              </Box>
             </>
           ) : (
             <>
