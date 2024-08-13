@@ -8,11 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {
-  deleteCardInfo,
-  getCardInfo,
-  requestRefund,
-} from "../../api/payment/paymentApi";
+import { deleteCardInfo, getCardInfo } from "../../api/payment/paymentApi";
 
 import AddIcon from "@mui/icons-material/Add";
 import Container from "../../components/Container";
@@ -76,20 +72,6 @@ const PaymentMypage = () => {
     setModalOpen(true);
   };
 
-  const handleRefund = async (ottId = 2) => {
-    try {
-      await requestRefund(ottId);
-      setSnackbarMessage("환불 요청이 성공적으로 처리되었습니다!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true); // 환불 요청 성공 시 Snackbar를 엽니다.
-    } catch (error) {
-      console.error("환불 요청 중 오류 발생:", error);
-      setSnackbarMessage("환불 요청 중 오류가 발생했습니다.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
-    }
-  };
-
   const getButtonStyles = () => ({
     color: "primary.main",
     fontWeight: "bold",
@@ -99,7 +81,7 @@ const PaymentMypage = () => {
   return (
     <Container>
       <Box className="p-4 flex flex-col items-center">
-        <Box className="w-full bg-white rounded-lg shadow p-4 mt-4">
+        <Box className="w-full bg-white rounded-lg shadow p-4 mt:4">
           <Typography variant="h6" component="div" gutterBottom>
             현재 결제수단
           </Typography>
@@ -149,15 +131,6 @@ const PaymentMypage = () => {
                   sx={getButtonStyles()}
                 >
                   결제 수단 제거
-                </Button>
-              </Box>
-              <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-                <Button
-                  variant="text"
-                  onClick={() => handleRefund(2)} // 여기에 실제 ottId를 넣으세요.
-                  sx={getButtonStyles()}
-                >
-                  환불 요청하기
                 </Button>
               </Box>
             </>

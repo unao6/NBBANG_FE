@@ -1,14 +1,12 @@
 import { Box, Button, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {
-  getPaymentsByStatus,
-  requestRefund,
-} from "../../../api/payment/paymentApi";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CircularProgress from "@mui/material/CircularProgress";
 import RefundModal from "./fragments/RefundModal";
+import { cancelPayment } from "../../../api/payment/kakaoPay/kakaoPayApi";
+import { getPaymentsByStatus } from "../../../api/payment/paymentApi";
 
 const RefundManager = () => {
   const [payments, setPayments] = useState([]);
@@ -35,7 +33,7 @@ const RefundManager = () => {
     };
 
     fetchPayments();
-  }, [filter, page]);
+  }, [filter, page, size]);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -53,7 +51,16 @@ const RefundManager = () => {
 
   const handleRefundSubmit = async (refundData) => {
     try {
-      await requestRefund(selectedPayment.id, refundData);
+      const cancelRequest = {
+        tid: selectedPayment.tid,
+        cid: selectedPayment.cid,
+        cancel_amount: selectedPayment.refundAmount,
+        cancel_tax_free_amount: refundData.cancelTaxFreeAmount,
+        // cancel_vat_amount: refundData.cancelVatAmount,
+        // cancel_available_amount: refundData.cancelAvailableAmount,
+        payload: refundData.payload,
+      };
+      await cancelPayment(cancelRequest);
       alert("환불 요청이 성공적으로 제출되었습니다.");
       closeModal();
       // 데이터 새로고침
@@ -100,7 +107,7 @@ const RefundManager = () => {
           }}
         >
           {i + 1}
-        </Button>
+        </Button>,
       );
     }
     return pages;
@@ -186,22 +193,27 @@ const RefundManager = () => {
                   {payment.partnerOrderId}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.paymentType || 'N/A'} {/* 기본값 설정 */}
+                  {payment.paymentType || "N/A"} {/* 기본값 설정 */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.amount}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.refundAmount || 'N/A'} {/* 기본값 설정 */}
+                  {payment.refundAmount || "N/A"} {/* 기본값 설정 */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.refundDate ? new Date(payment.refundDate).toLocaleString() : 'N/A'} {/* 기본값 설정 및 포맷팅 */}
+                  {payment.refundDate
+                    ? new Date(payment.refundDate).toLocaleString()
+                    : "N/A"}{" "}
+                  {/* 기본값 설정 및 포맷팅 */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.status}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.paymentApprovedAt ? new Date(payment.paymentApprovedAt).toLocaleString() : 'N/A'}
+                  {payment.paymentApprovedAt
+                    ? new Date(payment.paymentApprovedAt).toLocaleString()
+                    : "N/A"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.status === "REFUND_REQUESTED" && (
@@ -246,6 +258,7 @@ const RefundManager = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={handleRefundSubmit}
+        initialCancelAmount={selectedPayment ? selectedPayment.refundAmount : 0}
       />
     </div>
   );
