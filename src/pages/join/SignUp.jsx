@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   sendEmailCertification,
@@ -42,6 +42,9 @@ const SignUp = () => {
   const [isPhoneVerificationSuccess, setIsPhoneVerificationSuccess] = useState(false);
   const [isPhoneFocused, setIsPhoneFocused] = useState(false);
   const [isPhoneVerificationFocused, setIsPhoneVerificationFocused] = useState(false);
+
+  const [timeLeft, setTimeLeft] = useState(180); // 3분 = 180초
+  const [isTimerActive, setIsTimerActive] = useState(false);
 
   const navigate = useNavigate();
 
@@ -108,7 +111,7 @@ const handleVerifyCode = async () => {
     // 비밀번호 유효성 검사: 영어와 숫자를 포함하고 8자 이상인지 확인
     if (!validatePassword(passwordInput)) {
       setIsPasswordValid(false);
-      setPasswordMessage("비밀번호는 영어와 숫자를 포함하여 8자 이상이어야 합니다.");
+      setPasswordMessage("비밀번호는 영어와 숫자를 포함하여 8자 이상이어야 합니다.<br />특수문자는 포함하지 않습니다.");
     } else {
       setIsPasswordValid(true);
       setPasswordMessage("");
@@ -176,16 +179,30 @@ const handlePhoneNumberChange = (e) => {
   setPhoneNumber(e.target.value);
 };
 
-// 휴대폰 인증 코드 전송
-const handleSendPhoneVerificationCode = async () => {
-  try {
-    await sendPhoneCertification(phoneNumber);
-    setIsPhoneVerificationSent(true);
-    alert("인증번호가 발송되었습니다. 휴대폰을 확인해 주세요.");
-  } catch (error) {
-    alert("휴대폰 인증에 실패했습니다. 다시 시도해 주세요.");
-  }
-};
+  useEffect(() => {
+    if (isTimerActive && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    } else if (timeLeft === 0) {
+      setIsTimerActive(false);
+    }
+  }, [isTimerActive, timeLeft]);
+
+  // 휴대폰 인증 코드 전송
+  const handleSendPhoneVerificationCode = async () => {
+    try {
+      await sendPhoneCertification(phoneNumber);
+      setIsPhoneVerificationSent(true);
+      setIsTimerActive(true);
+      setTimeLeft(180); // 타이머 초기화
+      alert("인증번호가 발송되었습니다. 휴대폰을 확인해 주세요.");
+    } catch (error) {
+      alert("휴대폰 인증에 실패했습니다. 다시 시도해 주세요.");
+    }
+  };
 
 const handlePhoneVerificationCodeChange = (e) => {
   setPhoneVerificationCode(e.target.value);
@@ -197,6 +214,7 @@ const handleVerifyPhoneCode = async () => {
     await verifyPhoneCertification(phoneNumber, randomNumber);
     setIsPhoneVerificationSuccess(true);
     setPhoneVerificationMessage("휴대폰 인증이 완료되었습니다.");
+    setIsTimerActive(false); // 타이머 중지
   } catch (error) {
     setIsPhoneVerificationSuccess(false);
     setPhoneVerificationMessage("인증 코드가 올바르지 않습니다.");
@@ -375,9 +393,10 @@ const isFormValid =
           }}
         />
         {passwordMessage && (
-          <p className={`text-sm mt-2 ${isPasswordValid ? 'text-green-500' : 'text-red-500'}`}>
-            {passwordMessage}
-          </p>
+          <p
+            className={`text-sm mt-2 ${isPasswordValid ? 'text-green-500' : 'text-red-500'}`}
+            dangerouslySetInnerHTML={{ __html: passwordMessage }}
+          />
         )}
       </div>
 
@@ -447,6 +466,11 @@ const isFormValid =
               backgroundColor: 'transparent'
             }}
           />
+          {isTimerActive && (
+            <p className="text-sm mt-2 text-gray-700">
+              남은 시간: {`${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`}
+            </p>
+          )}
           <button
             type="button"
             onClick={handleVerifyPhoneCode}
