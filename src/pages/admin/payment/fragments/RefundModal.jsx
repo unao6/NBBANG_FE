@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-const RefundModal = ({ isOpen, onClose, onSubmit }) => {
-  const [cancelAmount, setCancelAmount] = useState('');
-  const [cancelTaxFreeAmount, setCancelTaxFreeAmount] = useState('');
-  const [cancelVatAmount, setCancelVatAmount] = useState('');
-  const [cancelAvailableAmount, setCancelAvailableAmount] = useState('');
-  const [payload, setPayload] = useState('');
+const RefundModal = ({ isOpen, onClose, onSubmit, initialCancelAmount }) => {
+  const [cancelTaxFreeAmount, setCancelTaxFreeAmount] = useState("");
+  const [cancelVatAmount, setCancelVatAmount] = useState("");
+  const [cancelAvailableAmount, setCancelAvailableAmount] = useState("");
+  const [payload, setPayload] = useState("");
+
+  useEffect(() => {
+    // cancelAmount를 초기화
+    setCancelTaxFreeAmount("");
+    setCancelVatAmount("");
+    setCancelAvailableAmount("");
+    setPayload("");
+  }, [initialCancelAmount]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
-      cancelAmount: parseInt(cancelAmount, 10),
+      cancelAmount: initialCancelAmount, // 수정할 수 없는 고정된 값
       cancelTaxFreeAmount: parseInt(cancelTaxFreeAmount, 10),
       cancelVatAmount: parseInt(cancelVatAmount, 10),
       cancelAvailableAmount: parseInt(cancelAvailableAmount, 10),
@@ -30,10 +37,9 @@ const RefundModal = ({ isOpen, onClose, onSubmit }) => {
             <label className="block text-gray-700">취소 금액</label>
             <input
               type="number"
-              value={cancelAmount}
-              onChange={(e) => setCancelAmount(e.target.value)}
-              className="border border-gray-300 rounded p-2 w-full"
-              required
+              value={initialCancelAmount}
+              readOnly
+              className="border border-gray-300 rounded p-2 w-full bg-gray-100 cursor-not-allowed"
             />
           </div>
           <div className="mb-4">
