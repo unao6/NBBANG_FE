@@ -80,6 +80,10 @@ const PartySettings = () => {
     setOpen(false);
   };
 
+  const handleAccountChangeRedirect = () => {
+    navigate("/mypage/account");
+  };
+
   return (
     <main className="container mx-auto mt-8 px-4 md:px-0">
       {/* Back Button */}
@@ -154,7 +158,7 @@ const PartySettings = () => {
             variant="outlined"
             color="primary"
             fullWidth
-            onClick={() => console.log("정산계좌 변경하기 클릭됨")}
+            onClick={handleAccountChangeRedirect}
             sx={{ mt: 2 }}
           >
             정산계좌 변경하기

@@ -78,6 +78,16 @@ const PaymentMypage = () => {
     width: "40%", // 버튼 가로 사이즈 줄이기
   });
 
+  const displayCardNumber = (cardNumber, cardType) => {
+    if (cardType) {
+      return cardType; // 카드 타입이 있을 경우 전체 표시
+    }
+    if (cardNumber) {
+      return cardNumber.slice(-4); // 카드 번호일 경우 마지막 네 자리만 표시
+    }
+    return null;
+  };
+
   return (
     <Container>
       <Box className="p-4 flex flex-col items-center">
@@ -104,7 +114,7 @@ const PaymentMypage = () => {
                     color="textSecondary"
                     sx={{ position: "absolute", bottom: 16, right: 16 }}
                   >
-                    {cardInfo.cardType || cardInfo.cardNumber}
+                    {displayCardNumber(cardInfo.cardNumber, cardInfo.cardType)}
                   </Typography>
                 </CardContent>
               </Card>
