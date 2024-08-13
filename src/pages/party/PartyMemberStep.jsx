@@ -23,7 +23,7 @@ const PartyMemberStep = () => {
   const [isAgreed, setIsAgreed] = useState(false);
   const [cardInfo, setCardInfo] = useState(null);
   const navigate = useNavigate();
-  const userId = 1; // 실제 환경에서는 로그인된 사용자의 ID를 가져와야 함
+  const FEE = 500; // 수수료를 상수로 정의
 
   useEffect(() => {
     const fetchOttInfo = async () => {
@@ -43,7 +43,7 @@ const PartyMemberStep = () => {
 
   const fetchCardInfo = async () => {
     try {
-      const data = await getCardInfo(userId);
+      const data = await getCardInfo(); // userId 제거
       console.log("Fetched card info:", data);
       setCardInfo(data);
     } catch (error) {
@@ -52,8 +52,8 @@ const PartyMemberStep = () => {
   };
 
   useEffect(() => {
-    fetchCardInfo();
-  }, [userId]);
+    fetchCardInfo(); // userId 제거
+  }, []);
 
   const handleAgreementChange = () => {
     setIsAgreed(!isAgreed);
@@ -84,6 +84,11 @@ const PartyMemberStep = () => {
     width: "40%", // 버튼 가로 사이즈 줄이기
   });
 
+  // 최종 금액 계산
+  const finalAmount = ottInfo
+    ? Math.floor(ottInfo.price / ottInfo.capacity) + FEE
+    : 0;
+
   return (
     <div className="min-h-full flex flex-col items-center bg-gray-100">
       <main className="w-full flex flex-col items-center max-w-4xl mx-auto">
@@ -95,6 +100,7 @@ const PartyMemberStep = () => {
                   src={getOttImage(ottInfo.name)}
                   alt={ottInfo.name}
                   className="w-20 h-20 mb-2"
+                  style={{ objectFit: "contain" }} // 이미지 원본 비율 유지
                 />
                 <h3 className="text-blue-500 font-semibold">{ottInfo.name}</h3>
               </div>
@@ -102,12 +108,19 @@ const PartyMemberStep = () => {
                 <p className="text-gray-700 line-through">
                   월 {ottInfo.price.toLocaleString()}원
                 </p>
-                <p className="text-black-500 text-xl font-bold">
+                <p className="text-gray-700 text-xl font-bold">
                   월{" "}
                   {Math.floor(
                     ottInfo.price / ottInfo.capacity,
                   ).toLocaleString()}
                   원
+                </p>
+                {/* 최종 금액 표시 */}
+                <p className="text-green-500 text-lg font-bold mt-4">
+                  최종 금액: {finalAmount.toLocaleString()}원
+                </p>
+                <p className="text-green-500 text-xs">
+                  (N/BBANG 수수료 {FEE.toLocaleString()}원 포함)
                 </p>
               </div>
             </div>
@@ -183,7 +196,12 @@ const PartyMemberStep = () => {
                   </Typography>
                   <Typography
                     color="textSecondary"
-                    sx={{ position: "absolute", bottom: 16, right: 16 }}
+                    sx={{
+                      position: "absolute",
+                      bottom: 16,
+                      right: 16,
+                      fontSize: "0.8rem",
+                    }} // 글자 크기 작게 조정
                   >
                     {cardInfo.cardType || cardInfo.cardNumber}
                   </Typography>
@@ -218,7 +236,8 @@ const PartyMemberStep = () => {
                     등록된 결제수단이 없어요.
                   </Typography>
                   <Typography color="textSecondary" className="mb-4">
-                    서비스를 이용하기 위해 마이페이지에서 결제 수단을 등록해 주세요.
+                    서비스를 이용하기 위해 마이페이지에서 결제 수단을 등록해
+                    주세요.
                   </Typography>
                 </CardContent>
               </Card>
