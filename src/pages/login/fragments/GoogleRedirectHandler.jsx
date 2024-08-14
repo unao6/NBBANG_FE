@@ -8,20 +8,21 @@ const GoogleRedirectHandler = () => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/auth/token", {
-          credentials: "include",
+        // axiosInterceptors를 사용하여 요청을 보냅니다.
+        const response = await axiosInterceptors.get("/api/auth/token", {
+          withCredentials: true, // 쿠키를 포함하여 요청을 보냄
         });
 
         if (response.status === 401) {
           throw new Error("Unauthorized");
         }
 
-        if (!response.ok) {
+        if (!response.status === 200) {
           throw new Error("토큰 요청 실패");
         }
 
-        const token = response.headers.get("access");
-        const hasPhoneNumber = response.headers.get("hasPhoneNumber") === "true";
+        const token = response.headers['access'];
+        const hasPhoneNumber = response.headers['hasPhoneNumber'] === "true";
 
         if (token) {
           localStorage.setItem("access", token);
@@ -34,11 +35,11 @@ const GoogleRedirectHandler = () => {
             },
           });
 
-          if (!phoneCheckResponse.ok) {
+          if (!phoneCheckResponse.status === 200) {
             throw new Error("전화번호 확인 요청 실패");
           }
 
-          const phoneCheckResult = await phoneCheckResponse.json();
+          const phoneCheckResult = phoneCheckResponse.data;
 
           if (phoneCheckResult.phoneNumber) {
             // 전화번호가 등록되어 있으면 마이페이지로 리다이렉트

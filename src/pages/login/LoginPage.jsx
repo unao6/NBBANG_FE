@@ -1,19 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInterceptors from "../../api/axiosInterceptors";
 
 const Login = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleEmailLogin = () => {
-        navigate("/users/user-login");
-    };
+  const handleEmailLogin = () => {
+    navigate("/users/user-login");
+  };
 
   const handleGoogleLogin = () => {
-    const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
+    const googleLoginUrl = `${axiosInterceptors.defaults.baseURL}/oauth2/authorization/google`;
     const newWindow = window.open(
       googleLoginUrl,
       "_blank",
-      "width=500,height=600",
+      "width=500,height=600"
     );
 
     const interval = setInterval(() => {
@@ -24,9 +25,9 @@ const Login = () => {
     }, 500);
   };
 
-    const handleSignUpClick = () => {
-        navigate("/users/sign-up");
-    };
+  const handleSignUpClick = () => {
+    navigate("/users/sign-up");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-full bg-gray-50">
