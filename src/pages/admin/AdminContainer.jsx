@@ -136,6 +136,19 @@ const AdminContainer = ({ children }) => {
                 이메일 발송
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/admin/notification/sms"
+                className={({ isActive }) =>
+                  `block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-200 ${
+                    isActive ? "bg-gray-200" : ""
+                  }`
+                }
+                onClick={() => handleNavigation("/admin/notification/sms")}
+              >
+                문자 발송
+              </NavLink>
+            </li>
             <li className="mt-8">
               <NavLink
                 to="/"

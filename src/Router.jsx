@@ -38,6 +38,7 @@ import PaymentRefund from "./pages/payment/PaymentRefund.jsx";
 import PromoCode from "./pages/myPage/promotion/PromoCode.jsx";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SendEmail from "./pages/admin/notification/SendEmail";
+import SendSms from "./pages/admin/notification/SendSms";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserInfo from "./pages/user/UserInfo";
@@ -69,6 +70,7 @@ const Router = () => {
       />
       <Route path="/admin/users" element={<UserList />} />
       <Route path="/admin/notification/email" element={<SendEmail />} />
+      <Route path="/admin/notification/sms" element={<SendSms />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />
