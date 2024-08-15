@@ -102,7 +102,7 @@ const AdminContainer = ({ children }) => {
                 }
                 onClick={() => handleNavigation("/admin/parties")}
               >
-                파티 관리
+                파티 조회
               </NavLink>
             </li>
             <li>

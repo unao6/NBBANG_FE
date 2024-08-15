@@ -74,7 +74,7 @@ const PartyLeaderStep = () => {
                     alt={`파티원 ${index + 1}`}
                     className="w-14 h-14 object-contain"
                   />
-                  <span className="text-green-500 text-xs mt-2">자동매칭</span>
+                  <span className="text-primary text-xs mt-2">자동매칭</span>
                 </div>
               ))}
             </div>
@@ -94,22 +94,22 @@ const PartyLeaderStep = () => {
             </div>
             <div className="mt-4">
               <div className="flex items-center">
-                <div className="flex-1 h-3 mx-1 bg-blue-500 rounded-full"></div>
+                <div className="flex-1 h-3 mx-1 bg-primary rounded-full"></div>
                 {Array.from({ length: capacity - 1 }).map((_, index) => (
                   <div
                     key={index}
-                    className="flex-1 h-3 mx-1 bg-yellow-500 rounded-full"
+                    className="flex-1 h-3 mx-1 bg-secondary rounded-full"
                   ></div>
                 ))}
               </div>
               <div className="flex justify-between mt-4 text-sm">
-                <span className="text-blue-500">내 1/{capacity} 부담금</span>
+                <span className="text-primary">내 1/{capacity} 부담금</span>
                 <span className="text-yellow-500">
                   파티원 {capacity - 1}명의 몫
                 </span>
               </div>
               <div className="flex justify-between mt-2 text-lg font-bold">
-                <span className="text-blue-500">
+                <span className="text-primary">
                   {pricePerMember.toLocaleString()}원/월
                 </span>
                 <span className="text-yellow-500">
@@ -144,8 +144,8 @@ const PartyLeaderStep = () => {
               <span className="line-through text-gray-400 text-sm mr-2">
                 500원
               </span>
-              <span className="text-green-600 font-bold text-lg">200원</span>
-              <p className="text-green-500 text-sm">*파티장 할인 적용완료</p>
+              <span className="text-accent font-bold text-lg">200원</span>
+              <p className="text-primary text-sm">*파티장 할인 적용완료</p>
             </div>
           </div>
           <div className="border-t border-gray-200 mt-4 pt-4 relative">
@@ -229,7 +229,7 @@ const PartyLeaderStep = () => {
 
         {/* 다음 버튼 */}
         <button
-          className="mt-8 bg-green-500 text-white py-3 px-8 rounded-full shadow-lg w-full hover:bg-green-600 transition-all duration-300"
+          className="mt-8 bg-primary text-white py-3 px-8 rounded-full shadow-lg w-full hover:bg-accent transition-all duration-300"
           onClick={handleNextClick}
         >
           다음

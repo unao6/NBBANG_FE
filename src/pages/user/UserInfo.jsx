@@ -46,8 +46,8 @@ const UserInfo = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        N/BBANG 계정 관리
+      <Typography variant="h6" gutterBottom sx={{ marginTop: 1, marginBottom: 3, }}>
+        계정 관리
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
         <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}></Avatar>

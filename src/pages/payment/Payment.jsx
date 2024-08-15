@@ -23,7 +23,7 @@ const Payment = () => {
           <h3 className="text-lg font-semibold">
             ChatGPT 파티의 결제 정보를 확인해주세요
           </h3>
-          <p className="mt-2 text-xl font-bold text-green-600">월 5,000원</p>
+          <p className="mt-2 text-xl font-bold text-accent">월 5,000원</p>
         </div>
         <div className="mb-4 p-4 bg-gray-100 rounded">
           <h4 className="text-md font-semibold">카드 결제일</h4>
@@ -60,7 +60,7 @@ const Payment = () => {
           </p>
         </div>
         <div className="mt-8 text-center">
-          <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
+          <button className="bg-primary hover:bg-accent text-white py-2 px-4 rounded">
             파티매칭 시작하기
           </button>
         </div>

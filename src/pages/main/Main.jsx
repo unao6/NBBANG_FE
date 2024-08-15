@@ -24,7 +24,7 @@ const Main = () => {
 
   return (
     <div
-      className="h-full w-full flex flex-col items-center justify-center overflow-hidden relative bg-gradient-to-b from-green-200 via-yellow-200 to-blue-200">
+      className="h-full w-full flex flex-col items-center justify-center overflow-hidden relative bg-gradient-to-b from-blue-200 via-gray-200 to-primary">
       {/* 빵 이미지 */}
       <div className="w-full flex justify-center mt-8">
         {" "}
@@ -45,8 +45,11 @@ const Main = () => {
       </div>
 
       {/* 메인 문구 */}
-      <h1 className="text-4xl font-extrabold text-center mt-24 text-black">
-        대한민국 N등 <br /> OTT 계정공유 서비스
+      <h1 className="mb-2 text-4xl font-extrabold text-center text-black">
+        대한민국 N등
+      </h1>
+      <h1 className="mb-2 text-4xl font-extrabold text-center text-black">
+        OTT 계정공유 서비스<br />
       </h1>
 
       <p className="text-center text-gray-700 mt-4">
@@ -60,7 +63,7 @@ const Main = () => {
       {/* 계정 공유 시작하기 버튼 */}
       <button
         onClick={handleButtonClick}
-        className="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full shadow-lg"
+        className="mt-6 bg-primary hover:bg-accent text-white font-bold py-2 px-4 rounded-full shadow-lg"
       >
         계정공유 시작하기
       </button>

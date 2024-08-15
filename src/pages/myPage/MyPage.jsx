@@ -19,7 +19,7 @@ const MyPage = () => {
   const navigate = useNavigate();
   const menuItems = [
     {
-      text: "엔빵 계정 관리",
+      text: "계정 정보",
       icon: <AccountCircleIcon />,
       href: "/mypage/user-info",
     },
@@ -36,9 +36,9 @@ const MyPage = () => {
     // { text: "공지사항", icon: <AnnouncementIcon />, href: "/notices" },
     { text: "알림 설정", icon: <NotificationsIcon />, href: "/notifications" },
     // { text: "자주 묻는 질문", icon: <HelpIcon />, href: "/faq" },
-    { text: "1:1 채팅문의", icon: <ChatIcon />, href: "/chat/start" },
+    { text: "1:1 채팅 문의", icon: <ChatIcon />, href: "/chat/start" },
     {
-      text: "프로모션 코드 입력",
+      text: "프로모션 코드 등록",
       icon: <LocalOfferIcon />,
       href: "/mypage/promoCode",
     },
@@ -87,7 +87,7 @@ const handleLogout = async () => {
             color="error"
             fullWidth
             onClick={handleLogout}
-            style={{ marginTop: "20px" }}
+            style={{ marginTop: "10px" }}
           >
             로그아웃
           </Button>

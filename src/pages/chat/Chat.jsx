@@ -241,7 +241,7 @@ const Chat = () => {
                 <div
                 className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
                   msg.nickname === 'N/BBANG'
-                    ? 'bg-blue-500 text-white'
+                    ? 'bg-primary text-white'
                     : msg.nickname === 'System'
                     ? 'bg-gray-300 text-black'
                     : 'bg-yellow-400 text-black'
@@ -277,7 +277,7 @@ const Chat = () => {
           type="button"
           onClick={handleSend} 
           className={`${
-            isChatEnded ? 'bg-gray-400' : 'bg-blue-500 text-white p-2 rounded'
+            isChatEnded ? 'bg-gray-400' : 'bg-primary text-white p-2 rounded'
             } text-white px-3 py-1.5 rounded-md transition duration-200`} 
           disabled={isChatEnded} >
           보내기

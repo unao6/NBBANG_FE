@@ -107,9 +107,9 @@ const AdminChatList = () => {
   }
 
   return (
-    <div className="p-6 h-full overflow-y-auto bg-gray-50">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">채팅 목록</h1>
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-2xl mb-4">채팅 목록</h1>
         <button
           onClick={() => navigate('/admin/chat/archived/list')}
           className="bg-yellow-400 px-4 py-2 rounded-lg hover:bg-yellow-500 transition duration-300"
@@ -123,12 +123,12 @@ const AdminChatList = () => {
           placeholder="닉네임 검색"
           value={searchTerm}
           onChange={handleSearchChange}
-          className="w-64 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm"
+          className="w-64 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm shadow-sm"
         />
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
         >
           <option value="ALL">전체</option>
           <option value="ONGOING">상담 중</option>
@@ -182,7 +182,7 @@ const AdminChatList = () => {
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       chat.status
-                        ? 'bg-green-50 text-green-600'
+                        ? 'bg-green-50 text-accent'
                         : 'bg-red-50 text-red-600'
                     }`}
                   >
@@ -192,7 +192,7 @@ const AdminChatList = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <button
                     onClick={() => handleChatClick(chat)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 relative"
+                    className="bg-primary text-white px-4 py-2 rounded hover:bg-accent transition duration-300 relative"
                   >
                     열기
                     {(newMessages[chat.id] || 0) > 0 && (
@@ -216,7 +216,7 @@ const AdminChatList = () => {
         pageRangeDisplayed={5}
         onPageChange={handlePageClick}
         containerClassName={'flex justify-center mt-6'}
-        activeClassName={'font-bold text-blue-500'}
+        activeClassName={'font-bold text-primary'}
         pageClassName={'mx-1'}
         previousClassName={'mx-1'}
         nextClassName={'mx-1'}

@@ -272,7 +272,7 @@ const isFormValid =
         <h2 className="text-2xl font-bold mb-6 text-left">회원가입</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className={`block text-sm font-medium ${isNicknameFocused ? "text-green-500" : "text-gray-700"}`}>닉네임</label>
+            <label className={`block text-sm font-medium ${isNicknameFocused ? "text-accent" : "text-gray-700"}`}>닉네임</label>
             <div className="relative">
               <input
                 type="text"
@@ -280,31 +280,31 @@ const isFormValid =
                 onChange={handleNicknameChange}
                 onFocus={() => setIsNicknameFocused(true)}
                 onBlur={() => setIsNicknameFocused(false)}
-                className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isNicknameFocused ? 'border-green-500' : 'border-gray-300'}`}
+                className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isNicknameFocused ? 'border-primary' : 'border-gray-300'}`}
                 placeholder="닉네임을 입력해주세요"
                 style={{
                   border: 'none',
-                  borderBottom: isNicknameFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+                  borderBottom: isNicknameFocused ? '2px solid #504EEE' : '2px solid #d3d3d3',
                   backgroundColor: 'transparent'
                 }}
               />
               <button
                 type="button"
                 onClick={handleNicknameCheck}
-                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
+                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-primary rounded-r-md hover:accent focus:outline-none"
               >
                 중복확인
               </button>
             </div>
             {nicknameMessage && (
-              <p className={`text-sm mt-2 ${isNicknameValid ? 'text-green-500' : 'text-red-500'}`}>
+              <p className={`text-sm mt-2 ${isNicknameValid ? 'text-primary' : 'text-red-500'}`}>
                 {nicknameMessage}
               </p>
             )}
           </div>
 
           <div className="mb-6">
-            <label className={`block text-sm font-medium ${isEmailFocused ? "text-green-500" : "text-gray-700"}`}>이메일</label>
+            <label className={`block text-sm font-medium ${isEmailFocused ? "text-primary" : "text-gray-700"}`}>이메일</label>
             <div className="relative">
               <input
                 type="email"
@@ -312,25 +312,25 @@ const isFormValid =
                 onChange={handleEmailChange}
                 onFocus={() => setIsEmailFocused(true)}
                 onBlur={() => setIsEmailFocused(false)}
-                className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isEmailFocused ? 'border-green-500' : 'border-gray-300'}`}
+                className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isEmailFocused ? 'border-primary' : 'border-gray-300'}`}
                 placeholder="이메일을 입력해주세요"
                 style={{
                   border: 'none',
-                  borderBottom: isEmailFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+                  borderBottom: isEmailFocused ? '2px solid #504EEE' : '2px solid #d3d3d3',
                   backgroundColor: 'transparent'
                 }}
               />
               <button
                 type="button"
                 onClick={handleEmailCheck}
-                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
+                className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-primary rounded-r-md hover:bg-accent focus:outline-none"
                 disabled={!isEmailValid}
               >
                 중복확인
               </button>
             </div>
             {emailMessage && (
-              <p className={`text-sm mt-2 ${isEmailValid ? 'text-green-500' : 'text-red-500'}`}>
+              <p className={`text-sm mt-2 ${isEmailValid ? 'text-primary' : 'text-red-500'}`}>
                 {emailMessage}
               </p>
             )}
@@ -340,7 +340,7 @@ const isFormValid =
             <button
               type="button"
               onClick={handleSendVerificationCode}
-              className="w-full px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+              className="w-full px-4 py-2 text-white bg-primary rounded focus:outline-none hover:bg-accent"
             >
               {isVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
             </button>
@@ -353,7 +353,7 @@ const isFormValid =
                 type="text"
                 value={certificationNumber}
                 onChange={handleVerificationCodeChange}
-                className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-green-500"
+                className="block w-full px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-primary"
                 placeholder="인증번호를 입력해주세요"
                 style={{
                   border: 'none',
@@ -364,12 +364,12 @@ const isFormValid =
               <button
                 type="button"
                 onClick={handleVerifyCode}
-                className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+                className="w-full mt-4 px-4 py-2 text-white bg-primary rounded focus:outline-none hover:bg-accent"
               >
                 인증 완료
               </button>
               {verificationMessage && (
-                <p className={`text-sm mt-2 ${isVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
+                <p className={`text-sm mt-2 ${isVerificationSuccess ? 'text-primary' : 'text-red-500'}`}>
                   {verificationMessage}
                 </p>
               )}
@@ -377,49 +377,49 @@ const isFormValid =
           )}
 
       <div className="mb-6">
-        <label className={`block text-sm font-medium ${isPasswordFocused ? "text-green-500" : "text-gray-700"}`}>비밀번호</label>
+        <label className={`block text-sm font-medium ${isPasswordFocused ? "text-primary" : "text-gray-700"}`}>비밀번호</label>
         <input
           type="password"
           value={password}
           onChange={handlePasswordChange}
           onFocus={() => setIsPasswordFocused(true)}
           onBlur={() => setIsPasswordFocused(false)}
-          className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPasswordFocused ? 'border-green-500' : 'border-gray-300'}`}
+          className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPasswordFocused ? 'border-primary' : 'border-gray-300'}`}
           placeholder="비밀번호를 입력해주세요"
           style={{
             border: 'none',
-            borderBottom: isPasswordFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+            borderBottom: isPasswordFocused ? '2px solid #504EEE' : '2px solid #d3d3d3',
             backgroundColor: 'transparent'
           }}
         />
         {passwordMessage && (
           <p
-            className={`text-sm mt-2 ${isPasswordValid ? 'text-green-500' : 'text-red-500'}`}
+            className={`text-sm mt-2 ${isPasswordValid ? 'text-primary' : 'text-red-500'}`}
             dangerouslySetInnerHTML={{ __html: passwordMessage }}
           />
         )}
       </div>
 
       <div className="mb-6">
-        <label className={`block text-sm font-medium ${isConfirmPasswordFocused ? "text-green-500" : "text-gray-700"}`}>비밀번호 확인</label>
+        <label className={`block text-sm font-medium ${isConfirmPasswordFocused ? "text-primary" : "text-gray-700"}`}>비밀번호 확인</label>
         <input
           type="password"
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
           onFocus={() => setIsConfirmPasswordFocused(true)}
           onBlur={() => setIsConfirmPasswordFocused(false)}
-          className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isConfirmPasswordFocused ? 'border-green-500' : 'border-gray-300'}`}
+          className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isConfirmPasswordFocused ? 'border-primary' : 'border-gray-300'}`}
           placeholder="비밀번호를 다시 입력해주세요"
           style={{
             border: 'none',
-            borderBottom: isConfirmPasswordFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+            borderBottom: isConfirmPasswordFocused ? '2px solid #504EEE' : '2px solid #d3d3d3',
             backgroundColor: 'transparent'
           }}
         />
       </div>
 
       <div className="mb-6">
-        <label className={`block text-sm font-medium ${isPhoneFocused ? "text-green-500" : "text-gray-700"}`}>
+        <label className={`block text-sm font-medium ${isPhoneFocused ? "text-primary" : "text-gray-700"}`}>
           휴대폰 번호
         </label>
         <div className="relative">
@@ -429,18 +429,18 @@ const isFormValid =
             onChange={handlePhoneNumberChange}
             onFocus={() => setIsPhoneFocused(true)}
             onBlur={() => setIsPhoneFocused(false)}
-            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneFocused ? 'border-green-500' : 'border-gray-300'}`}
+            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneFocused ? 'border-primary' : 'border-gray-300'}`}
             placeholder="휴대폰 번호를 - 없이 숫자만 입력해주세요"
             style={{
               border: 'none',
-              borderBottom: isPhoneFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+              borderBottom: isPhoneFocused ? '2px solid #504EEE' : '2px solid #d3d3d3',
               backgroundColor: 'transparent'
             }}
           />
           <button
             type="button"
             onClick={handleSendPhoneVerificationCode}
-            className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
+            className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-primary rounded-r-md hover:bg-accent focus:outline-none"
             disabled={!phoneNumber}
           >
             {isPhoneVerificationSent ? "인증번호 재전송" : "인증번호 전송"}
@@ -449,7 +449,7 @@ const isFormValid =
       </div>
       {isPhoneVerificationSent && (
         <div className="mb-6">
-          <label className={`block text-sm font-medium ${isPhoneVerificationFocused ? "text-green-500" : "text-gray-700"}`}>
+          <label className={`block text-sm font-medium ${isPhoneVerificationFocused ? "text-primary" : "text-gray-700"}`}>
             인증번호
           </label>
           <input
@@ -458,11 +458,11 @@ const isFormValid =
             onChange={handlePhoneVerificationCodeChange}
             onFocus={() => setIsPhoneVerificationFocused(true)}
             onBlur={() => setIsPhoneVerificationFocused(false)}
-            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${isPhoneVerificationFocused ? 'border-green-500' : 'border-gray-300'}`}
+            className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 focus:ring-primary border-b-2 ${isPhoneVerificationFocused ? 'border-primary' : 'border-gray-300'}`}
             placeholder="인증번호를 입력해주세요"
             style={{
               border: 'none',
-              borderBottom: isPhoneVerificationFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+              borderBottom: isPhoneVerificationFocused ? '2px solid #504EEE' : '2px solid #d3d3d3',
               backgroundColor: 'transparent'
             }}
           />
@@ -474,12 +474,12 @@ const isFormValid =
           <button
             type="button"
             onClick={handleVerifyPhoneCode}
-            className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+            className="w-full mt-4 px-4 py-2 text-white bg-primary rounded focus:outline-none hover:bg-accent"
           >
             인증 완료
           </button>
           {phoneVerificationMessage && (
-            <p className={`text-sm mt-2 ${isPhoneVerificationSuccess ? 'text-green-500' : 'text-red-500'}`}>
+            <p className={`text-sm mt-2 ${isPhoneVerificationSuccess ? 'text-primary' : 'text-red-500'}`}>
               {phoneVerificationMessage}
             </p>
           )}
@@ -490,8 +490,8 @@ const isFormValid =
           className="w-full px-4 py-2 text-gray-400 bg-gray-100 rounded focus:outline-none"
           disabled={!isFormValid}
           style={{
-            backgroundColor: isFormValid ? '#5bc490' : '#f1f1f1',
-            color: isFormValid ? '#fff' : '#d3d3d3'
+            backgroundColor: isFormValid ? '#FACC15' : '#f1f1f1',
+            color: isFormValid ? '#000' : '#d3d3d3'
           }}
         >
           회원가입완료
@@ -499,7 +499,7 @@ const isFormValid =
         </form>
         <div className="mt-4 text-center">
           <span className="text-xs font-bold">이미 계정이 있으신가요? </span>
-          <button onClick={() => navigate("/login")} className="text-xs font-bold text-green-500 hover:underline cursor-pointer">
+          <button onClick={() => navigate("/login")} className="text-xs font-bold text-primary hover:underline cursor-pointer">
             로그인
           </button>
         </div>

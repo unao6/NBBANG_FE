@@ -109,7 +109,7 @@ const PaymentRefund = () => {
                     <div className="flex items-center mb-4">
                       <h3 className="text-lg font-semibold">환불 정보</h3>
                       <div className="ml-2 relative group">
-                        <span className="text-blue-500 cursor-pointer">ℹ️</span>
+                        <span className="text-primary cursor-pointer">ℹ️</span>
                         <div className="absolute left-0 top-full mt-1 w-56 p-2 bg-gray-800 text-white text-xs rounded hidden group-hover:block">
                           월단위 결제이기 때문에 1일 이용료가 조금씩 변동될 수
                           있습니다.
@@ -149,7 +149,7 @@ const PaymentRefund = () => {
                       </div>
                       <div className="col-span-2">
                         <p className="text-md text-gray-700">환불 금액:</p>
-                        <p className="text-2xl font-bold text-green-600">
+                        <p className="text-2xl font-bold text-accent">
                           {refundInfo.refundAmount}원
                         </p>
                       </div>
@@ -176,7 +176,7 @@ const PaymentRefund = () => {
 
                     <div className="mt-6 text-center">
                       <button
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                        className="bg-primary hover:bg-accent text-white py-2 px-4 rounded"
                         onClick={handleRefundRequest}
                       >
                         환불 신청하기

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { deleteEmptyChat, startChat } from '../../api/chat/chatApi';
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ArrowBackIcon 임포트 추가
-import IconButton from '@mui/material/IconButton'; // IconButton 임포트 추가
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 
 const StartChat = () => {
@@ -40,13 +40,10 @@ const StartChat = () => {
       <div className="flex-1 flex items-start justify-center mt-0">
         <div className="w-full max-w-lg bg-white p-4 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-4">
-            <div className="text-2xl font-bold">N/BBANG 채팅 문의</div>
+            <div className="text-2xl font-bold">채팅 상담</div>
           </div>
           <div className="mb-4">
-            <div className="flex flex-wrap justify-between">
-              <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
-              <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
-              <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
+            <div className="flex flex-wrap justify-center">
               <img src={`${process.env.PUBLIC_URL}/assets/imgs/nbbang.png`} alt="NBBANG" className="mb-3 w-1/2 h-1/2" />
             </div>
             <p className="text-lg font-semibold">NBBANG</p>
@@ -54,7 +51,7 @@ const StartChat = () => {
             <p className="text-md text-gray-500">궁금하신 사항이 있다면 언제든지 문의해주세요.</p>
             <p className="text-md text-black">운영시간 : 10:00 ~ 19:00</p>
           </div>
-          <button className="w-full bg-yellow-400 text-black py-2 rounded-lg text-center"
+          <button className="w-full bg-primary text-white py-2 rounded-lg text-center"
                   onClick={handleButtonClick}>
             문의하기
           </button>

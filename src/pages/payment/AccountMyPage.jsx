@@ -59,9 +59,9 @@ const AccountMyPage = () => {
     >
       <Typography
         variant="h6"
-        sx={{ marginBottom: "16px", fontWeight: "bold" }}
+        sx={{  marginBottom: "16px", fontWeight: "bold" }}
       >
-        다음 계좌로 매달 안전히 정산해드릴게요
+        다음 계좌로 매달 안전히 정산해드려요
       </Typography>
       <Card
         sx={{
@@ -92,7 +92,7 @@ const AccountMyPage = () => {
             </CardContent>
             <Button
               onClick={handleRegisterOrChange}
-              sx={{ color: "#007BFF", fontWeight: "bold" }}
+              sx={{ color: "#504EEE", fontWeight: "bold" }}
             >
               변경
             </Button>

@@ -48,13 +48,17 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#8BC34A",
+        main: "#504EEE",
+        accent: "#462AE3"
       },
       secondary: {
-        main: "#FF9800",
+        main: "#FACC15",
         light: "#FFEB3B",
         contrastText: "#364D1C",
       },
+    },
+    typography: {
+      fontFamily: "Pretendard, sans-serif",
     },
   });
 

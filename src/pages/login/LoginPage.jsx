@@ -30,11 +30,11 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-      <div className="w-full max-w-md p-6">
+    <div className="flex flex-col items-center justify-start h-full">
+      <div className="w-full max-w-md"> {/* Adjusted margin-top */}
         <button
           onClick={() => navigate("/")}
-          className="p-1 rounded bg-gray-100"
+          className="p-1 pb-10 rounded"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -53,16 +53,16 @@ const Login = () => {
         </button>
         <h1 className="text-4xl font-bold text-center mt-4">N/BBANG</h1>
         <p className="text-center text-gray-600 mt-2">안녕하세요</p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col justify-center items-center">
           <button
             onClick={handleEmailLogin}
-            className="w-full px-4 py-3 mb-3 text-white bg-green-500 rounded-lg focus:outline-none"
+            className="w-3/4 px-4 py-3 mb-3 text-white bg-primary rounded-lg focus:outline-none hover:bg-accent"
           >
             이메일로 시작하기
           </button>
           <button
             onClick={handleGoogleLogin}
-            className="w-full px-4 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none"
+            className="w-3/4 px-4 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none hover:text-black"
           >
             Google 로그인
           </button>
@@ -71,7 +71,7 @@ const Login = () => {
           <span className="text-xs font-bold">엔빵 계정이 없으신가요? </span>
           <button
             onClick={handleSignUpClick}
-            className="text-xs font-bold text-green-500 hover:underline cursor-pointer"
+            className="text-xs font-bold text-accent hover:underline cursor-pointer"
           >
             회원가입
           </button>

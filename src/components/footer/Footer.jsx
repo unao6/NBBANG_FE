@@ -21,7 +21,7 @@ const FooterLink = ({ to, children, requireAuth }) => {
       <span className="transition-all duration-300 group-hover:text-black">
         {children}
       </span>
-      <span className="absolute bottom-0 left-0 w-0 h-[3px] bg-yellow-300 rounded-full transition-all duration-300 group-hover:w-full"></span>
+      <span className="absolute bottom-0 left-0 w-0 h-[3px] bg-primary rounded-full transition-all duration-300 group-hover:w-full"></span>
     </Link>
   );
 };

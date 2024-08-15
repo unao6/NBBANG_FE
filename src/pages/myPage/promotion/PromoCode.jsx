@@ -33,14 +33,14 @@ const PromoCodePage = () => {
           >
             <input
               type="text"
-              className="flex-grow px-4 py-2 border border-yellow-400 rounded-l-md focus:outline-none focus:ring-0 focus:border-yellow-400"
+              className="flex-grow px-4 py-2 border border-primary rounded-l-md focus:outline-none focus:ring-0 focus:border-primary"
               placeholder="여기에 코드를 입력하십시오..."
               value={promoCode}
               onChange={handlePromoCodeChange}
             />
             <button
               type="submit"
-              className="px-6 py-2 bg-yellow-400 border border-yellow-400 text-black font-semibold rounded-r-md hover:bg-yellow-500"
+              className="px-6 py-2 bg-primary border border-primary text-white font-semibold rounded-r-md hover:bg-accent"
             >
               적용
             </button>

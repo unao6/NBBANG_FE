@@ -233,7 +233,7 @@ const AdminChat = () => {
           {isChatEnded && (
             <button
               onClick={handleOpenMemoModal}
-              className="bg-blue-500 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-blue-600 transition duration-200"
+              className="bg-primary text-white px-3 py-1.5 rounded-md mr-2 hover:bg-accent transition duration-200"
             >
               상담 저장
             </button>
@@ -273,7 +273,7 @@ const AdminChat = () => {
                 <div
                   className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
                     msg.nickname === 'N/BBANG'
-                      ? 'bg-blue-500 text-white'
+                      ? 'bg-primary text-white'
                       : msg.nickname === 'System'
                       ? 'bg-gray-300 text-black'
                       : 'bg-yellow-400 text-black'
@@ -309,7 +309,7 @@ const AdminChat = () => {
             <button
               type="button"
               onClick={handleSend}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-accent transition duration-200"
             >
               보내기
             </button>
@@ -322,7 +322,7 @@ const AdminChat = () => {
             <h2 className="text-lg font-semibold text-gray-800 mb-4">저장 메모</h2>
             <textarea
               autoFocus
-              className="w-full p-2 border border-gray-300 rounded-md mb-4 resize-none text-sm"
+              className="w-full p-2 border border-gray-300 rounded-md mb-4 resize-none text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               rows="4"
               placeholder="메모를 입력하세요"
               value={memo}
@@ -332,7 +332,7 @@ const AdminChat = () => {
               <button onClick={() => setOpen(false)} className="bg-gray-400 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-gray-500 transition duration-200">
                 취소
               </button>
-              <button onClick={handleSaveMemo} className="bg-blue-500 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 transition duration-200">
+              <button onClick={handleSaveMemo} className="bg-primary text-white px-3 py-1.5 rounded-md hover:bg-accenet transition duration-200">
                 저장
               </button>
             </div>

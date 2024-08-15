@@ -70,12 +70,12 @@ const AddNumber = () => {
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             placeholder="휴대폰 번호를 - 없이 숫자만 입력해주세요"
-            className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none"
+            className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
             required
           />
           <button
             onClick={handleSendVerificationCode}
-            className="w-full px-4 py-3 mb-3 text-white bg-green-500 rounded-lg focus:outline-none"
+            className="w-full px-4 py-3 mb-3 text-white bg-primary rounded-lg focus:outline-none"
             disabled={!phoneNumber}
           >
             {isVerificationSent ? '인증번호 재전송' : '인증번호 전송'}
@@ -88,12 +88,12 @@ const AddNumber = () => {
               value={randomNumber}
               onChange={(e) => setRandomNumber(e.target.value)}
               placeholder="인증번호를 입력해주세요"
-              className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none"
+              className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
               required
             />
             <button
               onClick={handleVerifyCode}
-              className="w-full px-4 py-3 mb-3 text-white bg-green-500 rounded-lg focus:outline-none"
+              className="w-full px-4 py-3 mb-3 text-white bg-primary rounded-lg focus:outline-none"
             >
               인증 완료
             </button>
@@ -102,7 +102,7 @@ const AddNumber = () => {
         {isVerified && (
           <button
             onClick={handleSavePhoneNumber}
-            className="w-full px-4 py-3 text-white bg-blue-500 rounded-lg focus:outline-none"
+            className="w-full px-4 py-3 text-white bg-primary rounded-lg focus:outline-none"
           >
             전화번호 저장
           </button>

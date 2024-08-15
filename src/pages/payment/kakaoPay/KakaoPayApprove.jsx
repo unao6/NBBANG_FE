@@ -78,7 +78,7 @@ const KakaoPayApprove = () => {
           disabled={!isAgreed}
           className={`w-full py-3 rounded ${
             isAgreed
-              ? "bg-green-500 text-white"
+              ? "bg-primary text-white"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
           onClick={handleSubmit}

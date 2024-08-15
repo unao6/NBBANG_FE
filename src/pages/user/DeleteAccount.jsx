@@ -76,7 +76,7 @@ const handleDeleteAccount = async () => {
         <ArrowBackIosIcon />
       </IconButton>
       <Typography variant="h6" gutterBottom>
-        N/BBANG 계정 관리
+      정말로 회원 탈퇴를 하시겠어요?
       </Typography>
       <Card
         sx={{
@@ -84,18 +84,16 @@ const handleDeleteAccount = async () => {
           width: '100%',
           textAlign: 'center',
           padding: '32px 16px',
+          margin:'10px',
           borderRadius: '16px',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
         }}
       >
         <CardContent>
-          <Typography variant="h6" gutterBottom>
-            정말로 회원탈퇴 하시겠어요?
-          </Typography>
-          <Typography variant="body2" color="textSecondary" gutterBottom>
+          <Typography variant="body2" color="FFEB3B" gutterBottom>
             N/BBANG에 등록된 모든 정보가 삭제돼요.
             <br />
-            이용 중·정산 전인 파티가 있으면 회원탈퇴가 불가해요.
+            이용 중 또는 정산 전인 파티가 있으면<br /> 회원탈퇴가 불가능해요.
           </Typography>
         </CardContent>
       </Card>

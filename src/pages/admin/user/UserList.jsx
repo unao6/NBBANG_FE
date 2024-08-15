@@ -156,13 +156,13 @@ useEffect(() => {
         <div className="flex space-x-4">
           <button
             onClick={handleViewActive}
-            className={`px-4 py-2 rounded ${!viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            className={`px-4 py-2 rounded ${!viewInactive ? 'bg-primary text-white hover:bg-accent' : 'bg-gray-300 hover:bg-gray-400'}`}
           >
             가입된 회원 보기
           </button>
           <button
             onClick={handleViewInactive}
-            className={`px-4 py-2 rounded ${viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            className={`px-4 py-2 rounded ${viewInactive ? 'bg-primary text-white hover:bg-accent' : 'bg-gray-300 hover:bg-gray-400'}`}
           >
             탈퇴한 회원 보기
           </button>
@@ -171,7 +171,7 @@ useEffect(() => {
           <select
             value={roleFilter}
             onChange={handleRoleChange}
-            className="px-4 py-2 border rounded pr-8"
+            className="px-4 py-2 border rounded pr-8 "
           >
             <option value="all">전체</option>
             <option value="admin">관리자</option>
@@ -240,7 +240,7 @@ useEffect(() => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <button
                       onClick={() => handleRestoreUser(user.email)}
-                      className="bg-green-500 text-white px-4 py-2 rounded"
+                      className="bg-primary text-white px-4 py-2 rounded"
                     >
                       복구
                     </button>

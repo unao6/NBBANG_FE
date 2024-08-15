@@ -33,7 +33,7 @@ const MyParty = () => {
   }
 
   return (
-    <main className="container mx-auto mt-8 px-4 md:px-0">
+    <main className="container mx-auto mt-8 px-4">
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {myParties.length > 0 ? (
           myParties.map(party => (

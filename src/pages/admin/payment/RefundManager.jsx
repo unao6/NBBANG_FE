@@ -219,7 +219,7 @@ const RefundManager = () => {
                   {payment.status === "REFUND_REQUESTED" && (
                     <button
                       onClick={() => openModal(payment)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                      className="bg-primary text-white px-4 py-2 rounded"
                     >
                       환불 정보 입력
                     </button>

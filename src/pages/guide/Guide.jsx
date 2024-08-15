@@ -9,7 +9,7 @@ const CustomAccordion = ({ title, children, icon }) => {
         className="w-full flex justify-between items-center p-2 text-gray-800 focus:outline-none"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center text-sm font-semibold">
+        <div className="flex items-center text-md font-semibold">
           <span className="mr-2">{icon}</span>
           {title}
         </div>
@@ -33,7 +33,7 @@ const CustomAccordion = ({ title, children, icon }) => {
         </span>
       </button>
       {isOpen && (
-        <div className="p-2 text-sm text-gray-500 bg-gray-100 rounded-md">
+        <div className="p-4 text-sm text-gray-500 bg-gray-100 rounded-md">
           {children}
         </div>
       )}

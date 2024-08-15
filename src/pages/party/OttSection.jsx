@@ -45,14 +45,14 @@ const OttSelection = () => {
       <main className="w-full flex flex-col items-center mt-8 max-w-4xl mx-auto">
         <div className="grid grid-cols-1 gap-4 p-6 bg-white rounded shadow-lg w-full">
           <h2 className="text-lg font-semibold mb-4 text-center">
-            보고싶은 OTT를 선택해주세요
+            이용을 원하는 서비스를 선택하세요
           </h2>
           <div className="grid grid-cols-3 gap-4">
             {ottList.map((ott) => (
               <div
                 key={ott.ottId}
                 className={`relative flex flex-col items-center p-4 rounded-lg cursor-pointer ${
-                  selectedOtt?.ottId === ott.ottId ? "bg-green-100" : "bg-white"
+                  selectedOtt?.ottId === ott.ottId ? "border-2 border-primary" : "bg-white"
                 }`}
                 onClick={() => handleOttClick(ott)}
               >
@@ -63,7 +63,7 @@ const OttSelection = () => {
                     className="object-contain h-full"
                   />
                   {selectedOtt?.ottId === ott.ottId && (
-                    <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                    <div className="absolute top-0 right-0 bg-accent text-white rounded-full w-4 h-4 flex items-center justify-center">
                       ✓
                     </div>
                   )}
@@ -89,7 +89,7 @@ const OttSelection = () => {
                 <p className="text-gray-500 line-through">
                   월 {selectedOtt.price.toLocaleString()}원
                 </p>
-                <p className="text-2xl text-green-600 font-bold">
+                <p className="text-2xl text-accent font-bold">
                   월{" "}
                   {Math.floor(
                     selectedOtt.price / selectedOtt.capacity,
@@ -100,15 +100,15 @@ const OttSelection = () => {
             </div>
             <div className="flex justify-center">
               <button
-                className={`py-3 px-32 rounded-full shadow-md transition-all duration-300 ${
+                className={`py-3 px-32 rounded-full shadow-md ${
                   isSubscribedOtt
                     ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-green-500 hover:bg-green-600 text-white"
+                    : "bg-primary hover:accent text-white"
                 }`}
                 onClick={handleNextClick}
                 disabled={isSubscribedOtt}
               >
-                {isSubscribedOtt ? "이용중인 OTT 서비스입니다" : "다음"}
+                {isSubscribedOtt ? "이미 이용 중인 서비스입니다" : "다음"}
               </button>
             </div>
           </div>

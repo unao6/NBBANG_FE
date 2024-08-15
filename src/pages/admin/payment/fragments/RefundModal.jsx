@@ -91,7 +91,7 @@ const RefundModal = ({ isOpen, onClose, onSubmit, initialCancelAmount }) => {
             </button>
             <button
               type="submit"
-              className="py-2 px-4 bg-blue-500 text-white rounded"
+              className="py-2 px-4 bg-primary text-white rounded"
             >
               제출
             </button>

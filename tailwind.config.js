@@ -4,9 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#1DA1F2",
-        secondary: "#14171A",
-        accent: "#657786",
+        primary: "#504EEE",
+        secondary: "#FACC15",
+        accent: "#462AE3",
+      },
+      ringColor: {
+        primary: "#504EEE",
+        accent: "#462AE3",
       },
       spacing: {
         128: "32rem",

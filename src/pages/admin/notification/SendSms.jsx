@@ -62,14 +62,14 @@ const SendSms = () => {
       </div>
       <button
         onClick={handleSendSms}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="bg-primary text-white px-4 py-2 rounded"
         disabled={isSending} // 전송 중일 때 버튼 비활성화
       >
         SMS 발송
       </button>
-      {isSending && <div className="mt-4 text-blue-500">SMS 전송 중...</div>}
+      {isSending && <div className="mt-4 text-primary">SMS 전송 중...</div>}
       {successMessage && (
-        <div className="mt-4 text-green-500">{successMessage}</div>
+        <div className="mt-4 text-accent">{successMessage}</div>
       )}
       {errorMessage && (
         <div className="mt-4 text-red-500">{errorMessage}</div>

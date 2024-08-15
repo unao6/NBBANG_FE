@@ -102,7 +102,7 @@ const PartyMemberStep = () => {
                   className="w-20 h-20 mb-2"
                   style={{ objectFit: "contain" }} // 이미지 원본 비율 유지
                 />
-                <h3 className="text-blue-500 font-semibold">{ottInfo.name}</h3>
+                <h3 className="text-primary font-semibold">{ottInfo.name}</h3>
               </div>
               <div className="text-right flex flex-col items-end">
                 <p className="text-gray-700 line-through">
@@ -132,15 +132,15 @@ const PartyMemberStep = () => {
           <h3 className="text-sm font-bold mb-2">모두 동의합니다.</h3>
           <ul className="list-disc pl-5 space-y-2">
             <li className="text-sm text-gray-700">
-              전자금융거래 이용약관 <span className="text-blue-500">보기</span>
+              전자금융거래 이용약관 <span className="text-primary">보기</span>
             </li>
             <li className="text-sm text-gray-700">
               개인정보수집 및 이용동의{" "}
-              <span className="text-blue-500">보기</span>
+              <span className="text-primary">보기</span>
             </li>
             <li className="text-sm text-gray-700">
               개인(신용)정보 제 3자 제공 및 위탁동의{" "}
-              <span className="text-blue-500">보기</span>
+              <span className="text-primary">보기</span>
             </li>
           </ul>
           <div className="mt-4">
