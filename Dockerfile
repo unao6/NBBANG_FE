@@ -1,29 +1,35 @@
-# 1. 기본 Node.js 이미지 사용
-FROM node:18 AS build
+# Node.js를 사용하여 React 프로젝트 빌드 및 서빙
+FROM node:18-alpine
 
-# 2. 작업 디렉토리 생성 및 이동
+# 작업 디렉토리 설정
 WORKDIR /app
 
-# 3. 의존성 파일 복사
+# 패키지 설치를 위해 package.json과 package-lock.json을 복사
 COPY package.json package-lock.json ./
 
-# 4. 의존성 설치
+# dependencies 설치
 RUN npm install
 
-# 5. 애플리케이션 소스 코드 복사
+# 프로젝트 소스 복사
 COPY . .
 
-# 6. 리액트 애플리케이션 빌드
+# React 프로젝트 빌드
 RUN npm run build
 
-# 7. 최종 이미지 구성
-FROM nginx:alpine
+# 정적 파일을 서빙할 경로 설정
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# 8. 빌드된 애플리케이션을 Nginx의 HTML 디렉토리로 복사
-COPY --from=build /app/build /usr/share/nginx/html
+# Serve를 사용하여 정적 파일을 제공
+RUN npm install -g serve
 
-# 9. Nginx가 기본 포트 80에서 실행되도록 설정
-EXPOSE 80
+# 포트 노출
+EXPOSE 3000
 
-# 10. Nginx 시작
-CMD ["nginx", "-g", "daemon off;"]
+# 애플리케이션 실행 (빌드된 정적 파일 서빙)
+CMD ["serve", "-s", "build", "-l", "3000"]
+
+# docker build -t kimhyeonpil/react-image .
+# docker push kimhyeonpil/react-image
+# docker pull kimhyeonpil/react-image
+# docker run -d -p 80:3000 --name react-server kimhyeonpil/react-image
