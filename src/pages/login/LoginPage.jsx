@@ -10,8 +10,24 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `https://oauth2/authorization/google`;
+    // 새 창을 띄워 구글 로그인을 진행
+    const googleLoginWindow = window.open(
+      `https://nbbang.store/oauth2/authorization/google`,
+      "_blank",
+      "width=500,height=600",
+    );
+
+    // 부모 창에서 새 창의 메시지를 기다림
+    const messageListener = (event) => {
+      if (event.data === "success") {
+        navigate("/redirect"); // 인증이 성공하면 리디렉션
+        window.removeEventListener("message", messageListener);
+      }
+    };
+
+    window.addEventListener("message", messageListener);
   };
+
 
   const handleSignUpClick = () => {
     navigate("/users/sign-up");
