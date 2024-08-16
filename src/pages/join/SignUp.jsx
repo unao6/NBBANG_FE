@@ -490,8 +490,8 @@ const isFormValid =
           className="w-full px-4 py-2 text-gray-400 bg-gray-100 rounded focus:outline-none"
           disabled={!isFormValid}
           style={{
-            backgroundColor: isFormValid ? '#FACC15' : '#f1f1f1',
-            color: isFormValid ? '#000' : '#d3d3d3'
+            backgroundColor: isFormValid ? '#504EEE' : '#f1f1f1',
+            color: isFormValid ? '#FFF' : '#d3d3d3'
           }}
         >
           회원가입완료

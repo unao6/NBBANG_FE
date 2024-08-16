@@ -217,7 +217,7 @@ const AccountRegistration = () => {
             type="submit"
             className={`w-full py-3 rounded-full shadow-md transition duration-200 ${
               accountInfo
-                ? "bg-secondary text-black cursor-pointer"
+                ? "bg-primary text-black cursor-pointer"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             disabled={!accountInfo} // 계좌 정보가 없으면 비활성화
