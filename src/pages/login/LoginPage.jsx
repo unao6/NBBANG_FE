@@ -12,7 +12,7 @@ const Login = () => {
   const handleGoogleLogin = () => {
     // 새 창을 띄워 구글 로그인을 진행
     const googleLoginWindow = window.open(
-      `https://nbbang.store/oauth2/authorization/google`,
+      `https://nbbang.store/api/oauth2/authorization/google`,
       "_blank",
       "width=500,height=600",
     );
