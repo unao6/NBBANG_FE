@@ -24,7 +24,7 @@ const Main = () => {
 
   return (
     <div
-      className="h-full w-full flex flex-col items-center justify-center overflow-hidden relative bg-gradient-to-b from-blue-200 via-gray-200 to-primary">
+      className="h-full w-full flex flex-col items-center justify-center overflow-hidden relative bg-gradient-to-b from-orange-200 via-gray-100 to-blue-200">
       {/* 빵 이미지 */}
       <div className="w-full flex justify-center mt-8">
         {" "}
