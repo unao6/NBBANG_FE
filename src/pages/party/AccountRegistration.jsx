@@ -31,11 +31,13 @@ const AccountRegistration = () => {
   };
 
   useEffect(() => {
-    if (!ottInfo) {
+    if (!ottInfo && ottId) {
       setOttInfo(ottId);
     }
-    fetchAccountInfo(); // 계좌 정보 가져오기 함수 호출
-  }, [ottId, ottInfo, setOttInfo]);
+    if (!partyCreated) {
+      fetchAccountInfo(); // 계좌 정보 가져오기 함수 호출
+    }
+  }, [ottId, ottInfo, setOttInfo, partyCreated]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -64,6 +66,7 @@ const AccountRegistration = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
     fetchAccountInfo(); // 계좌 정보 갱신
+    setPartyCreated(false); // 파티 생성 상태 초기화
   };
 
   if (partyCreated) {
@@ -227,7 +230,10 @@ const AccountRegistration = () => {
       <AccountRegisterModal
         open={modalOpen}
         onClose={handleCloseModal}
-        onSubmitSuccess={fetchAccountInfo} // 계좌 정보 갱신을 위한 콜백
+        onSubmitSuccess={() => {
+          fetchAccountInfo(); // 계좌 정보 갱신
+          setPartyCreated(false); // 파티 생성 상태 초기화
+        }}
       />
     </div>
   );

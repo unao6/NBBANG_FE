@@ -49,7 +49,7 @@ const Main = () => {
         대한민국 N등
       </h1>
       <h1 className="mb-2 text-4xl font-extrabold text-center text-black">
-        OTT 계정공유 서비스<br />
+        구독 셰어링 서비스<br />
       </h1>
 
       <p className="text-center text-gray-700 mt-4">
