@@ -16,7 +16,7 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInterceptors.post("/login", {
+      const response = await axiosInterceptors.post("/api/login", {
         email,
         password
       }, {

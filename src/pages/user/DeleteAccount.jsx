@@ -34,7 +34,7 @@ const handleDeleteAccount = async () => {
       await deleteAccount(user.email);
 
       // 로그아웃 API 요청 보내기
-      await axiosInterceptors.post("/logout", null, {
+      await axiosInterceptors.post("/api/logout", null, {
         withCredentials: true, // 쿠키를 포함하여 요청
       });
 

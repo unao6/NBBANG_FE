@@ -33,7 +33,7 @@ axiosInterceptors.interceptors.response.use(
       try {
         console.log('Attempting to reissue token'); // 리이슈 토큰 시도 로그
         const response = await axios.post(
-          `${baseURL}/reissue`,
+          `${baseURL}/api/reissue`,
           {}, // 요청 바디가 비어있다면 빈 객체 전달
           {
             withCredentials: true, // 쿠키를 포함하여 요청을 보냄

@@ -60,7 +60,7 @@ const PartySettingsUser = () => {
     const joinDateObj = new Date(joinDate);
     const oneMonthLater = new Date(joinDateObj);
     oneMonthLater.setMonth(joinDateObj.getMonth() + 1);
-    return true;
+    return new Date() >= oneMonthLater;
   };
 
   if (!partyDetails) {
