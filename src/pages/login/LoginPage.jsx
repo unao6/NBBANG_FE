@@ -10,19 +10,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    const googleLoginUrl = `${axiosInterceptors.defaults.baseURL}/oauth2/authorization/google`;
-    const newWindow = window.open(
-      googleLoginUrl,
-      "_blank",
-      "width=500,height=600"
-    );
-
-    const interval = setInterval(() => {
-      if (newWindow.closed) {
-        clearInterval(interval);
-        navigate("/redirect");
-      }
-    }, 500);
+    window.location.href = `${axiosInterceptors.defaults.baseURL}/oauth2/authorization/google`;
   };
 
   const handleSignUpClick = () => {
