@@ -19,7 +19,12 @@ const Main = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate('/add-party');
+    const token = localStorage.getItem("access");
+    if (!token) {
+      navigate("/login"); // 로그인이 되어 있지 않으면 로그인 페이지로 이동
+    } else {
+      navigate("/add-party"); // 로그인이 되어 있으면 파티 추가 페이지로 이동
+    }
   };
 
   return (
