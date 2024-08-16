@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
+console.log('BaseURL: ', baseURL)
 
 const axiosInterceptors = axios.create({
   baseURL: baseURL, // 기본 API URL
