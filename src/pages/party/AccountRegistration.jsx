@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import AccountRegisterModal from "../payment/fragments/AccountRegisterModal"; // 모달 컴포넌트 가져오기
+import AccountRegisterModal from "../payment/fragments/AccountRegisterModal";
 import { createParty } from "../../api/party/partyApi";
-import { getAccountInfo } from "../../api/payment/accountApi"; // 계좌 정보 가져오기
-import { getBankImage } from "../../components/BankImage"; // 은행 이미지 가져오기
+import { getAccountInfo } from "../../api/payment/accountApi";
+import { getBankImage } from "../../components/BankImage";
 import { getOttImage } from "../../components/OttImage.js";
 import useOttStore from "../../store/ottStore";
 
@@ -22,7 +22,7 @@ const AccountRegistration = () => {
     try {
       const data = await getAccountInfo();
       if (!data) {
-        setModalOpen(true); // 계좌 정보가 없으면 모달을 자동으로 열기
+        setModalOpen(true);
       }
       setAccountInfo(data);
     } catch (error) {
@@ -34,17 +34,17 @@ const AccountRegistration = () => {
     if (!ottInfo && ottId) {
       setOttInfo(ottId);
     }
-    if (!partyCreated) {
-      fetchAccountInfo(); // 계좌 정보 가져오기 함수 호출
+    if (!partyCreated && !modalOpen && !accountInfo) {
+      fetchAccountInfo();
     }
-  }, [ottId, ottInfo, setOttInfo, partyCreated]);
+  }, [ottId, ottInfo, partyCreated, modalOpen, accountInfo, setOttInfo]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!accountInfo) {
       alert("파티를 생성하기 전에 계좌를 등록해 주세요.");
-      setModalOpen(true); // 계좌가 없으면 모달을 열기
+      setModalOpen(true);
       return;
     }
 
@@ -63,10 +63,17 @@ const AccountRegistration = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setModalOpen(false);
-    fetchAccountInfo(); // 계좌 정보 갱신
-    setPartyCreated(false); // 파티 생성 상태 초기화
+  };
+
+  const handleAccountUpdateSuccess = () => {
+    fetchAccountInfo();
+    handleCloseModal();
   };
 
   if (partyCreated) {
@@ -187,7 +194,8 @@ const AccountRegistration = () => {
                   </p>
                 </div>
                 <button
-                  onClick={() => setModalOpen(true)}
+                  type="button"
+                  onClick={handleOpenModal}
                   className="text-primary font-bold ml-auto"
                 >
                   변경
@@ -199,7 +207,8 @@ const AccountRegistration = () => {
                   계좌가 등록되어 있지 않습니다. 먼저 계좌를 등록해주세요.
                 </p>
                 <button
-                  onClick={() => setModalOpen(true)}
+                  type="button"
+                  onClick={handleOpenModal}
                   className="text-white bg-primary mb-2 border-2 border-primary py-1 px-4 rounded-lg"
                 >
                   계좌 등록하기
@@ -217,7 +226,7 @@ const AccountRegistration = () => {
             type="submit"
             className={`w-full py-3 rounded-full shadow-md transition duration-200 ${
               accountInfo
-                ? "bg-primary text-black cursor-pointer"
+                ? "bg-secondary text-black cursor-pointer"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             disabled={!accountInfo} // 계좌 정보가 없으면 비활성화
@@ -230,10 +239,7 @@ const AccountRegistration = () => {
       <AccountRegisterModal
         open={modalOpen}
         onClose={handleCloseModal}
-        onSubmitSuccess={() => {
-          fetchAccountInfo(); // 계좌 정보 갱신
-          setPartyCreated(false); // 파티 생성 상태 초기화
-        }}
+        onSubmitSuccess={handleAccountUpdateSuccess}
       />
     </div>
   );

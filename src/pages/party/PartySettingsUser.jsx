@@ -54,14 +54,9 @@ const PartySettingsUser = () => {
 
   const joinDate = user ? getJoinDate() : null;
 
+  // 한 달 제한을 제거하여 항상 탈퇴 가능하도록 설정
   const isEligibleToLeave = () => {
-    if (!joinDate) {
-      return false;
-    }
-    const joinDateObj = new Date(joinDate);
-    const oneMonthLater = new Date(joinDateObj);
-    oneMonthLater.setMonth(joinDateObj.getMonth() + 1);
-    return new Date() >= oneMonthLater;
+    return true;
   };
 
   if (!partyDetails) {
