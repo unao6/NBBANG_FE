@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
 import { fetchUserInfo } from "../../api/user/userApi";
 
 const PartySettingsUser = () => {
