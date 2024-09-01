@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const baseURL = process.env.REACT_APP_API_BASE_URL;
+
 const axiosInterceptors = axios.create({
-  baseURL: 'http://localhost:8080', // 기본 API URL
+  baseURL: baseURL, // 기본 API URL
   withCredentials: true, // 쿠키를 포함하여 요청을 보냄
 });
 
@@ -31,7 +33,7 @@ axiosInterceptors.interceptors.response.use(
       try {
         console.log('Attempting to reissue token'); // 리이슈 토큰 시도 로그
         const response = await axios.post(
-          'http://localhost:8080/reissue',
+          `${baseURL}/api/reissue`,
           {}, // 요청 바디가 비어있다면 빈 객체 전달
           {
             withCredentials: true, // 쿠키를 포함하여 요청을 보냄

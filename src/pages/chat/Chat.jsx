@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import SockJS from 'sockjs-client';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 import useUserStore from '../../store/useUserStore';
 import { fetchUserInfo } from '../../api/user/userApi';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SettingsIcon from '@mui/icons-material/Settings'; 
 
 const Chat = () => {
   const { chatId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState(location.state?.messages || []);
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
@@ -204,9 +208,15 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col h-full relative">
+      <div className="flex justify-between mb-2">
+        <IconButton aria-label="back" onClick={() => navigate(-1)}>
+          <ArrowBackIcon />
+        </IconButton>
+      </div>
+
       <div
         className="flex-1 overflow-y-auto p-4 bg-white flex flex-col"
-        style={{ paddingTop: '68px', paddingBottom: '68px' }}
+        style={{ paddingBottom: '68px' }}
       >
         {messages.map((msg, index) => {
           const msgDate = new Date(msg.sentAt);
@@ -231,7 +241,7 @@ const Chat = () => {
                 <div
                 className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
                   msg.nickname === 'N/BBANG'
-                    ? 'bg-blue-500 text-white'
+                    ? 'bg-primary text-white'
                     : msg.nickname === 'System'
                     ? 'bg-gray-300 text-black'
                     : 'bg-yellow-400 text-black'
@@ -267,7 +277,7 @@ const Chat = () => {
           type="button"
           onClick={handleSend} 
           className={`${
-            isChatEnded ? 'bg-gray-400' : 'bg-blue-500 text-white p-2 rounded'
+            isChatEnded ? 'bg-gray-400' : 'bg-primary text-white p-2 rounded'
             } text-white px-3 py-1.5 rounded-md transition duration-200`} 
           disabled={isChatEnded} >
           보내기

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Box, Button, IconButton } from "@mui/material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { fetchActiveUsers, fetchInactiveUsers, restoreUserAccount } from '../../../api/user/userApi';
 
 const UserList = () => {
@@ -10,24 +13,33 @@ const UserList = () => {
   const [viewInactive, setViewInactive] = useState(false);
   const [hoveredPhone, setHoveredPhone] = useState(null);
   const [roleFilter, setRoleFilter] = useState('all');
+  const [page, setPage] = useState(0); // 현재 페이지 번호
+  const [size] = useState(10); // 페이지 당 항목 수
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const activeResponse = await fetchActiveUsers();
-        const inactiveResponse = await fetchInactiveUsers();
+useEffect(() => {
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const response = viewInactive
+        ? await fetchInactiveUsers(page, size)
+        : await fetchActiveUsers(page, size);
 
-        setActiveUsers(activeResponse);
-        setInactiveUsers(inactiveResponse);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
+      if (viewInactive) {
+        setInactiveUsers(response.content);
+      } else {
+        setActiveUsers(response.content);
       }
-    };
+      setTotalPages(response.totalPages);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchUsers();
-  }, []);
+  fetchUsers();
+}, [viewInactive, page, size]);
 
   const handleViewActive = () => setViewInactive(false);
   const handleViewInactive = () => setViewInactive(true);
@@ -42,6 +54,47 @@ const UserList = () => {
     } catch (err) {
       setError(err);
     }
+  };
+  const handlePreviousPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePageClick = (pageNum) => {
+    setPage(pageNum);
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 0; i < totalPages; i++) {
+      pages.push(
+        <Button
+          key={i}
+          onClick={() => handlePageClick(i)}
+          sx={{
+            margin: "0 4px",
+            minWidth: "32px",
+            height: "32px",
+            borderRadius: "50%",
+            backgroundColor: i === page ? "#e0e0e0" : "transparent",
+            color: i === page ? "black" : "inherit",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+            },
+          }}
+        >
+          {i + 1}
+        </Button>
+      );
+    }
+    return pages;
   };
 
   const handleRoleChange = (event) => {
@@ -67,12 +120,21 @@ const UserList = () => {
     return false;
   });
 
-  const formatDateTimeFromArray = (dateArray) => {
-    if (Array.isArray(dateArray) && dateArray.length >= 6) {
-      const [year, month, day, hour, minute, second] = dateArray;
-      return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
+  const formatDateTimeFromArray = (dateString) => {
+    const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
     }
-    return 'Invalid Date';
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hour = String(date.getHours()).padStart(2, '0');
+  const minute = String(date.getMinutes()).padStart(2, '0');
+  const second = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}.${month}.${day} ${hour}:${minute}:${second}`;
   };
 
   const getStatus = (deleted) => {
@@ -94,13 +156,13 @@ const UserList = () => {
         <div className="flex space-x-4">
           <button
             onClick={handleViewActive}
-            className={`px-4 py-2 rounded ${!viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            className={`px-4 py-2 rounded ${!viewInactive ? 'bg-primary text-white hover:bg-accent' : 'bg-gray-300 hover:bg-gray-400'}`}
           >
             가입된 회원 보기
           </button>
           <button
             onClick={handleViewInactive}
-            className={`px-4 py-2 rounded ${viewInactive ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            className={`px-4 py-2 rounded ${viewInactive ? 'bg-primary text-white hover:bg-accent' : 'bg-gray-300 hover:bg-gray-400'}`}
           >
             탈퇴한 회원 보기
           </button>
@@ -109,7 +171,7 @@ const UserList = () => {
           <select
             value={roleFilter}
             onChange={handleRoleChange}
-            className="px-4 py-2 border rounded pr-8"
+            className="px-4 py-2 border rounded pr-8 "
           >
             <option value="all">전체</option>
             <option value="admin">관리자</option>
@@ -160,7 +222,7 @@ const UserList = () => {
                 </td>
                 <td
                   className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                  style={{ width: '150px' }}
+                  style={{ width: '150px', maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                   onMouseEnter={() => setHoveredPhone(user.id)}  // 마우스 오버 시 user.id로 상태 변경
                   onMouseLeave={() => setHoveredPhone(null)}     // 마우스가 떠나면 상태 초기화
                 >
@@ -178,7 +240,7 @@ const UserList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <button
                       onClick={() => handleRestoreUser(user.email)}
-                      className="bg-green-500 text-white px-4 py-2 rounded"
+                      className="bg-primary text-white px-4 py-2 rounded"
                     >
                       복구
                     </button>
@@ -189,6 +251,29 @@ const UserList = () => {
           </tbody>
         </table>
       </div>
+        <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+          <IconButton
+            onClick={handlePreviousPage}
+            disabled={page === 0}
+            sx={{
+              backgroundColor: "#e0e0e0",
+              marginRight: "8px",
+            }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          {renderPageNumbers()}
+          <IconButton
+            onClick={handleNextPage}
+            disabled={page >= totalPages - 1}
+            sx={{
+              backgroundColor: "#e0e0e0",
+              marginLeft: "8px",
+            }}
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </Box>
     </div>
   );
 };

@@ -47,13 +47,13 @@ export const sendPhoneCertification = async (phoneNumber) => {
 };
 
 // 인증번호 확인 API
-export const verifyPhoneCertification = async (phoneNumber, verificationCode) => {
-  return axiosInterceptors.post('/api/users/phone-check', { phoneNumber, verificationCode });
+export const verifyPhoneCertification = async (phoneNumber, randomNumber) => {
+  return axiosInterceptors.post('/api/users/phone-check', { phoneNumber, randomNumber });
 };
 
 // 회원가입 API
 export const signUpUser = (nickname, email, password, phoneNumber) => {
-  return axiosInterceptors.post("/api/users/sign-up", {
+  return axiosInterceptors.post('/api/users/sign-up', {
     nickname,
     email,
     password,
@@ -75,12 +75,29 @@ export const deleteAccount = async (email) => {
 };
 
 // 휴대폰 번호 변경 API
-export const changePhoneNumber = async (phoneNumber) => {
+export const changePhoneNumber = async (email, phoneNumber, randomNumber) => {
   try {
-    const response = await axiosInterceptors.put('/api/users/change-phone-number', { phoneNumber });
-    return response;
+    const response = await axiosInterceptors.put('/api/users/change-phone-number', {
+      email: email,
+      newPhoneNumber: phoneNumber,
+      randomNumber: randomNumber,
+    });
+    return response.data;
   } catch (error) {
     console.error('Error changing phone number:', error);
+    throw error;
+  }
+};
+
+// addPhoneNumber 함수는 동일한 방식으로 구현
+export const addPhoneNumber = async (phoneNumber) => {
+  try {
+    const response = await axiosInterceptors.post('/api/auth/add-phone-number', {
+      phoneNumber: phoneNumber, // 이제 phoneNumber만 전송
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding phone number:', error);
     throw error;
   }
 };
@@ -113,3 +130,8 @@ export const restoreUserAccount = async (email) => {
     throw error;
   }
 };
+
+export const checkIfAdmin = async() => {
+  const response = await axiosInterceptors.get('/api/role/check');
+  return response.data;
+}

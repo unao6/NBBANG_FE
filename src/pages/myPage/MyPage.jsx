@@ -12,13 +12,14 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import PaymentIcon from "@mui/icons-material/Payment";
 import React from "react";
+import axiosInterceptors from "../../api/axiosInterceptors";
 import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
   const navigate = useNavigate();
   const menuItems = [
     {
-      text: "엔빵 계정 관리",
+      text: "계정 정보",
       icon: <AccountCircleIcon />,
       href: "/mypage/user-info",
     },
@@ -35,28 +36,42 @@ const MyPage = () => {
     // { text: "공지사항", icon: <AnnouncementIcon />, href: "/notices" },
     { text: "알림 설정", icon: <NotificationsIcon />, href: "/notifications" },
     // { text: "자주 묻는 질문", icon: <HelpIcon />, href: "/faq" },
-    { text: "1:1 채팅문의", icon: <ChatIcon />, href: "/chat/start" },
+    { text: "1:1 채팅 문의", icon: <ChatIcon />, href: "/chat/start" },
     {
-      text: "프로모션 코드 입력",
+      text: "프로모션 코드 등록",
       icon: <LocalOfferIcon />,
-      href: "/promo-code",
+      href: "/mypage/promoCode",
     },
     // { text: "제안하기", icon: <FeedbackIcon />, href: "/suggestions" },
   ];
 
-  const handleLogout = () => {
-    // 로그아웃 처리: 로컬 스토리지에서 토큰 제거
-    localStorage.removeItem("access");
+const handleLogout = async () => {
+    try {
+      // 로그아웃 API 요청 보내기
+      const response = await axiosInterceptors.post("/logout", null, {
+        withCredentials: true, // 쿠키를 포함하여 요청
+      });
 
-    // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
-    window.dispatchEvent(new Event("storage"));
+      if (response.status === 200) {
+        // 로그아웃 성공 시 로컬 스토리지에서 토큰 제거
+        localStorage.removeItem("access");
 
-    // 로그아웃 후 로그인 페이지로 리다이렉트
-    navigate("/");
+        // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
+        window.dispatchEvent(new Event("storage"));
+
+        // 로그아웃 후 로그인 페이지로 리다이렉트
+        navigate("/");
+      } else {
+        console.error("Logout failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-full bg-gray-50 p-4">
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow">
         <List component="nav" aria-label="main mailbox folders">
           {menuItems.map((item, index) => (
@@ -72,7 +87,7 @@ const MyPage = () => {
             color="error"
             fullWidth
             onClick={handleLogout}
-            style={{ marginTop: "20px" }}
+            style={{ marginTop: "10px" }}
           >
             로그아웃
           </Button>

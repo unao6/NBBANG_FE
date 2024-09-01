@@ -114,8 +114,8 @@ const ArchivedChatMessages = () => {
                 <div
                   className={`inline-block p-2 rounded-lg shadow w-auto max-w-xs break-words ${
                     msg.nickname === 'N/BBANG'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-300 text-black'
+                      ? 'bg-primary text-white'
+                      : 'bg-yellow-400 text-black'
                   }`}
                 >
                   {msg.text}

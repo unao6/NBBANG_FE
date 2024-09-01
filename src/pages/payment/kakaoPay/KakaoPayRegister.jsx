@@ -37,7 +37,7 @@ const KakaoPayCardRegister = () => {
   return (
     <div className="flex flex-col justify-center items-center bg-gray-100 flex-grow">
       <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">엔빵 카카오페이 카드등록</h2>
+        <h2 className="text-2xl font-bold mb-4">N/BBANG 카카오페이 카드등록</h2>
         
         <div className="mb-4 p-4 bg-gray-100 rounded">
           <p className="text-sm text-gray-700 mt-2">
@@ -67,14 +67,14 @@ const KakaoPayCardRegister = () => {
         <h3 className="text-sm font-bold mb-2">모두 동의합니다.</h3>
         <ul className="list-disc pl-5 space-y-2">
           <li className="text-sm text-gray-700">
-            전자금융거래 이용약관 <span className="text-blue-500">보기</span>
+            전자금융거래 이용약관 <span className="text-primary">보기</span>
           </li>
           <li className="text-sm text-gray-700">
-            개인정보수집 및 이용동의 <span className="text-blue-500">보기</span>
+            개인정보수집 및 이용동의 <span className="text-primary">보기</span>
           </li>
           <li className="text-sm text-gray-700">
             개인(신용)정보 제 3자 제공 및 위탁동의{" "}
-            <span className="text-blue-500">보기</span>
+            <span className="text-primary">보기</span>
           </li>
         </ul>
       </div>
@@ -84,7 +84,7 @@ const KakaoPayCardRegister = () => {
           disabled={!isAgreed}
           className={`w-full py-3 rounded ${
             isAgreed
-              ? "bg-green-500 text-white"
+              ? "bg-primary text-white"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
           onClick={handleSubmit}

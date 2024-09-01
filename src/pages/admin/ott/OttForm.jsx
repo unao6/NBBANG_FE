@@ -49,9 +49,9 @@ const OttForm = ({ ottId, onSave, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-6 pt-4 pb-6 mb-4 max-w-4xl mx-auto">
-      <div className="flex flex-row items-center justify-between mb-4">
-        <div className="flex flex-col items-start">
+    <form onSubmit={handleSubmit} className="bg-white shadow rounded px-6 pt-4 pb-6 mb-4 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold mb-2">
             OTT 이름
           </label>
@@ -59,10 +59,10 @@ const OttForm = ({ ottId, onSave, initialData }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold mb-2">
             구독 가격
           </label>
@@ -70,10 +70,10 @@ const OttForm = ({ ottId, onSave, initialData }) => {
             type="text"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold mb-2">
             인원 수
           </label>
@@ -81,29 +81,40 @@ const OttForm = ({ ottId, onSave, initialData }) => {
             type="number"
             value={capacity}
             onChange={(e) => setCapacity(e.target.value)}
-            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
-      </div>
-      <div className="flex items-center justify-end">
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          {ottId ? '수정' : '등록'}
-        </button>
-        {ottId && (
-          <button
-            type="button"
-            className="ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={() => onSave(null)} // 폼 초기화 및 수정 모드 종료
-          >
-            취소
-          </button>
-        )}
+        <div className="flex items-end space-x-4">
+          {ottId ? (
+            <>
+              <button
+                type="submit"
+                className="bg-primary hover:bg-accent text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline w-24"
+              >
+                수정
+              </button>
+              <button
+                type="button"
+                className="bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline w-24"
+                onClick={() => onSave(null)} // 폼 초기화 및 수정 모드 종료
+              >
+                취소
+              </button>
+            </>
+          ) : (
+            <div className="flex justify-end w-full">
+              <button
+                type="submit"
+                className="bg-primary hover:bg-accent text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline w-24"
+              >
+                등록
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </form>
   );
-};
+}
 
 export default OttForm;

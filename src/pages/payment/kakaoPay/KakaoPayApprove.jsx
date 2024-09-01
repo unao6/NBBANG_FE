@@ -49,7 +49,7 @@ const KakaoPayApprove = () => {
   return (
     <div className="flex flex-col justify-between bg-gray-100">
       <div className="bg-white p-8 shadow-md w-full max-w-2xl mx-auto rounded">
-        <h2 className="text-2xl font-bold mb-4">엔빵 카카오페이 카드등록</h2>
+        <h2 className="text-2xl font-bold mb-4">N/BBANG 카카오페이 카드등록</h2>
 
         <div className="mb-4 p-4 bg-gray-100 rounded">
           <p className="text-sm text-gray-700">
@@ -78,7 +78,7 @@ const KakaoPayApprove = () => {
           disabled={!isAgreed}
           className={`w-full py-3 rounded ${
             isAgreed
-              ? "bg-green-500 text-white"
+              ? "bg-primary text-white"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
           onClick={handleSubmit}

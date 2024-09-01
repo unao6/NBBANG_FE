@@ -1,13 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 
 import AccountMyPage from "./pages/payment/AccountMyPage";
-import AccountRegisterPage from "./pages/payment/AccountRegister";
 import AccountRegistration from "./pages/party/AccountRegistration.jsx";
 import AddParty from "./pages/party/AddParty";
 import AdminChat from "./pages/admin/chat/AdminChat";
 import AdminPartyManagement from "./pages/admin/party/AdminPartyManagement";
-import ArchivedChatMessages from "./pages/admin/chat/ArchivedChatMessages.jsx"
 import ArchivedChatList from "./pages/admin/chat/ArchivedChatList.jsx";
+import ArchivedChatMessages from "./pages/admin/chat/ArchivedChatMessages.jsx";
 import CardRegister from "./pages/payment/CardRegister";
 import ChangeNumber from "./pages/user/ChangeNumber";
 import Chat from "./pages/chat/Chat";
@@ -35,12 +34,16 @@ import PartySettings from "./pages/party/PartySettings";
 import PartySettingsUser from "./pages/party/PartySettingsUser";
 import Payment from "./pages/payment/Payment";
 import PaymentMypage from "./pages/payment/PaymentMypage";
+import PaymentRefund from "./pages/payment/PaymentRefund.jsx";
+import PromoCode from "./pages/myPage/promotion/PromoCode.jsx";
 import RefundManager from "./pages/admin/payment/RefundManager";
 import SendEmail from "./pages/admin/notification/SendEmail";
+import SendSms from "./pages/admin/notification/SendSms";
 import SignUp from "./pages/join/SignUp";
 import StartChat from "./pages/chat/StartChat";
 import UserInfo from "./pages/user/UserInfo";
 import UserList from "./pages/admin/user/UserList";
+import AddNumber from "./pages/login/AddNumber";
 
 const Router = () => {
   return (
@@ -53,6 +56,7 @@ const Router = () => {
       <Route path="/payment/kakaopay/approve" element={<KakaoPayApprove />} />
       <Route path="/payment/kakaopay/fail" element={<KakaoPayFail />} />
       <Route path="/payment/kakaopay/cancel" element={<KakaoPayCancel />} />
+      <Route path="/payment/refund" element={<PaymentRefund />} />
       <Route path="/chat/:chatId" element={<Chat />} />
       <Route path="/chat/start" element={<StartChat />} />
       <Route path="/admin/payments" element={<Manager />} />
@@ -60,14 +64,20 @@ const Router = () => {
       <Route path="/admin/chat" element={<ChatList />} />
       <Route path="/admin/chat/:chatId" element={<AdminChat />} />
       <Route path="/admin/chat/archived/list" element={<ArchivedChatList />} />
-      <Route path="/admin/chat/archived/:archivedId" element={<ArchivedChatMessages />} />
+      <Route
+        path="/admin/chat/archived/:archivedId"
+        element={<ArchivedChatMessages />}
+      />
       <Route path="/admin/users" element={<UserList />} />
       <Route path="/admin/notification/email" element={<SendEmail />} />
+      <Route path="/admin/notification/sms" element={<SendSms />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/payment" element={<PaymentMypage />} />
       <Route path="/mypage/user-info" element={<UserInfo />} />
       <Route path="/mypage/delete-account" element={<DeleteAccount />} />
       <Route path="/mypage/change-number" element={<ChangeNumber />} />
+      <Route path="/mypage/add-number" element={<AddNumber />} /> {/* AddNumber 경로 추가 */}
+      <Route path="/mypage/promoCode" element={<PromoCode />} />
       <Route path="/users/sign-up" element={<SignUp />} />
       <Route path="/users/user-login" element={<Login />} />
       <Route path="/login" element={<LoginPage />} />
@@ -90,10 +100,6 @@ const Router = () => {
       />
       <Route path="/admin/parties" element={<AdminPartyManagement />} />
       <Route path="/mypage/account" element={<AccountMyPage />} />
-      <Route
-        path="/mypage/account/register"
-        element={<AccountRegisterPage />}
-      />
       <Route
         path="/party-matching-success"
         element={<PartyMatchingSuccess />}

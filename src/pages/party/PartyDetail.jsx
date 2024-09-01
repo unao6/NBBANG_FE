@@ -68,12 +68,13 @@ const PartyDetail = () => {
   };
 
   return (
-    <main className="container mx-auto mt-2 px-4 md:px-0">
+    <main className="container mx-auto mt-2 px-4">
       <div className="flex justify-between mb-2">
         <IconButton aria-label="back" onClick={() => navigate(-1)}>
           <ArrowBackIcon />
         </IconButton>
         <IconButton aria-label="settings" onClick={handleSettingsClick}>
+          <div className="text-sm pr-1">설정 </div>
           <SettingsIcon />
         </IconButton>
       </div>
@@ -141,7 +142,7 @@ const PartyDetail = () => {
             </div>
           </div>
           <div className="flex items-center mb-4">
-            <div className="bg-blue-500 text-white p-2 w-1/4 text-center rounded-l-lg">
+            <div className="bg-primary text-white p-2 w-1/4 text-center rounded-l-lg">
               {individualShare.toLocaleString()}원
             </div>
             {Array(partyDetails.capacity - 1)
@@ -149,7 +150,9 @@ const PartyDetail = () => {
               .map((_, index) => (
                 <div
                   key={index}
-                  className="bg-yellow-400 text-white p-2 w-1/4 text-center"
+                  className={`bg-secondary text-black p-2 w-1/4 text-center ${
+                    index === partyDetails.capacity - 2 ? "rounded-r-lg" : "rounded-l"
+                  }`}
                 >
                   {individualShare.toLocaleString()}원
                 </div>
@@ -157,17 +160,17 @@ const PartyDetail = () => {
           </div>
 
           <div className="flex justify-between items-center">
-            <div className="text-blue-500 flex items-center">
-              <div className="w-4 h-4 bg-blue-500 mr-2 rounded-full"></div>내 1/
+            <div className="text-primary flex items-center">
+              <div className="w-4 h-4 bg-primary mr-2 rounded-full"></div>내 1/
               {partyDetails.capacity} 부담금
             </div>
-            <div className="text-gray-800">
+            <div className="text-primary">
               {individualShare.toLocaleString()}원/월
             </div>
           </div>
           <div className="flex justify-between items-center mt-2">
-            <div className="text-yellow-400 flex items-center">
-              <div className="w-4 h-4 bg-yellow-400 mr-2 rounded-full"></div>
+            <div className="text-gray-800 flex items-center">
+              <div className="w-4 h-4 bg-secondary mr-2 rounded-full"></div>
               파티원 {partyDetails.capacity - 1}명의 몫
             </div>
             <div className="text-gray-800">
@@ -192,14 +195,14 @@ const PartyDetail = () => {
               {partyDetails.isLeader ? (
                 <>
                   <p className="text-gray-700 mt-2">
-                    수수료:{" "}
-                    <span style={{ textDecoration: "line-through" }}>
+                    수수료 : {" "}
+                    <span className="text-sm text-gray-500" style={{ textDecoration: "line-through" }}>
                       {serviceFee.toLocaleString()}원
                     </span>{" "}
                     <span>{"200원"}</span>
                   </p>
                   <p className="text-gray-700 mt-2">
-                    최종 정산 금액: {leaderSettlement.toLocaleString()}원/월
+                    최종 정산 금액 : {leaderSettlement.toLocaleString()}원/월
                   </p>
                 </>
               ) : (
@@ -234,7 +237,7 @@ const PartyDetail = () => {
               </span>
             </div>
             <button
-              className="text-blue-500 ml-4"
+              className="text-primary ml-4"
               onClick={() => setShowIdInfo(!showIdInfo)}
             >
               {showIdInfo ? "숨기기" : "표시"}
@@ -250,7 +253,7 @@ const PartyDetail = () => {
               </span>
             </div>
             <button
-              className="text-blue-500 ml-4"
+              className="text-primary ml-4"
               onClick={() => setShowPwInfo(!showPwInfo)}
             >
               {showPwInfo ? "숨기기" : "표시"}

@@ -25,6 +25,16 @@ export const fetchChatMessages = async (chatId) => {
     return response.data;
 };
 
+export const fetchNewMessagesCount = async () => {
+    const response = await axiosInterceptors.get(`${adminChatUrl}/newMessagesCount`)
+    return response.data;
+}
+
+export const resetNewMessagesCount = async (chatId) => {
+    const response = await axiosInterceptors.post(`${adminChatUrl}/resetNewMessagesCount/${chatId}`)
+    return response.data;
+}
+
 export const endChat = async (chatId) => {
     const response = await axiosInterceptors.post(`${adminChatUrl}/end/${chatId}`);
     return response.data;

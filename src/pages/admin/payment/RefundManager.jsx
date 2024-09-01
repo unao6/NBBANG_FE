@@ -1,11 +1,12 @@
+import { Box, Button, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {
-  getPaymentsByStatus,
-  requestRefund,
-} from "../../../api/payment/paymentApi";
 
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CircularProgress from "@mui/material/CircularProgress";
 import RefundModal from "./fragments/RefundModal";
+import { cancelPayment } from "../../../api/payment/kakaoPay/kakaoPayApi";
+import { getPaymentsByStatus } from "../../../api/payment/paymentApi";
 
 const RefundManager = () => {
   const [payments, setPayments] = useState([]);
@@ -14,13 +15,16 @@ const RefundManager = () => {
   const [filter, setFilter] = useState("REFUND_REQUESTED");
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [page, setPage] = useState(0); // 현재 페이지 번호
+  const [size] = useState(10); // 페이지 당 항목 수
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
 
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await getPaymentsByStatus(filter);
-        console.log("Fetched payments:", response.data); // 데이터 로깅
-        setPayments(response.data);
+        const response = await getPaymentsByStatus(filter, page, size);
+        setPayments(response.data.content);
+        setTotalPages(response.data.totalPages);
       } catch (err) {
         setError(err);
       } finally {
@@ -29,7 +33,7 @@ const RefundManager = () => {
     };
 
     fetchPayments();
-  }, [filter]);
+  }, [filter, page, size]);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -47,15 +51,66 @@ const RefundManager = () => {
 
   const handleRefundSubmit = async (refundData) => {
     try {
-      await requestRefund(selectedPayment.id, refundData);
+      const cancelRequest = {
+        tid: selectedPayment.tid,
+        cid: selectedPayment.cid,
+        cancel_amount: selectedPayment.refundAmount,
+        cancel_tax_free_amount: refundData.cancelTaxFreeAmount,
+        // cancel_vat_amount: refundData.cancelVatAmount,
+        // cancel_available_amount: refundData.cancelAvailableAmount,
+        payload: refundData.payload,
+      };
+      await cancelPayment(cancelRequest);
       alert("환불 요청이 성공적으로 제출되었습니다.");
       closeModal();
       // 데이터 새로고침
-      const response = await getPaymentsByStatus(filter);
-      setPayments(response.data);
+      const response = await getPaymentsByStatus(filter, page, size);
+      setPayments(response.data.content);
     } catch (error) {
       alert("환불 요청 중 오류가 발생했습니다.");
     }
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePageClick = (pageNum) => {
+    setPage(pageNum);
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 0; i < totalPages; i++) {
+      pages.push(
+        <Button
+          key={i}
+          onClick={() => handlePageClick(i)}
+          sx={{
+            margin: "0 4px",
+            minWidth: "32px",
+            height: "32px",
+            borderRadius: "50%",
+            backgroundColor: i === page ? "#e0e0e0" : "transparent",
+            color: i === page ? "black" : "inherit",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+            },
+          }}
+        >
+          {i + 1}
+        </Button>,
+      );
+    }
+    return pages;
   };
 
   if (loading) {
@@ -138,28 +193,33 @@ const RefundManager = () => {
                   {payment.partnerOrderId}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.paymentType || 'N/A'} {/* 기본값 설정 */}
+                  {payment.paymentType || "N/A"} {/* 기본값 설정 */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.amount}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.refundAmount || 'N/A'} {/* 기본값 설정 */}
+                  {payment.refundAmount || "N/A"} {/* 기본값 설정 */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.refundDate ? new Date(payment.refundDate).toLocaleString() : 'N/A'} {/* 기본값 설정 및 포맷팅 */}
+                  {payment.refundDate
+                    ? new Date(payment.refundDate).toLocaleString()
+                    : "N/A"}{" "}
+                  {/* 기본값 설정 및 포맷팅 */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.status}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {payment.paymentApprovedAt ? new Date(payment.paymentApprovedAt).toLocaleString() : 'N/A'}
+                  {payment.paymentApprovedAt
+                    ? new Date(payment.paymentApprovedAt).toLocaleString()
+                    : "N/A"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {payment.status === "REFUND_REQUESTED" && (
                     <button
                       onClick={() => openModal(payment)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                      className="bg-primary text-white px-4 py-2 rounded"
                     >
                       환불 정보 입력
                     </button>
@@ -170,10 +230,35 @@ const RefundManager = () => {
           </tbody>
         </table>
       </div>
+      {/* 페이지네이션 버튼 및 페이지 번호 */}
+      <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+        <IconButton
+          onClick={handlePreviousPage}
+          disabled={page === 0}
+          sx={{
+            backgroundColor: "#e0e0e0",
+            marginRight: "8px",
+          }}
+        >
+          <ArrowBackIosIcon />
+        </IconButton>
+        {renderPageNumbers()}
+        <IconButton
+          onClick={handleNextPage}
+          disabled={page >= totalPages - 1}
+          sx={{
+            backgroundColor: "#e0e0e0",
+            marginLeft: "8px",
+          }}
+        >
+          <ArrowForwardIosIcon />
+        </IconButton>
+      </Box>
       <RefundModal
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={handleRefundSubmit}
+        initialCancelAmount={selectedPayment ? selectedPayment.refundAmount : 0}
       />
     </div>
   );

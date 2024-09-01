@@ -101,7 +101,7 @@ const ArchivedChatList = () => {
         <h1 className="text-2xl font-bold text-gray-800">채팅 아카이브</h1>
         <button
           onClick={() => navigate('/admin/chat')}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-accent transition duration-300"
         >
           채팅 목록
         </button>
@@ -112,7 +112,7 @@ const ArchivedChatList = () => {
           placeholder="닉네임 검색"
           value={searchTerm}
           onChange={handleSearchChange}
-          className="w-64 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm"
+          className="w-64 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm shadow-sm"
         />
       </div>
       <div className="overflow-x-auto">
@@ -181,7 +181,7 @@ const ArchivedChatList = () => {
         pageRangeDisplayed={5}
         onPageChange={handlePageClick}
         containerClassName={'flex justify-center mt-6'}
-        activeClassName={'font-bold text-blue-500'}
+        activeClassName={'font-bold text-primary'}
         pageClassName={'mx-1'}
         previousClassName={'mx-1'}
         nextClassName={'mx-1'}

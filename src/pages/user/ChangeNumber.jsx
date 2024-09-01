@@ -4,9 +4,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
 import { sendPhoneCertification, verifyPhoneCertification, changePhoneNumber } from '../../api/user/userApi';
 
-const ChangeNumber = () => {
+const ChangeNumber = ({ email }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
+  const [randomNumber, setRandomNumber] = useState('');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [isPhoneFocused, setIsPhoneFocused] = useState(false);
@@ -27,7 +27,7 @@ const ChangeNumber = () => {
 
   const handleVerifyCode = async () => {
     try {
-      await verifyPhoneCertification(phoneNumber, verificationCode);
+      await verifyPhoneCertification(phoneNumber, randomNumber);
       setIsVerified(true);
       setIsPhoneVerificationSuccess(true);
       setPhoneVerificationMessage('휴대폰 인증이 완료되었습니다.');
@@ -40,7 +40,7 @@ const ChangeNumber = () => {
   const handleSavePhoneNumber = async () => {
     if (isVerified) {
       try {
-        await changePhoneNumber(phoneNumber);
+        await changePhoneNumber(email, phoneNumber, randomNumber);
         alert('휴대폰 번호가 성공적으로 변경되었습니다.');
         navigate('/mypage/user-info');
       } catch (error) {
@@ -60,19 +60,16 @@ const ChangeNumber = () => {
       <IconButton onClick={handleBackClick} sx={{ alignSelf: 'flex-start', marginBottom: 2 }}>
         <ArrowBackIosIcon />
       </IconButton>
-      <Typography variant="h6" gutterBottom sx={{ padding: '16px' }}>
-        휴대폰 번호 변경
-      </Typography>
 
       <div className="mb-6">
         <label
-          className={`block text-sm font-medium ${
-            isPhoneFocused ? 'text-green-500' : 'text-gray-700'
+          className={`block text-xl p-4 font-medium ${
+            isPhoneFocused ? 'text-primary' : 'text-gray-700'
           }`}
         >
-          새 휴대폰 번호
+          새로운 휴대폰 번호 입력
         </label>
-        <div className="relative">
+        <div className="relative m-2">
           <input
             type="text"
             value={phoneNumber}
@@ -82,17 +79,17 @@ const ChangeNumber = () => {
             className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${
               isPhoneFocused ? 'border-green-500' : 'border-gray-300'
             }`}
-            placeholder="휴대폰 번호를 입력해주세요"
+            placeholder="휴대폰 번호를 - 없이 숫자만 입력해주세요"
             style={{
               border: 'none',
-              borderBottom: isPhoneFocused ? '2px solid #5bc490' : '2px solid #d3d3d3',
+              borderBottom: isPhoneFocused ? '2px solid #504EEE' : '2px solid #d3d3d3',
               backgroundColor: 'transparent',
             }}
           />
           <button
             type="button"
             onClick={handleSendVerificationCode}
-            className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-green-500 rounded-r-md hover:bg-green-600 focus:outline-none"
+            className="absolute inset-y-0 right-0 px-4 py-1 text-white bg-primary rounded-r-md hover:bg-accent focus:outline-none"
             disabled={!phoneNumber}
           >
             {isVerificationSent ? '인증번호 재전송' : '인증번호 전송'}
@@ -111,12 +108,12 @@ const ChangeNumber = () => {
           </label>
           <input
             type="text"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
+            value={randomNumber}
+            onChange={(e) => setRandomNumber(e.target.value)}
             onFocus={() => setIsPhoneVerificationFocused(true)}
             onBlur={() => setIsPhoneVerificationFocused(false)}
             className={`block w-full px-3 py-2 focus:outline-none focus:ring-0 border-b-2 ${
-              isPhoneVerificationFocused ? 'border-green-500' : 'border-gray-300'
+              isPhoneVerificationFocused ? 'border-primary' : 'border-gray-300'
             }`}
             placeholder="인증번호를 입력해주세요"
             style={{
@@ -130,7 +127,7 @@ const ChangeNumber = () => {
           <button
             type="button"
             onClick={handleVerifyCode}
-            className="w-full mt-4 px-4 py-2 text-white bg-green-500 rounded focus:outline-none hover:bg-green-600"
+            className="w-full mt-4 px-4 py-2 text-white bg-primary rounded focus:outline-none hover:bg-accent"
           >
             인증 완료
           </button>
@@ -147,15 +144,13 @@ const ChangeNumber = () => {
       )}
 
       {isVerified && (
-        <Button
-          variant="contained"
-          color="secondary"
+        <button
+          type="button"
           onClick={handleSavePhoneNumber}
-          fullWidth
-          sx={{ marginTop: 2 }}
+          className="w-full mt-4 px-4 py-2 text-white bg-primary rounded focus:outline-none hover:bg-accent"
         >
           휴대폰 번호 저장
-        </Button>
+        </button>
       )}
     </Box>
   );
