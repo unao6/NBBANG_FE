@@ -1,5 +1,6 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AnnouncementIcon from "@mui/icons-material/Announcement";
+import { Button } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import HelpIcon from "@mui/icons-material/Help";
@@ -11,13 +12,15 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import PaymentIcon from "@mui/icons-material/Payment";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const menuItems = [
     {
       text: "엔빵 계정 관리",
       icon: <AccountCircleIcon />,
-      href: "/manage-account",
+      href: "/mypage/user-info",
     },
     {
       text: "파티원 | 결제수단",
@@ -27,22 +30,33 @@ const MyPage = () => {
     {
       text: "파티장 | 정산계좌",
       icon: <PaymentIcon />,
-      href: "/settlement-account",
+      href: "/mypage/account",
     },
-    { text: "공지사항", icon: <AnnouncementIcon />, href: "/notices" },
+    // { text: "공지사항", icon: <AnnouncementIcon />, href: "/notices" },
     { text: "알림 설정", icon: <NotificationsIcon />, href: "/notifications" },
-    { text: "자주 묻는 질문", icon: <HelpIcon />, href: "/faq" },
-    { text: "1:1 채팅문의", icon: <ChatIcon />, href: "/chat" },
+    // { text: "자주 묻는 질문", icon: <HelpIcon />, href: "/faq" },
+    { text: "1:1 채팅문의", icon: <ChatIcon />, href: "/chat/start" },
     {
       text: "프로모션 코드 입력",
       icon: <LocalOfferIcon />,
       href: "/promo-code",
     },
-    { text: "제안하기", icon: <FeedbackIcon />, href: "/suggestions" },
+    // { text: "제안하기", icon: <FeedbackIcon />, href: "/suggestions" },
   ];
 
+  const handleLogout = () => {
+    // 로그아웃 처리: 로컬 스토리지에서 토큰 제거
+    localStorage.removeItem("access");
+
+    // 로컬 스토리지 변경 감지 이벤트를 수동으로 트리거
+    window.dispatchEvent(new Event("storage"));
+
+    // 로그아웃 후 로그인 페이지로 리다이렉트
+    navigate("/");
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow">
         <List component="nav" aria-label="main mailbox folders">
           {menuItems.map((item, index) => (
@@ -52,6 +66,17 @@ const MyPage = () => {
             </ListItem>
           ))}
         </List>
+        <div className="p-4">
+          <Button
+            variant="outlined"
+            color="error"
+            fullWidth
+            onClick={handleLogout}
+            style={{ marginTop: "20px" }}
+          >
+            로그아웃
+          </Button>
+        </div>
       </div>
     </div>
   );

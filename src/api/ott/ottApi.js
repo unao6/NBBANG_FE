@@ -1,24 +1,21 @@
-import axios from "axios";
-
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
-const ottUrl = `${baseUrl}/api`;
+import axiosInterceptors from "../axiosInterceptors.js";
 
 export const createOtt = (ottCreateRequest) => {
-  return axios.post(`${ottUrl}/admin/ott`, ottCreateRequest);
+  return axiosInterceptors.post(`/api/admin/ott`, ottCreateRequest);
 };
 
 export const getAllOtt = () => {
-  return axios.get(`${ottUrl}/ott/all`);
+  return axiosInterceptors.get(`/api/ott/all`);
 };
 
 export const getOttById = (ottId) => {
-  return axios.get(`${ottUrl}/ott/${ottId}`);
+  return axiosInterceptors.get(`/api/ott/${ottId}`);
 };
 
-export const updateOtt = (ottUpdateRequest) => {
-  return axios.put(`${ottUrl}/admin/ott`, ottUpdateRequest);
+export const updateOtt = (ottId, ottUpdateRequest) => {
+  return axiosInterceptors.put(`/api/admin/ott/${ottId}`,ottUpdateRequest);
 };
 
 export const deleteOtt = (ottId) => {
-  return axios.delete(`${ottUrl}/admin/ott/${ottId}`);
+  return axiosInterceptors.delete(`/api/admin/ott/${ottId}`);
 };
